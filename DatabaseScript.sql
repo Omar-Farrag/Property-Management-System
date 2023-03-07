@@ -168,6 +168,46 @@ ALTER TABLE USERS ADD CONSTRAINT USERS_ROLE_ID_FK FOREIGN KEY(ROLE_ID) REFERENCE
 
 ALTER TABLE CREDENTIALS ADD CONSTRAINT CRED_USER_ID_FK FOREIGN KEY(USER_ID) REFERENCES USERS(USER_ID);
 
+INSERT INTO ROLES VALUES(
+    'IT',
+    'It Officer'
+);
+
+INSERT INTO ROLES VALUES(
+    'DE',
+    'Data Entry'
+);
+
+INSERT INTO ROLES VALUES(
+    'MD',
+    'Maintenance Department Officer'
+);
+
+INSERT INTO ROLES VALUES(
+    'TC',
+    'Technician'
+);
+
+INSERT INTO ROLES VALUES(
+    'LA',
+    'Leasing Agent'
+);
+
+INSERT INTO ROLES VALUES(
+    'CT',
+    'Current Tenant'
+);
+
+INSERT INTO ROLES VALUES(
+    'PT',
+    'Potential Tenant'
+);
+
+INSERT INTO ROLES VALUES(
+    'AC',
+    'Accountant'
+);
+
 INSERT INTO USERS VALUES(
     'A1',
     'Layth',
@@ -239,6 +279,55 @@ INSERT INTO USERS VALUES(
     'Hala@RealEstate.edu',
     'AC'
 );
+
+INSERT INTO CREDENTIALS VALUES(
+    'A1',
+    'A1'
+);
+
+INSERT INTO CREDENTIALS VALUES(
+    'A2',
+    'A2'
+);
+
+INSERT INTO CREDENTIALS VALUES(
+    'A3',
+    'A3'
+);
+
+INSERT INTO CREDENTIALS VALUES(
+    'A4',
+    'A4'
+);
+
+INSERT INTO CREDENTIALS VALUES(
+    'A5',
+    'A5'
+);
+
+INSERT INTO CREDENTIALS VALUES(
+    'A6',
+    'A6'
+);
+
+INSERT INTO CREDENTIALS VALUES(
+    'A7',
+    'A7'
+);
+
+INSERT INTO CREDENTIALS VALUES(
+    'A8',
+    'A8'
+);
+
+SELECT *
+FROM USERS;
+
+SELECT *
+FROM ROLES;
+
+SELECT *
+FROM CREDENTIALS;
 
 /*
  ___________________________________________________________________________________________________________________
