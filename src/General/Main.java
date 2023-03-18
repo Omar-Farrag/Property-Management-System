@@ -4,7 +4,7 @@
  */
 package General;
 
-import DataEntryInterface.PropertyForm;
+import DataEntryInterface.DataEntryUserInterface;
 
 /**
  *
@@ -19,7 +19,7 @@ public class Main {
         // TODO code application logic here
         (new LogInScreen()).setVisible(true);
         (new GeneralUserInterface()).setVisible(true);
-        (new PropertyForm()).setVisible(true);
+        (new DataEntryUserInterface()).setVisible(true);
     }
     
 }

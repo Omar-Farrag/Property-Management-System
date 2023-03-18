@@ -4,6 +4,8 @@
  */
 package DataEntryInterface;
 
+import java.awt.Frame;
+
 /**
  *
  * @author Layth (edu)
@@ -67,7 +69,7 @@ public class DataEntryUserInterface extends javax.swing.JFrame {
                     .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(roleLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
                         .addComponent(dateLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
         infoPanelLayout.setVerticalGroup(
             infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -112,7 +114,7 @@ public class DataEntryUserInterface extends javax.swing.JFrame {
                         .addGroup(welcomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(welcomeLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(welcomeLabel1))
-                        .addGap(0, 15, Short.MAX_VALUE)))
+                        .addGap(0, 30, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         welcomePanelLayout.setVerticalGroup(
@@ -130,6 +132,11 @@ public class DataEntryUserInterface extends javax.swing.JFrame {
 
         ModifyPropertyButton.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         ModifyPropertyButton.setText("Modify Property");
+        ModifyPropertyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ModifyPropertyButtonActionPerformed(evt);
+            }
+        });
 
         DeletePropertyButton.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         DeletePropertyButton.setText("Delete Property");
@@ -141,6 +148,11 @@ public class DataEntryUserInterface extends javax.swing.JFrame {
 
         NewPropertyButton.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         NewPropertyButton.setText("Create New Property");
+        NewPropertyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                NewPropertyButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -153,15 +165,12 @@ public class DataEntryUserInterface extends javax.swing.JFrame {
                 .addGap(6, 6, 6))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(DeletePropertyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ModifyPropertyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(NewPropertyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(194, 194, 194))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(DeletePropertyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ModifyPropertyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(NewPropertyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(191, 191, 191))
         );
-
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {DeletePropertyButton, ModifyPropertyButton, NewPropertyButton});
-
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -184,7 +193,21 @@ public class DataEntryUserInterface extends javax.swing.JFrame {
 
     private void DeletePropertyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeletePropertyButtonActionPerformed
         // TODO add your handling code here:
+        (new DeletePropertyForm()).setVisible(true);
+        this.setState(Frame.ICONIFIED);
     }//GEN-LAST:event_DeletePropertyButtonActionPerformed
+
+    private void NewPropertyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewPropertyButtonActionPerformed
+        // TODO add your handling code here:
+        (new CreatePropertyForm()).setVisible(true);
+         this.setState(Frame.ICONIFIED);
+    }//GEN-LAST:event_NewPropertyButtonActionPerformed
+
+    private void ModifyPropertyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ModifyPropertyButtonActionPerformed
+        // TODO add your handling code here:
+        (new ModifyPropertyForm()).setVisible(true);
+         this.setState(Frame.ICONIFIED);
+    }//GEN-LAST:event_ModifyPropertyButtonActionPerformed
 
     /**
      * @param args the command line arguments
