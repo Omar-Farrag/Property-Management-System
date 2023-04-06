@@ -1,7 +1,7 @@
 package DatabaseManagement;
 
 public class Attribute {
-    private final Attribute.Name attributeName;
+    private final Name attributeName;
     private final String attributeValue;
     private final Type type;
     private final Table t;
@@ -29,7 +29,7 @@ public class Attribute {
      * @param attribute Name of the attribute as written in the database
      * @param t         The table that the attribute belongs to
      */
-    public Attribute(Attribute.Name attribute, Table t) {
+    public Attribute(Name attribute, Table t) {
         this.attributeName = attribute;
         this.attributeValue = "";
         this.type = Type.STRING;
@@ -42,7 +42,7 @@ public class Attribute {
         return attributeName.getName();
     }
 
-    public Attribute.Name getAttributeName() {
+    public Name getAttributeName() {
         return attributeName;
     }
 
