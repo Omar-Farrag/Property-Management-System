@@ -338,7 +338,7 @@ FROM CREDENTIALS;
  |-------------------------------------------------------------------------------------------------------------------|
  |___________________________________________________________________________________________________________________|
  
- ALTER TABLE MAINTENANCE_REQUESTS DROP CONSTRAINT MAINT_REQUESTS_LEASE_NUM_FK;
+ALTER TABLE MAINTENANCE_REQUESTS DROP CONSTRAINT MAINT_REQUESTS_LEASE_NUM_FK;
 
 ALTER TABLE MAINTENANCE_REQUESTS DROP CONSTRAINT MAINT_REQS_ASSIGNED_TECH_FK;
 
