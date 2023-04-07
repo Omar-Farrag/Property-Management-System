@@ -1,5 +1,7 @@
 package Properties;
 
+import DatabaseManagement.QueryResult;
+
 public class Mall implements PropertyManagementInterface {
     @Override
     public QueryResult insert() {

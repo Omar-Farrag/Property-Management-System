@@ -1,5 +1,7 @@
 package Properties;
 
+import DatabaseManagement.QueryResult;
+
 public class Store implements PropertyManagementInterface {
 
     @Override
