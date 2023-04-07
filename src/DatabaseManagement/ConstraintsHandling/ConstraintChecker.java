@@ -140,18 +140,18 @@ public class ConstraintChecker {
         return errors;
     }
 
-    private Errors checkConstraints(Table t, AttributeCollection toValidate, OperationType type,Filters filters) throws TableNotFoundException,
+    private Errors checkConstraints(Table t, AttributeCollection allAttributes, OperationType type,Filters filters) throws TableNotFoundException,
             ConstraintNotFoundException {
         JSONObject table = metaData.getTableInfoFromMetaData(t);
         JSONObject tableAttributes = (JSONObject) table.get("Attributes");
         Errors errors = new Errors();
 
-        for (Attribute attribute : toValidate.attributes()) {
+        for (Attribute attribute : allAttributes.attributes()) {
             JSONArray attributeConstraints = (JSONArray) tableAttributes.get(attribute.getStringName());
             for (Object obj : attributeConstraints) {
                 String constraint = (String) obj;
                 try {
-                    ValidationParameters parameters = new ValidationParameters(constraint,attribute, toValidate,
+                    ValidationParameters parameters = new ValidationParameters(constraint,attribute, allAttributes,
                             type, filters);
                     errors.add(attribute, validator.validate(parameters));
                 } catch (

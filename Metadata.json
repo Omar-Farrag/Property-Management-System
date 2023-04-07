@@ -19,6 +19,7 @@
       ],
       "WASTEDISPOSED": [
         "FLOAT",
+        "C_WASTEDISPOSED IS NOT NULL",
         "C_WASTEDISPOSED >= 0"
       ],
       "WASTECHARGE": [
@@ -128,18 +129,18 @@
     "Attributes": {
       "UTILITY_PERCENTAGE": [
         "FLOAT",
-        "C_UTILITY_PERCENTAGE IS NOT NULL",
-        "C_ UTILITY_PERCENTAGE BETWEEN 0 AND 100 "
+        "C_ UTILITY_PERCENTAGE BETWEEN 0 AND 100 ",
+        "C_UTILITY_PERCENTAGE IS NOT NULL"
       ],
       "MAINTENANCE_PERCENTAGE": [
         "FLOAT",
-        "C_MAINTENANCE_PERCENTAGE IS NOT NULL",
-        "C_ MAINTENANCE_PERCENTAGE BETWEEN 0 AND 100 "
+        "C_ MAINTENANCE_PERCENTAGE BETWEEN 0 AND 100 ",
+        "C_MAINTENANCE_PERCENTAGE IS NOT NULL"
       ],
       "LEASE_PERCENTAGE": [
         "FLOAT",
-        "C_LEASE_PERCENTAGE IS NOT NULL",
-        "C_ LEASE_PERCENTAGE BETWEEN 0 AND 100 "
+        "C_ LEASE_PERCENTAGE BETWEEN 0 AND 100 ",
+        "C_LEASE_PERCENTAGE IS NOT NULL"
       ],
       "DISCOUNT_NUM": [
         "CHAR_10",
@@ -166,13 +167,13 @@
       ],
       "END_DATE": [
         "DATE",
-        "C_END_DATE IS NOT NULL",
-        "C_END_DATE > START_DATE"
+        "C_END_DATE > START_DATE",
+        "C_END_DATE IS NOT NULL"
       ],
       "START_DATE": [
         "DATE",
-        "C_START_DATE IS NOT NULL",
-        "C_END_DATE > START_DATE"
+        "C_END_DATE > START_DATE",
+        "C_START_DATE IS NOT NULL"
       ],
       "PAYMENT_OPTION": [
         "VARCHAR2_50",
@@ -201,13 +202,13 @@
       ],
       "LEASE_END": [
         "DATE",
-        "C_LEASE_END IS NOT NULL",
-        "C_LEASE_END > LEASE_START"
+        "C_LEASE_END > LEASE_START",
+        "C_LEASE_END IS NOT NULL"
       ],
       "LEASE_START": [
         "DATE",
-        "C_LEASE_START IS NOT NULL",
-        "C_LEASE_END > LEASE_START"
+        "C_LEASE_END > LEASE_START",
+        "C_LEASE_START IS NOT NULL"
       ],
       "PAYMENT_OPTION": [
         "VARCHAR2_50",
@@ -372,8 +373,7 @@
     "TableName": "ROLES",
     "Attributes": {
       "DESCRIPTION": [
-        "VARCHAR2_100",
-        "C_DESCRIPTION IS NOT NULL"
+        "VARCHAR2_100"
       ],
       "ROLE_ID": [
         "CHAR_2",
@@ -404,12 +404,12 @@
       ],
       "SENDER_ID": [
         "VARCHAR2_30",
-        "C_SENDER_ID IS NOT NULL",
-        "P_NOTIFICATIONS_PK"
+        "P_NOTIFICATIONS_PK",
+        "R_USERS_USER_ID_PK"
       ],
       "RECEIVER_ID": [
         "VARCHAR2_30",
-        "C_RECEIVER_ID IS NOT NULL"
+        "R_USERS_USER_ID_PK"
       ],
       "DATE_SENT": [
         "DATE",

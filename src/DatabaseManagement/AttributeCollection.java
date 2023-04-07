@@ -2,6 +2,7 @@ package DatabaseManagement;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class AttributeCollection {
@@ -105,5 +106,19 @@ public class AttributeCollection {
 
         return String.join(" , ", values_as_string);
     }
+    public ArrayList<String> getValues(){
+        ArrayList<String> values = new ArrayList<>();
+        for(Attribute att : attributes){
+            values.add(att.getValue());
+        }
+        return values;
+    }
+    public String getValue(Attribute attribute){
+        for(Attribute att : attributes){
+            if(att.equals(attribute)) return att.getValue();
+        }
+        return "";
+    }
+
 
 }

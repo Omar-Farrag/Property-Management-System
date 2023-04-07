@@ -10,12 +10,11 @@ import org.json.simple.parser.ParseException;
 import org.w3c.dom.Attr;
 
 import java.io.*;
+import java.sql.Array;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class MetaDataExtractor {
 
@@ -251,22 +250,22 @@ public class MetaDataExtractor {
         }
         return constraints;
     }
-    public AttributeCollection getPrimaryKeys(Table t) {
+    public Key getPrimaryKeys(Table t) {
         return getKeys(t,"P_");
     }
-    public AttributeCollection getUniqueKeys(Table t){
+    public Key getUniqueKeys(Table t){
         return getKeys(t,"U_");
     }
-    private AttributeCollection getKeys(Table t, String toStartWith){
-        AttributeCollection collection = new AttributeCollection();
+    private Key getKeys(Table t, String toStartWith){
+        Key key = new Key();
         JSONObject attributes = getTableAttributes(t);
 
         for(Object att : attributes.keySet()){
             String attributeName = att.toString();
                 if(isKey((JSONArray) attributes.get(attributeName),toStartWith))
-                    collection.add(new Attribute(Name.valueOf(attributeName),t));
+                    key.add(new Attribute(Name.valueOf(attributeName),t));
             }
-        return collection;
+        return key;
     }
     private boolean isKey(JSONArray constraints, String toStartWith){
         for(Object constraint : constraints)
@@ -274,5 +273,76 @@ public class MetaDataExtractor {
                 return true;
 
         return false;
+    }
+
+
+    public static class Key{
+        private final ArrayList<Attribute> keyAttributes;
+
+        public Key(){
+            keyAttributes = new ArrayList<>();
+        }
+        public void add(Attribute attribute){
+            keyAttributes.add(attribute);
+        }
+
+        public ArrayList<Attribute> getKeyAttributes() {
+            return keyAttributes;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Key that = (Key) o;
+
+            for(Attribute thisAttribute : keyAttributes){
+                boolean found = false;
+                for(Attribute thatAttribute : that.keyAttributes){
+                    if (thisAttribute.equals(thatAttribute) && thisAttribute.getValue().equals(thatAttribute.getValue())) {
+                        found = true;
+                        break;
+                    }
+                }
+                if(!found) return false;
+            }
+            return true;
+
+        }
+
+        @Override
+        public int hashCode() {
+            ArrayList<String> values = new ArrayList<>();
+            for(Attribute attribute :
+                    keyAttributes) values.add(attribute.getStringName() + attribute.getValue() + attribute.getT().getTableName());
+            Collections.sort(values);
+            return Objects.hash(values);
+        }
+    }
+
+    public static void main(String[] args) {
+        Key key = new Key();
+        key.add(new Attribute(Name.USER_ID,"A1",Table.USERS));
+        key.add(new Attribute(Name.USER_ID,"A2",Table.USERS));
+        key.add(new Attribute(Name.USER_ID,"A3",Table.USERS));
+
+        Key key2 = new Key();
+        key2.add(new Attribute(Name.USER_ID,"A3",Table.USERS));
+        key2.add(new Attribute(Name.FNAME,"A1",Table.USERS));
+        key2.add(new Attribute(Name.USER_ID,"A2",Table.USERS));
+
+        Key key3 = new Key();
+        key3.add(new Attribute(Name.USER_ID,"A1",Table.USERS));
+        key3.add(new Attribute(Name.USER_ID,"A3",Table.USERS));
+        key3.add(new Attribute(Name.USER_ID,"A25",Table.USERS));
+
+
+        HashSet<Key> keys = new HashSet<>();
+
+        keys.add(key);
+        keys.add(key2);
+
+        System.out.println(keys.contains(key3));
+
     }
 }

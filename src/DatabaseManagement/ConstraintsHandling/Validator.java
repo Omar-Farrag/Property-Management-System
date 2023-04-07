@@ -1,15 +1,13 @@
 package DatabaseManagement.ConstraintsHandling;
 
+import DatabaseManagement.*;
+import DatabaseManagement.Attribute.Name;
+import DatabaseManagement.ConstraintsHandling.MetaDataExtractor.Key;
 import DatabaseManagement.ConstraintsHandling.ValidationParameters.OperationType;
-import DatabaseManagement.DatabaseManager;
 import DatabaseManagement.Exceptions.ConstraintNotFoundException;
 import DatabaseManagement.Exceptions.DBManagementException;
 import DatabaseManagement.Exceptions.MissingValidatorException;
 import DatabaseManagement.ConstraintsHandling.ReferentialResolver.DetailedKey;
-import DatabaseManagement.QueryResult;
-import DatabaseManagement.Attribute;
-import DatabaseManagement.AttributeCollection;
-import DatabaseManagement.Table;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -17,6 +15,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,17 +35,17 @@ public class Validator {
 //        new Scanner(System.in).nextLine();
 //
         try {
-            Attribute x1 = new Attribute(Attribute.Name.LEASE_NUM, "L123456789", Table.LEASES);
-            Attribute x2 = new Attribute(Attribute.Name.LOCATION_NUM, "", Table.LEASES);
-            Attribute x3 = new Attribute(Attribute.Name.END_DATE, "", Table.LEASES);
-            Attribute x4 = new Attribute(Attribute.Name.START_DATE, "", Table.LEASES);
-            Attribute x5 = new Attribute(Attribute.Name.PAYMENT_OPTION, "", Table.LEASES);
-            Attribute x6 = new Attribute(Attribute.Name.LEASER_ID, "", Table.LEASES);
+            Attribute x1 = new Attribute(Name.LEASE_NUM, "L123456789", Table.LEASES);
+            Attribute x2 = new Attribute(Name.LOCATION_NUM, "", Table.LEASES);
+            Attribute x3 = new Attribute(Name.END_DATE, "", Table.LEASES);
+            Attribute x4 = new Attribute(Name.START_DATE, "", Table.LEASES);
+            Attribute x5 = new Attribute(Name.PAYMENT_OPTION, "", Table.LEASES);
+            Attribute x6 = new Attribute(Name.LEASER_ID, "", Table.LEASES);
 
 
-            Attribute x7 = new Attribute(Attribute.Name.MALL_NUM, "M12", Table.LOCS);
-            Attribute x8 = new Attribute(Attribute.Name.LOCATION_NUM, "1234567890", Table.LOCS);
-            Attribute x9 = new Attribute(Attribute.Name.STORE_NUM, "G20", Table.LOCS);
+            Attribute x7 = new Attribute(Name.MALL_NUM, "M12", Table.LOCS);
+            Attribute x8 = new Attribute(Name.LOCATION_NUM, "1234567890", Table.LOCS);
+            Attribute x9 = new Attribute(Name.STORE_NUM, "G20", Table.LOCS);
 
 
 //            Attribute y = new Attribute(Attribute.Name.ADDRESS, "ABC");
@@ -136,15 +135,15 @@ public class Validator {
         String errorMessage = validateNOT_NULL(parameters);
         if (!errorMessage.isEmpty()) return errorMessage;
 
-        Attribute toValidate = parameters.getToValidate();
         OperationType operationType = parameters.getOperationType();
 
         try {
             if (operationType.equals(OperationType.UPDATE)) {
-                handlePKUpdate(toValidate);
-            }
-            else if(operationType.equals(OperationType.INSERT)){
-                handlePKInsert(toValidate);
+                if(!validPKUpdate(parameters)) return parameters.getToValidate().getStringName() + " cannot be used " +
+                        "because it would duplicate an existing primary key";
+            } else if (operationType.equals(OperationType.INSERT)) {
+                if(!validPKInsert(parameters)) return parameters.getToValidate().getStringName() + " cannot be used " +
+                        "because it would duplicate an existing primary key";
             }
 
         } catch (SQLException e) {
@@ -155,20 +154,59 @@ public class Validator {
         return "";
     }
 
-    private boolean handlePKUpdate(Attribute toValidate) throws SQLException {
-        MetaDataExtractor extractor = MetaDataExtractor.getInstance();
-        AttributeCollection collection = extractor.getPrimaryKeys(toValidate.getT());
+    private boolean validPKInsert(ValidationParameters parameters) throws SQLException {
+        Attribute toValidate = parameters.getToValidate();
+        AttributeCollection allAttributes = parameters.getAllAttributes();
 
-        String query = "Select * from " + toValidate.getT().getTableName() +
-                " where " + toValidate.getStringName() + " = " + toValidate.getStringValue();
+        Key primaryKeys = MetaDataExtractor.getInstance().getPrimaryKeys(toValidate.getT());
+
+        Filters filters = new Filters();
+
+        for(Attribute key: primaryKeys.getKeyAttributes()){
+            Name name = key.getAttributeName();
+            String value = allAttributes.getValue(key);
+            Table t = key.getT();
+            Attribute valuedAttribute = new Attribute(name,value,t);
+            filters.addEqual(valuedAttribute);
+        }
+        String query = "Select * from " + toValidate.getT().getAliasedName() +" " +
+               filters.getFilterClause();
+
         ResultSet result = DatabaseManager.getInstance().executeStatement(query);
+        return !result.next();
 
-        AttributeCollection toCheck = new AttributeCollection();
+    }
 
-        for(Attribute key : collection.attributes()){
-            toCheck.add(new Attribute(key.getAttributeName(),result.getString(key.getStringName()),key.getT()));
+    private boolean validPKUpdate(ValidationParameters parameters) throws SQLException {
+        Attribute toValidate = parameters.getToValidate();
+        Filters filters = parameters.getFilters();
+        Key primaryKeys = MetaDataExtractor.getInstance().getPrimaryKeys(toValidate.getT());
+
+        if (primaryKeys.getKeyAttributes().size() <= 1) {
+            String query = "Select * from " + toValidate.getT().getAliasedName() +
+                    " where " + toValidate.getStringName() + " = " + toValidate.getStringValue();
+            ResultSet result = DatabaseManager.getInstance().executeStatement(query);
+            return !result.next();
         }
 
+        String query = "Select * from " + toValidate.getT().getAliasedName() + " " + filters.getFilterClause();
+        ResultSet result = DatabaseManager.getInstance().executeStatement(query);
+
+        HashSet<Key> keys = new HashSet<>();
+
+        while(result.next()){
+            Key key = new Key();
+            for(Attribute attribute : primaryKeys.getKeyAttributes()){
+                Name name = attribute.getAttributeName();
+                String value = result.getString(name.getName());
+                Table t = attribute.getT();
+                Attribute valuedAttribute = new Attribute(name,value,t);
+                key.add(valuedAttribute);
+            }
+            if(keys.contains(key)) return false;
+            else keys.add(key);
+        }
+        return true;
     }
 
     public String validateUNIQUE(ValidationParameters parameters) {
@@ -274,7 +312,7 @@ public class Validator {
     }
 
     private ComparisonResult compare(ValidationParameters parameters, String operator) {
-    try {
+        try {
             String constraint = parameters.getConstraint();
             Attribute toValidate = parameters.getToValidate();
             AttributeCollection allAttributes = parameters.getAllAttributes();
@@ -463,7 +501,7 @@ public class Validator {
 
     public String validateCHAR(ValidationParameters parameters) {
         String constraint = parameters.getConstraint();
-        Attribute toValidate= parameters.getToValidate();
+        Attribute toValidate = parameters.getToValidate();
 
         int length = Integer.parseInt(constraint.split("_")[1]);
         try {
