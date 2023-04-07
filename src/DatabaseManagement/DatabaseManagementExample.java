@@ -51,8 +51,8 @@ public class DatabaseManagementExample {
 
             //To get rows that match specific conditions, add them to a filters object
             filters.clear();
-            filters.addEqual(new Attribute(Name.USER_ID, "A15", Table.USERS));
-            filters.addEqual(new Attribute(Name.FNAME, "Wadih", Table.USERS));
+            filters.addEqual(new Attribute(Name.USER_ID, "A4", Table.USERS));
+            filters.addEqual(new Attribute(Name.FNAME, "Hassan", Table.USERS));
             result = DB.retrieve(Table.USERS, filters);
             System.out.println("DB.retrieve(Table.Users,filters)");
             if (result.noErrors()) printTable(result.getResult());
@@ -111,12 +111,13 @@ public class DatabaseManagementExample {
             ins.nextLine();
             System.out.println();
 
-            //Finally, let's try updating the table where LNAME = 'Kareem' should be replaced with 'Karim'
+            //Finally, let's try updating the table where LNAME = 'Kareem' is replaced with 'Montasir'
+            //True is there to signal that we want to cascade this change in LNAME to the tables referencing it
             filters.clear();
             filters.addEqual(new Attribute(Name.LNAME, "Kareem", Table.USERS));
             collection.clear();
-            collection.add(new Attribute(Name.LNAME, "Karim", Table.USERS));
-            result = DB.modify(Table.USERS, filters, collection, false);
+            collection.add(new Attribute(Name.LNAME, "Montasir", Table.USERS));
+            result = DB.modify(Table.USERS, filters, collection, true);
             if (result.noErrors()) {
                 System.out.println(result.getRowsAffected());
                 printTable(DB.retrieve(Table.USERS).getResult());
@@ -129,10 +130,10 @@ public class DatabaseManagementExample {
 
             //Finally, Let's change it back to Kareem cuz why not
             filters.clear();
-            filters.addEqual(new Attribute(Name.LNAME, "Karim", Table.USERS));
+            filters.addEqual(new Attribute(Name.LNAME, "Montasir", Table.USERS));
             collection.clear();
             collection.add(new Attribute(Name.LNAME, "Kareem", Table.USERS));
-            result = DB.modify(Table.USERS, filters, collection, false);
+            result = DB.modify(Table.USERS, filters, collection, true);
             if (result.noErrors()) {
                 System.out.println(result.getRowsAffected());
                 printTable(DB.retrieve(Table.USERS).getResult());
