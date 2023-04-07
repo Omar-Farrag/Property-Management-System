@@ -35,8 +35,7 @@ public interface NotificationManagement {
      * Removes a given notification from a user's list of notifications
      * 
      * @param notification The notification that is to be dismissed
-     * @return success code (1 means the notification was removed from given user's
-     *         notifications and 0 means it wasn't)
+     * @return number of notifications deleted
      */
     public int dismissNotification(Notification notification);
 }

@@ -5,6 +5,7 @@ import DatabaseManagement.Attribute.Name;
 import DatabaseManagement.Exceptions.DBManagementException;
 import DatabaseManagement.Exceptions.InvalidAttributeValueException;
 
+import javax.xml.crypto.Data;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -76,15 +77,20 @@ public class NotificationsManager implements NotificationManagement {
 
     @Override
     public int dismissNotification(Notification notification) {
-        /*
-         * Query notifications table in database for the record having the same sender
-         * and date as in the given notification
-         * 
-         * Delete that record
-         * 
-         * Return 1 if deletion is successful, 0 otherwise
-         */
-        throw new UnsupportedOperationException("Unimplemented method 'dismissNotification'");
+
+        Filters filters = new Filters();
+        String date = notification.getDateSent().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy hh:mm:ss a"));
+        filters.addEqual(new Attribute(Name.SENDER_ID, notification.getSenderID() ,Table.NOTIFICATIONS));
+        filters.addEqual(new Attribute(Name.DATE_SENT, date ,Table.NOTIFICATIONS));
+        try {
+            QueryResult result = DatabaseManager.getInstance().delete(Table.NOTIFICATIONS,filters);
+            return result.getRowsAffected();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (DBManagementException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -94,13 +100,21 @@ public class NotificationsManager implements NotificationManagement {
         NotificationsManager manager = new NotificationsManager();
 //        int result = manager.notifyUser("A2",notif);
 //        System.out.println(result);
+;
 
         try {
             ArrayList<Notification> notifications = manager.retrieveNotifications("A2");
+            Notification notif = null;
             for(Notification notification : notifications){
+                if(notification.getMessage().equals("STATUS UPDATE: FOURTH'S A CHARM")) notif = notification;
                 System.out.println(notification.toString());
                 System.out.println();
             }
+            System.out.println();
+
+            int result = manager.dismissNotification(notif);
+
+            System.out.println(result);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (DBManagementException e) {
