@@ -14,6 +14,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.regex.Matcher;
@@ -139,10 +142,10 @@ public class Validator {
 
         try {
             if (operationType.equals(OperationType.UPDATE)) {
-                if(!validPKUpdate(parameters)) return parameters.getToValidate().getStringName() + " cannot be used " +
+                if (!validPKUpdate(parameters)) return parameters.getToValidate().getStringName() + " cannot be used " +
                         "because it would duplicate an existing primary key";
             } else if (operationType.equals(OperationType.INSERT)) {
-                if(!validPKInsert(parameters)) return parameters.getToValidate().getStringName() + " cannot be used " +
+                if (!validPKInsert(parameters)) return parameters.getToValidate().getStringName() + " cannot be used " +
                         "because it would duplicate an existing primary key";
             }
 
@@ -162,15 +165,15 @@ public class Validator {
 
         Filters filters = new Filters();
 
-        for(Attribute key: primaryKeys.getKeyAttributes()){
+        for (Attribute key : primaryKeys.getKeyAttributes()) {
             Name name = key.getAttributeName();
             String value = allAttributes.getValue(key);
             Table t = key.getT();
-            Attribute valuedAttribute = new Attribute(name,value,t);
+            Attribute valuedAttribute = new Attribute(name, value, t);
             filters.addEqual(valuedAttribute);
         }
-        String query = "Select * from " + toValidate.getT().getAliasedName() +" " +
-               filters.getFilterClause();
+        String query = "Select * from " + toValidate.getT().getAliasedName() + " " +
+                filters.getFilterClause();
 
         ResultSet result = DatabaseManager.getInstance().executeStatement(query);
         return !result.next();
@@ -194,16 +197,16 @@ public class Validator {
 
         HashSet<Key> keys = new HashSet<>();
 
-        while(result.next()){
+        while (result.next()) {
             Key key = new Key();
-            for(Attribute attribute : primaryKeys.getKeyAttributes()){
+            for (Attribute attribute : primaryKeys.getKeyAttributes()) {
                 Name name = attribute.getAttributeName();
                 String value = result.getString(name.getName());
                 Table t = attribute.getT();
-                Attribute valuedAttribute = new Attribute(name,value,t);
+                Attribute valuedAttribute = new Attribute(name, value, t);
                 key.add(valuedAttribute);
             }
-            if(keys.contains(key)) return false;
+            if (keys.contains(key)) return false;
             else keys.add(key);
         }
         return true;
@@ -228,7 +231,7 @@ public class Validator {
         String constraint = parameters.getConstraint();
         Attribute toValidate = parameters.getToValidate();
 
-        constraint = constraint.replace("R_", "").trim();
+        constraint = constraint.substring(2).trim();
         DetailedKey referenced = ReferentialResolver.getInstance().getReferencedTable(constraint);
 
         String query =
@@ -568,6 +571,20 @@ public class Validator {
         }
     }
 
+    public String validateTIMESTAMP(ValidationParameters parameters) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy hh:mm:ss a");
+        String inputDate = parameters.getToValidate().getValue();
+        try {
+            LocalDateTime.parse(inputDate, formatter);
+            return "";
+        } catch (DateTimeException e) {
+            String validAsDate = validateDATE(parameters);
+            if(validAsDate.isEmpty()) return "";
+            else return "Invalid Timestamp. Must be in format dd-MMM-yyyy hh:mm:ss a.";
+        }
+    }
+
     private void initConstraintsToValidatorMap() {
         constraints = new ArrayList<>();
 
@@ -590,6 +607,7 @@ public class Validator {
         constraints.add(new Constraint(ConstraintEnum.CHAR, this::validateCHAR));
         constraints.add(new Constraint(ConstraintEnum.VARCHAR2, this::validateVARCHAR2));
         constraints.add(new Constraint(ConstraintEnum.DATE, this::validateDATE));
+        constraints.add(new Constraint(ConstraintEnum.TIMESTAMP, this::validateTIMESTAMP));
     }
 
     private class ComparisonResult {

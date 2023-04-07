@@ -7,6 +7,7 @@ import DatabaseManagement.Exceptions.DBManagementException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
@@ -30,7 +31,7 @@ public class Notification {
         this.senderID = senderID;
         this.senderName=  "";
         this.dateSent = dateSent;
-        this.message = topic.getTopic() + ": " + message ;
+        this.message = topic.getTopic() + ": " + message.replace("'","''") ;
     }
 
     public Notification(String senderID, LocalDateTime dateSent, String message,String senderName) {
@@ -55,8 +56,8 @@ public class Notification {
     @Override
     public String toString() {
         return "FROM: " + senderName
-                + "\nDate Sent: " + dateSent.toString()
-                + "\n\n" + message;
+                + "\nDate Sent: " + DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm:ss").format(dateSent)
+                + "\nMessage: " + message;
     }
 
     /**

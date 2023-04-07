@@ -23,7 +23,7 @@ public class NotificationsManager implements NotificationManagement {
     public int notifyUser(String receiverID, Notification notification) {
         AttributeCollection collection = new AttributeCollection();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy hh:mm:ss a");
         String formattedDate = notification.getDateSent().format(formatter);
 
         collection.add(new Attribute(Name.SENDER_ID, notification.getSenderID(), Table.NOTIFICATIONS));
@@ -64,7 +64,7 @@ public class NotificationsManager implements NotificationManagement {
            String senderName = rs.getString(Name.FNAME.getName()) + " " + rs.getString(Name.LNAME.getName());
 
            String message = rs.getString(Name.MESSAGE.getName());
-           DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+           DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
            LocalDateTime date = LocalDateTime.parse(rs.getString(Name.DATE_SENT.getName()),formatter);
            notifications.add(new Notification(senderID,date,message,senderName));
 
@@ -86,17 +86,20 @@ public class NotificationsManager implements NotificationManagement {
          */
         throw new UnsupportedOperationException("Unimplemented method 'dismissNotification'");
     }
+
+
     public static void main(String[] args) {
-        Notification notif = new Notification("A1", LocalDateTime.now(), Notification.NotifTopic.STATUS_UPDATE,
-                "THIRD'S A CHARM");
+//        Notification notif = new Notification("A1", LocalDateTime.now(), Notification.NotifTopic.STATUS_UPDATE,
+//                "FOURTH'S A CHARM");
         NotificationsManager manager = new NotificationsManager();
-        int result = manager.notifyUser("A2",notif);
-        System.out.println(result);
+//        int result = manager.notifyUser("A2",notif);
+//        System.out.println(result);
 
         try {
             ArrayList<Notification> notifications = manager.retrieveNotifications("A2");
             for(Notification notification : notifications){
                 System.out.println(notification.toString());
+                System.out.println();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

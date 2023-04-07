@@ -111,7 +111,6 @@
       ],
       "RECEIPT_NUM": [
         "CHAR_10",
-        "C_RECEIPT_NUM LIKE 'R%'",
         "P_RECEIPTS_RECEIPT_NUM_PK"
       ],
       "DATE_PAID": [
@@ -373,7 +372,8 @@
     "TableName": "ROLES",
     "Attributes": {
       "DESCRIPTION": [
-        "VARCHAR2_100"
+        "VARCHAR2_100",
+        "C_DESCRIPTION IS NOT NULL"
       ],
       "ROLE_ID": [
         "CHAR_2",
@@ -412,7 +412,7 @@
         "R_USERS_USER_ID_PK"
       ],
       "DATE_SENT": [
-        "DATE",
+        "TIMESTAMP(6)",
         "C_DATE_SENT IS NOT NULL",
         "P_NOTIFICATIONS_PK"
       ]

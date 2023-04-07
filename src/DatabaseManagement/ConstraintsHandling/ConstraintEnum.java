@@ -20,7 +20,8 @@ public enum ConstraintEnum {
     FLOAT("FLOAT"),
     CHAR("CHAR_\\d{1,}"),
     VARCHAR2("VARCHAR2_\\d{1,}"),
-    DATE("DATE");
+    DATE("DATE"),
+    TIMESTAMP("TIMESTAMP\\(\\d+\\)");
 
     private String name;
 
