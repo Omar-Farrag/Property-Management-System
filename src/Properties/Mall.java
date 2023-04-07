@@ -1,7 +1,6 @@
 package Properties;
 
-public class Store implements PropertyManagementInterface {
-
+public class Mall implements PropertyManagementInterface {
     @Override
     public QueryResult insert() {
 

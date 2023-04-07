@@ -1,9 +1,9 @@
 package Properties;
 
 public interface PropertyManagementInterface {
-    public void insert();
+    public QueryResult insert();
 
-    public void modify();
+    public QueryResult modify();
 
-    public void delete();
+    public QueryResult delete();
 }
