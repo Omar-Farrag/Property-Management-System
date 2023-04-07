@@ -1,11 +1,13 @@
 package DatabaseManagement.ConstraintsHandling;
 
 import DatabaseManagement.*;
+import DatabaseManagement.Attribute.Name;
 import DatabaseManagement.Exceptions.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.w3c.dom.Attr;
 
 import java.io.*;
 import java.sql.DatabaseMetaData;
@@ -72,7 +74,7 @@ public class MetaDataExtractor {
                     for (int i = 0; i < constraints.size(); i++) {
 
                         Table t = Table.valueOf(tableName);
-                        Attribute.Name attName = Attribute.Name.valueOf(attribute.toString());
+                        Name attName = Name.valueOf(attribute.toString());
                         String constraintName = constraints.get(i).toString();
 
                         if (constraintName.startsWith("P"))
@@ -248,5 +250,29 @@ public class MetaDataExtractor {
             }
         }
         return constraints;
+    }
+    public AttributeCollection getPrimaryKeys(Table t) {
+        return getKeys(t,"P_");
+    }
+    public AttributeCollection getUniqueKeys(Table t){
+        return getKeys(t,"U_");
+    }
+    private AttributeCollection getKeys(Table t, String toStartWith){
+        AttributeCollection collection = new AttributeCollection();
+        JSONObject attributes = getTableAttributes(t);
+
+        for(Object att : attributes.keySet()){
+            String attributeName = att.toString();
+                if(isKey((JSONArray) attributes.get(attributeName),toStartWith))
+                    collection.add(new Attribute(Name.valueOf(attributeName),t));
+            }
+        return collection;
+    }
+    private boolean isKey(JSONArray constraints, String toStartWith){
+        for(Object constraint : constraints)
+            if(constraint.toString().startsWith(toStartWith))
+                return true;
+
+        return false;
     }
 }

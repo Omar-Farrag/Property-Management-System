@@ -5,6 +5,5 @@ import DatabaseManagement.AttributeCollection;
 
 @FunctionalInterface
 public interface ValidationFunction {
-    public String validate(String constraint, Attribute toValidate,
-                           AttributeCollection RestOfAttributes);
+    public String validate(ValidationParameters parameters);
 }

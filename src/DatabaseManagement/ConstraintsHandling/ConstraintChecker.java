@@ -7,6 +7,7 @@ import java.util.*;
 
 import DatabaseManagement.*;
 
+import DatabaseManagement.ConstraintsHandling.ValidationParameters.OperationType;
 import DatabaseManagement.Exceptions.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -42,7 +43,7 @@ public class ConstraintChecker {
         int numAttributes = metaData.getTableAttributes(t).size();
         if (numAttributes != toInsert.size())
             throw new InsufficientAttributesException(t, numAttributes, toInsert.size());
-        return checkConstraints(t, toInsert);
+        return checkConstraints(t, toInsert, OperationType.INSERT, new Filters());
 
     }
 
@@ -84,14 +85,19 @@ public class ConstraintChecker {
 
         checkAttributeExistence(t, new AttributeCollection(filters));
         checkAttributeExistence(t, newValues);
-        Errors constraintErrorsNew = checkConstraints(t, newValues);
-        Errors constraintErrorsFilters = checkConstraints(t, new AttributeCollection(filters));
+        Errors constraintErrorsNew = checkConstraints(t, newValues, OperationType.UPDATE, filters);
+//        Errors constraintErrorsFilters = checkConstraints(t, new AttributeCollection(filters),OperationType.UPDATE,
+//                filters);
         if (cascade) {
-            if (!constraintErrorsNew.noErrors() || !constraintErrorsFilters.noErrors())
-                return constraintErrorsNew.append(constraintErrorsFilters);
+            if(!constraintErrorsNew.noErrors()){
+                return constraintErrorsNew;
+            }
+//            if (!constraintErrorsNew.noErrors() || !constraintErrorsFilters.noErrors())
+//                return constraintErrorsNew.append(constraintErrorsFilters);
         } else {
             Errors referentialErrors = checkReferencingTables(t, filters);
-            return constraintErrorsNew.append(constraintErrorsFilters).append(referentialErrors);
+//            return constraintErrorsNew.append(constraintErrorsFilters).append(referentialErrors);
+            return constraintErrorsNew.append(referentialErrors);
         }
         return new Errors();
     }
@@ -134,7 +140,8 @@ public class ConstraintChecker {
         return errors;
     }
 
-    private Errors checkConstraints(Table t, AttributeCollection toValidate) throws TableNotFoundException, ConstraintNotFoundException {
+    private Errors checkConstraints(Table t, AttributeCollection toValidate, OperationType type,Filters filters) throws TableNotFoundException,
+            ConstraintNotFoundException {
         JSONObject table = metaData.getTableInfoFromMetaData(t);
         JSONObject tableAttributes = (JSONObject) table.get("Attributes");
         Errors errors = new Errors();
@@ -144,7 +151,9 @@ public class ConstraintChecker {
             for (Object obj : attributeConstraints) {
                 String constraint = (String) obj;
                 try {
-                    errors.add(attribute, validator.validate(constraint, attribute, toValidate));
+                    ValidationParameters parameters = new ValidationParameters(constraint,attribute, toValidate,
+                            type, filters);
+                    errors.add(attribute, validator.validate(parameters));
                 } catch (
                         MissingValidatorException e) {
                     System.out.println(e.getMessage());
@@ -157,29 +166,30 @@ public class ConstraintChecker {
         return errors;
     }
 
-    private Errors checkConstraints(AttributeCollection toValidate) throws TableNotFoundException, ConstraintNotFoundException {
-        Errors errors = new Errors();
-
-        for (Attribute attribute : toValidate.attributes()) {
-            JSONObject table = metaData.getTableInfoFromMetaData(attribute.getT());
-            JSONObject tableAttributes = (JSONObject) table.get("Attributes");
-            JSONArray attributeConstraints = (JSONArray) tableAttributes.get(attribute.getStringName());
-
-            for (Object obj : attributeConstraints) {
-                String constraint = (String) obj;
-                try {
-                    errors.add(attribute, validator.validate(constraint, attribute, toValidate));
-                } catch (
-                        MissingValidatorException e) {
-                    System.out.println(e.getMessage());
-                    e.printStackTrace();
-                } catch (DBManagementException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-        return errors;
-    }
+//    private Errors checkConstraints(AttributeCollection toValidate,String operationType) throws TableNotFoundException,
+//            ConstraintNotFoundException {
+//        Errors errors = new Errors();
+//
+//        for (Attribute attribute : toValidate.attributes()) {
+//            JSONObject table = metaData.getTableInfoFromMetaData(attribute.getT());
+//            JSONObject tableAttributes = (JSONObject) table.get("Attributes");
+//            JSONArray attributeConstraints = (JSONArray) tableAttributes.get(attribute.getStringName());
+//
+//            for (Object obj : attributeConstraints) {
+//                String constraint = (String) obj;
+//                try {
+//                    errors.add(attribute, validator.validate(constraint, attribute, toValidate,operationType));
+//                } catch (
+//                        MissingValidatorException e) {
+//                    System.out.println(e.getMessage());
+//                    e.printStackTrace();
+//                } catch (DBManagementException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//        }
+//        return errors;
+//    }
 
     private void checkAttributeExistence(Table t, AttributeCollection toValidate) throws AttributeNotFoundException, TableNotFoundException {
         JSONObject table = metaData.getTableInfoFromMetaData(t);
