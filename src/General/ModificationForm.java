@@ -10,6 +10,8 @@ public interface ModificationForm {
 
     public void displayErrors();
 
+    public void displayActionStatus();
+
     public void populateFields();
 
 }
