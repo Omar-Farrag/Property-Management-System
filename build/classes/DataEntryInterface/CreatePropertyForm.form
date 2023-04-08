@@ -161,7 +161,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jTabbedPane1" alignment="0" pref="545" max="32767" attributes="0"/>
+          <Component id="jTabbedPane1" alignment="0" pref="522" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -208,7 +208,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jLabel18" min="-2" pref="50" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                      <Component id="jScrollPane2" pref="495" max="32767" attributes="0"/>
+                      <Component id="jScrollPane2" pref="472" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -256,7 +256,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jPanel7" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="51" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="83" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -282,32 +282,31 @@
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="40" pref="40" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Group type="102" attributes="0">
-                                          <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="1" attributes="0">
                                               <Component id="jLabel42" min="-2" pref="140" max="-2" attributes="0"/>
                                               <Component id="jLabel45" min="-2" pref="140" max="-2" attributes="0"/>
                                           </Group>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jLabel52" max="32767" attributes="0"/>
-                                              <Component id="jLabel54" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="jTextField19" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="biannualError" max="32767" attributes="0"/>
+                                              <Component id="annualError" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="biannualField" alignment="0" max="32767" attributes="0"/>
                                               <Group type="102" attributes="0">
                                                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                                      <Component id="jLabel25" pref="480" max="32767" attributes="0"/>
-                                                      <Component id="jComboBox2" alignment="0" max="32767" attributes="0"/>
-                                                      <Component id="jComboBox3" alignment="0" max="32767" attributes="0"/>
-                                                      <Component id="jTextField7" alignment="0" max="32767" attributes="0"/>
+                                                      <Component id="storeFieldError" pref="480" max="32767" attributes="0"/>
+                                                      <Component id="mallCMB" alignment="0" max="32767" attributes="0"/>
+                                                      <Component id="floorCMB" alignment="0" max="32767" attributes="0"/>
+                                                      <Component id="storeNameField" alignment="0" max="32767" attributes="0"/>
                                                   </Group>
                                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                               </Group>
-                                              <Component id="jTextField17" max="32767" attributes="0"/>
+                                              <Component id="annualField" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
                                       <Group type="102" attributes="0">
-                                          <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
                                               <Component id="jLabel24" min="-2" pref="140" max="-2" attributes="0"/>
                                               <Component id="jLabel26" min="-2" pref="140" max="-2" attributes="0"/>
@@ -321,16 +320,16 @@
                                           </Group>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                              <Component id="jLabel34" pref="480" max="32767" attributes="0"/>
-                                              <Component id="jTextField12" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="jComboBox4" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="jTextField10" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="jTextField14" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="jComboBox5" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="jTextField15" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="jLabel29" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="jLabel31" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="jLabel33" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="monthlyError" pref="480" max="32767" attributes="0"/>
+                                              <Component id="storeNumberField" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="classCMB" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="spaceField" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="monthlyField" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="purposeCMB" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="quarterlyField" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="spaceError" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="storeNumberError" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="quarterlyError" alignment="0" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
@@ -340,11 +339,11 @@
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="1" attributes="0">
-                                          <Component id="jButton5" min="-2" max="-2" attributes="0"/>
+                                          <Component id="createStoreButton" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace min="-2" pref="293" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="1" attributes="0">
-                                          <Component id="jLabel50" min="-2" max="-2" attributes="0"/>
+                                          <Component id="createStoreStatus" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace min="-2" pref="243" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -364,76 +363,76 @@
                                   <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jLabel24" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jTextField7" alignment="0" min="-2" pref="18" max="-2" attributes="0"/>
+                                      <Component id="storeNameField" alignment="0" min="-2" pref="18" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
-                                  <Component id="jLabel25" min="-2" max="-2" attributes="0"/>
+                                  <Component id="storeFieldError" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="jLabel26" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jComboBox2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="mallCMB" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jLabel28" linkSize="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jComboBox3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="floorCMB" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="jLabel30" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jTextField12" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
+                                      <Component id="storeNumberField" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                                  <Component id="jLabel31" min="-2" max="-2" attributes="0"/>
+                                  <Component id="storeNumberError" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="jLabel32" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jComboBox4" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="classCMB" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jLabel35" linkSize="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jTextField10" min="-2" pref="18" max="-2" attributes="0"/>
+                                      <Component id="spaceField" min="-2" pref="18" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="jLabel29" min="-2" max="-2" attributes="0"/>
+                                  <Component id="spaceError" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="jLabel36" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jComboBox5" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="purposeCMB" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="jLabel38" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jTextField14" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
+                                      <Component id="monthlyField" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                                  <Component id="jLabel34" min="-2" pref="16" max="-2" attributes="0"/>
+                                  <Component id="monthlyError" min="-2" pref="16" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="jLabel41" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jTextField15" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
+                                      <Component id="quarterlyField" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                                  <Component id="jLabel33" min="-2" max="-2" attributes="0"/>
+                                  <Component id="quarterlyError" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="jLabel42" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jTextField19" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
+                                      <Component id="biannualField" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                                  <Component id="jLabel52" min="-2" pref="16" max="-2" attributes="0"/>
+                                  <Component id="biannualError" min="-2" pref="16" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="jLabel45" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="jTextField17" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
+                                      <Component id="annualField" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabel54" min="-2" pref="16" max="-2" attributes="0"/>
+                                  <Component id="annualError" min="-2" pref="16" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                                  <Component id="jButton5" min="-2" max="-2" attributes="0"/>
+                                  <Component id="createStoreButton" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabel50" min="-2" max="-2" attributes="0"/>
+                                  <Component id="createStoreStatus" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace pref="18" max="32767" attributes="0"/>
                               </Group>
                           </Group>
@@ -464,12 +463,12 @@
                             <Property name="opaque" type="boolean" value="true"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JTextField" name="jTextField7">
+                        <Component class="javax.swing.JTextField" name="storeNameField">
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField7ActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="storeNameFieldActionPerformed"/>
                           </Events>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel25">
+                        <Component class="javax.swing.JLabel" name="storeFieldError">
                           <Properties>
                             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -506,7 +505,7 @@
                             <Property name="opaque" type="boolean" value="true"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel29">
+                        <Component class="javax.swing.JLabel" name="spaceError">
                           <Properties>
                             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -530,12 +529,12 @@
                             <Property name="opaque" type="boolean" value="true"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JTextField" name="jTextField10">
+                        <Component class="javax.swing.JTextField" name="spaceField">
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField10ActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="spaceFieldActionPerformed"/>
                           </Events>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel31">
+                        <Component class="javax.swing.JLabel" name="storeNumberError">
                           <Properties>
                             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -559,7 +558,7 @@
                             <Property name="opaque" type="boolean" value="true"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel33">
+                        <Component class="javax.swing.JLabel" name="quarterlyError">
                           <Properties>
                             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -570,12 +569,12 @@
                             <Property name="text" type="java.lang.String" value="Error Message"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JTextField" name="jTextField12">
+                        <Component class="javax.swing.JTextField" name="storeNumberField">
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField12ActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="storeNumberFieldActionPerformed"/>
                           </Events>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel34">
+                        <Component class="javax.swing.JLabel" name="monthlyError">
                           <Properties>
                             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -612,9 +611,9 @@
                             <Property name="opaque" type="boolean" value="true"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JTextField" name="jTextField14">
+                        <Component class="javax.swing.JTextField" name="monthlyField">
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField14ActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="monthlyFieldActionPerformed"/>
                           </Events>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel38">
@@ -643,9 +642,9 @@
                             <Property name="opaque" type="boolean" value="true"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JTextField" name="jTextField15">
+                        <Component class="javax.swing.JTextField" name="quarterlyField">
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField15ActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="quarterlyFieldActionPerformed"/>
                           </Events>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel42">
@@ -661,9 +660,9 @@
                             <Property name="opaque" type="boolean" value="true"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JTextField" name="jTextField17">
+                        <Component class="javax.swing.JTextField" name="annualField">
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField17ActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="annualFieldActionPerformed"/>
                           </Events>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel45">
@@ -679,7 +678,7 @@
                             <Property name="opaque" type="boolean" value="true"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JButton" name="jButton5">
+                        <Component class="javax.swing.JButton" name="createStoreButton">
                           <Properties>
                             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                               <Color blue="cc" green="cc" red="cc" type="rgb"/>
@@ -690,7 +689,7 @@
                             <Property name="text" type="java.lang.String" value="SUBMIT"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel50">
+                        <Component class="javax.swing.JLabel" name="createStoreStatus">
                           <Properties>
                             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                               <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -701,7 +700,7 @@
                             <Property name="text" type="java.lang.String" value="Form Submitted Successfully/Error"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JComboBox" name="jComboBox2">
+                        <Component class="javax.swing.JComboBox" name="mallCMB">
                           <Properties>
                             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                               <StringArray count="4">
@@ -716,7 +715,7 @@
                             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                           </AuxValues>
                         </Component>
-                        <Component class="javax.swing.JComboBox" name="jComboBox3">
+                        <Component class="javax.swing.JComboBox" name="floorCMB">
                           <Properties>
                             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                               <StringArray count="4">
@@ -727,65 +726,71 @@
                               </StringArray>
                             </Property>
                           </Properties>
-                          <AuxValues>
-                            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-                          </AuxValues>
-                        </Component>
-                        <Component class="javax.swing.JComboBox" name="jComboBox4">
-                          <Properties>
-                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                              <StringArray count="4">
-                                <StringItem index="0" value="Item 1"/>
-                                <StringItem index="1" value="Item 2"/>
-                                <StringItem index="2" value="Item 3"/>
-                                <StringItem index="3" value="Item 4"/>
-                              </StringArray>
-                            </Property>
-                          </Properties>
-                          <AuxValues>
-                            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-                          </AuxValues>
-                        </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel52">
-                          <Properties>
-                            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                            </Property>
-                            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="0" green="0" red="ff" type="rgb"/>
-                            </Property>
-                            <Property name="text" type="java.lang.String" value="Error Message"/>
-                          </Properties>
-                        </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel54">
-                          <Properties>
-                            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                            </Property>
-                            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="0" green="0" red="ff" type="rgb"/>
-                            </Property>
-                            <Property name="text" type="java.lang.String" value="Error Message"/>
-                          </Properties>
-                        </Component>
-                        <Component class="javax.swing.JComboBox" name="jComboBox5">
-                          <Properties>
-                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                              <StringArray count="4">
-                                <StringItem index="0" value="Item 1"/>
-                                <StringItem index="1" value="Item 2"/>
-                                <StringItem index="2" value="Item 3"/>
-                                <StringItem index="3" value="Item 4"/>
-                              </StringArray>
-                            </Property>
-                          </Properties>
-                          <AuxValues>
-                            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-                          </AuxValues>
-                        </Component>
-                        <Component class="javax.swing.JTextField" name="jTextField19">
                           <Events>
-                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField19ActionPerformed"/>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="floorCMBActionPerformed"/>
+                          </Events>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                          </AuxValues>
+                        </Component>
+                        <Component class="javax.swing.JComboBox" name="classCMB">
+                          <Properties>
+                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                              <StringArray count="4">
+                                <StringItem index="0" value="Item 1"/>
+                                <StringItem index="1" value="Item 2"/>
+                                <StringItem index="2" value="Item 3"/>
+                                <StringItem index="3" value="Item 4"/>
+                              </StringArray>
+                            </Property>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="classCMBActionPerformed"/>
+                          </Events>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                          </AuxValues>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="biannualError">
+                          <Properties>
+                            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                            </Property>
+                            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                              <Color blue="0" green="0" red="ff" type="rgb"/>
+                            </Property>
+                            <Property name="text" type="java.lang.String" value="Error Message"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="annualError">
+                          <Properties>
+                            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                            </Property>
+                            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                              <Color blue="0" green="0" red="ff" type="rgb"/>
+                            </Property>
+                            <Property name="text" type="java.lang.String" value="Error Message"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JComboBox" name="purposeCMB">
+                          <Properties>
+                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                              <StringArray count="4">
+                                <StringItem index="0" value="Item 1"/>
+                                <StringItem index="1" value="Item 2"/>
+                                <StringItem index="2" value="Item 3"/>
+                                <StringItem index="3" value="Item 4"/>
+                              </StringArray>
+                            </Property>
+                          </Properties>
+                          <AuxValues>
+                            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                          </AuxValues>
+                        </Component>
+                        <Component class="javax.swing.JTextField" name="biannualField">
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="biannualFieldActionPerformed"/>
                           </Events>
                         </Component>
                       </SubComponents>
@@ -822,7 +827,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jLabel1" min="-2" pref="50" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="495" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="472" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -869,15 +874,15 @@
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jLabel4" max="32767" attributes="0"/>
+                                          <Component id="mallNameError" max="32767" attributes="0"/>
                                           <Group type="102" attributes="0">
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Component id="jTextField1" min="-2" pref="542" max="-2" attributes="0"/>
-                                                  <Component id="jTextField2" min="-2" pref="542" max="-2" attributes="0"/>
+                                                  <Component id="mallNameField" min="-2" pref="542" max="-2" attributes="0"/>
+                                                  <Component id="mallAddressField" min="-2" pref="542" max="-2" attributes="0"/>
                                               </Group>
-                                              <EmptySpace min="0" pref="8" max="32767" attributes="0"/>
+                                              <EmptySpace min="0" pref="39" max="32767" attributes="0"/>
                                           </Group>
-                                          <Component id="jLabel6" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="mallAddressError" alignment="0" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <Group type="102" attributes="0">
@@ -892,11 +897,11 @@
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="1" attributes="0">
-                                      <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="createMallButton" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="291" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="1" attributes="0">
-                                      <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
+                                      <Component id="createMallStatus" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="244" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
@@ -911,22 +916,22 @@
                               <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jTextField1" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
+                                  <Component id="mallNameField" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                              <Component id="mallNameError" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jTextField2" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
+                                  <Component id="mallAddressField" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                              <Component id="mallAddressError" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-                              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                              <Component id="createMallButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="178" max="32767" attributes="0"/>
+                              <Component id="createMallStatus" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="97" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -956,12 +961,12 @@
                         <Property name="text" type="java.lang.String" value="Please fill in this form then submit"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="jTextField1">
+                    <Component class="javax.swing.JTextField" name="mallNameField">
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField1ActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mallNameFieldActionPerformed"/>
                       </Events>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel4">
+                    <Component class="javax.swing.JLabel" name="mallNameError">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -985,9 +990,9 @@
                         <Property name="opaque" type="boolean" value="true"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="jTextField2">
+                    <Component class="javax.swing.JTextField" name="mallAddressField">
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel6">
+                    <Component class="javax.swing.JLabel" name="mallAddressError">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -998,7 +1003,7 @@
                         <Property name="text" type="java.lang.String" value="Error Message"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JButton" name="jButton1">
+                    <Component class="javax.swing.JButton" name="createMallButton">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="cc" green="cc" red="cc" type="rgb"/>
@@ -1009,7 +1014,7 @@
                         <Property name="text" type="java.lang.String" value="SUBMIT"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="jLabel9">
+                    <Component class="javax.swing.JLabel" name="createMallStatus">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="ff" green="ff" red="ff" type="rgb"/>
