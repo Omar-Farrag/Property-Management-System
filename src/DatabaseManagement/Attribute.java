@@ -1,18 +1,20 @@
 package DatabaseManagement;
 
 public class Attribute {
+
     private final Name attributeName;
     private final String attributeValue;
     private final Type type;
     private final Table t;
 
     /**
-     * Creates an instance of the attribute object. Use this constructor for operations where the value of the
-     * attribute is needed, such as performing Update, Insert, filtering, etc.
+     * Creates an instance of the attribute object. Use this constructor for
+     * operations where the value of the attribute is needed, such as performing
+     * Update, Insert, filtering, etc.
      *
      * @param attributeName Name of the Attribute as written in the database
-     * @param value         Value of the attribute as a string
-     * @param t             The table that the attribute belongs to
+     * @param value Value of the attribute as a string
+     * @param t The table that the attribute belongs to
      */
     public Attribute(Name attributeName, String value, Table t) {
         this.attributeName = attributeName;
@@ -23,11 +25,12 @@ public class Attribute {
     }
 
     /**
-     * Creates an instance of the attribute object. Use this constructor for operations where the value of the
-     * attribute is not needed such as when retrieving specific attributes from a table.
+     * Creates an instance of the attribute object. Use this constructor for
+     * operations where the value of the attribute is not needed such as when
+     * retrieving specific attributes from a table.
      *
      * @param attribute Name of the attribute as written in the database
-     * @param t         The table that the attribute belongs to
+     * @param t The table that the attribute belongs to
      */
     public Attribute(Name attribute, Table t) {
         this.attributeName = attribute;
@@ -36,7 +39,6 @@ public class Attribute {
         this.t = t;
 
     }
-
 
     public String getStringName() {
         return attributeName.getName();
@@ -50,16 +52,18 @@ public class Attribute {
         return t.getAlias() + "." + getStringName();
     }
 
-
     public String getValue() {
         return attributeValue;
     }
 
     public String getStringValue() {
-        if (type.equals(Type.STRING) || type.equals((Type.DATE)))
+        if (type.equals(Type.STRING) || type.equals((Type.DATE))) {
             return "'" + attributeValue + "'";
-        else if (attributeValue == null) return "NULL";
-        else return attributeValue;
+        } else if (attributeValue == null) {
+            return "NULL";
+        } else {
+            return attributeValue;
+        }
 
     }
 
@@ -83,14 +87,17 @@ public class Attribute {
     }
 
     /**
-     * Known problem: if two attributes have the same name but different types, bad things will happen
-     * Solution: make the user specify the type in the Attribute Constructor. Moreover, in the validator class, in
-     * the validation functions for the data types, add an extra step where the type is checked to make sure that it
-     * is correct. For example in the validation function, for VARCHAR2, check that the type of attribute is STRING.
-     * If it is not, throw an exception
+     * Known problem: if two attributes have the same name but different types,
+     * bad things will happen Solution: make the user specify the type in the
+     * Attribute Constructor. Moreover, in the validator class, in the
+     * validation functions for the data types, add an extra step where the type
+     * is checked to make sure that it is correct. For example in the validation
+     * function, for VARCHAR2, check that the type of attribute is STRING. If it
+     * is not, throw an exception
      * <p>
      * <p>
-     * In our case, no two attributes have the same name and different types so we're good
+     * In our case, no two attributes have the same name and different types so
+     * we're good
      */
     public enum Name {
         ELECHARGE("ELECHARGE", Type.NUMBER),
@@ -149,8 +156,8 @@ public class Attribute {
         MESSAGE("MESSAGE", Type.STRING),
         SENDER_ID("SENDER_ID", Type.STRING),
         RECEIVER_ID("RECEIVER_ID", Type.STRING),
-        DATE_SENT("DATE_SENT", Type.DATE);
-
+        DATE_SENT("DATE_SENT", Type.DATE),
+        NUM_FLOORS("NUM_FLOORS", Type.NUMBER);
 
         private final String name;
         private final Type type;
