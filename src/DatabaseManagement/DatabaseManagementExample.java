@@ -7,6 +7,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class DatabaseManagementExample {
@@ -76,7 +77,7 @@ public class DatabaseManagementExample {
             //Change the USER_ID when you run cuz it has to be unique in the table
             //A40  Karim Benzema 0554321234 karim@benzema.edu PT
             collection.clear();
-            collection.add(new Attribute(Name.USER_ID, "A40", Table.USERS));
+            collection.add(new Attribute(Name.USER_ID, "A4", Table.USERS));
             collection.add(new Attribute(Name.FNAME, "Karim", Table.USERS));
             collection.add(new Attribute(Name.LNAME, "Benzema", Table.USERS));
             collection.add(new Attribute(Name.PHONE_NUMBER, "0554321234", Table.USERS));
@@ -88,6 +89,16 @@ public class DatabaseManagementExample {
             if (result.noErrors()) {
                 System.out.println(result.getRowsAffected());
                 printTable(DB.retrieve(Table.USERS).getResult());
+            }
+            else{
+                Name[] values = {Name.USER_ID,Name.FNAME,Name.LNAME, Name.PHONE_NUMBER, Name.EMAIL_ADDRESS,
+                        Name.ROLE_ID};
+                 for(Name att : values){
+                    ArrayList<String> errors = result.getErrorByAttribute(new Attribute(att,Table.USERS));
+                    for(String error : errors){
+                        System.out.println(error);
+                    }
+                 }
             }
 
             System.out.println();
@@ -118,6 +129,7 @@ public class DatabaseManagementExample {
             collection.clear();
             collection.add(new Attribute(Name.LNAME, "Montasir", Table.USERS));
             result = DB.modify(Table.USERS, filters, collection, true);
+
             if (result.noErrors()) {
                 System.out.println(result.getRowsAffected());
                 printTable(DB.retrieve(Table.USERS).getResult());

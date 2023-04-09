@@ -1,12 +1,15 @@
 package General;
 
+import DatabaseManagement.AttributeCollection;
+import DatabaseManagement.ConstraintsHandling.ConstraintChecker.Errors;
+
 public interface InsertForm {
 
-    public void getAttributes();
+    public AttributeCollection getAttributes();
 
     public void clearErrors();
 
-    public void displayErrors();
+    public void displayErrors(Errors errors);
 
-    public void displayActionStatus();
+    public void displayActionStatus(boolean successful);
 }
