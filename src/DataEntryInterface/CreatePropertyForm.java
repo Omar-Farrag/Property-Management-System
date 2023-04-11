@@ -639,11 +639,11 @@ public class CreatePropertyForm extends javax.swing.JFrame implements InsertForm
     }// </editor-fold>//GEN-END:initComponents
 
     private void createStoreButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createStoreButtonActionPerformed
-        // TODO add your handling code here:
+        controller.insertStore(this);
     }//GEN-LAST:event_createStoreButtonActionPerformed
 
     private void createMallButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createMallButtonActionPerformed
-        // TODO add your handling code here:
+        controller.insertMall(this);
     }//GEN-LAST:event_createMallButtonActionPerformed
 
     private void mallCMBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mallCMBActionPerformed
@@ -676,92 +676,18 @@ public class CreatePropertyForm extends javax.swing.JFrame implements InsertForm
     }
 
     @Override
-    public void clearErrors() {
-        storeFieldError.setText("");
-        storeNumberError.setText("");
-        spaceError.setText("");
-        monthlyError.setText("");
-        quarterlyError.setText("");
-        annualError.setText("");
-        biannualError.setText("");
-        mallNameError.setText("");
-        mallAddressError.setText("");
-        createStoreStatus.setText("");
-        createStoreStatus.setText("");
-        mallFloorsError.setText("");
-
-        setErrorVisibility(false);
-    }
-
-    @Override
-    public void displayErrors(Errors errors) {
-        try {
-            ArrayList<String> messages;
-
-            messages = errors.getErrorByAttribute(new Attribute(Name.NAME, Table.PROPERTIES));
-            storeFieldError.setText(messages.get(0));
-
-            messages = errors.getErrorByAttribute(new Attribute(Name.STORE_NUM, Table.PROPERTIES));
-            storeNumberError.setText(messages.get(0));
-
-            messages = errors.getErrorByAttribute(new Attribute(Name.SPACE, Table.PROPERTIES));
-            spaceError.setText(messages.get(0));
-
-            messages = errors.getErrorByAttribute(new Attribute(Name.MONTHLY_RATE, Table.PROPERTIES));
-            monthlyError.setText(messages.get(0));
-
-            messages = errors.getErrorByAttribute(new Attribute(Name.QUARTERLY_RATE, Table.PROPERTIES));
-            quarterlyError.setText(messages.get(0));
-
-            messages = errors.getErrorByAttribute(new Attribute(Name.ANNUAL_RATE, Table.PROPERTIES));
-            annualError.setText(messages.get(0));
-
-            messages = errors.getErrorByAttribute(new Attribute(Name.BI_ANNUAL_RATE, Table.PROPERTIES));
-            biannualError.setText(messages.get(0));
-
-            messages = errors.getErrorByAttribute(new Attribute(Name.NAME, Table.MALLS));
-            mallNameError.setText(messages.get(0));
-
-            messages = errors.getErrorByAttribute(new Attribute(Name.ADDRESS, Table.MALLS));
-            mallAddressError.setText(messages.get(0));
-
-            messages = errors.getErrorByAttribute(new Attribute(Name.NUM_FLOORS, Table.MALLS));
-            mallFloorsError.setText(messages.get(0));
-
-            setErrorVisibility(true);
-        } catch (UnvalidatedAttributeException ex) {
-            ex.printStackTrace();
-            Logger.getLogger(CreatePropertyForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    @Override
-    public void displayActionStatus(boolean successful) {
-        int currentPane = jTabbedPane1.getSelectedIndex();
-        if (successful) {
-            if (currentPane == 0) {
-                createStoreStatus.setText("Store Created Successfully");
-                createStoreStatus.setVisible(true);
-
-            } else {
-                createMallStatus.setText("Mall Created Successfully");
-                createMallStatus.setVisible(true);
-            }
-        }
-    }
-
-    private void setErrorVisibility(boolean visibility) {
-        storeFieldError.setVisible(visibility);
-        storeNumberError.setVisible(visibility);
-        spaceError.setVisible(visibility);
-        monthlyError.setVisible(visibility);
-        quarterlyError.setVisible(visibility);
-        annualError.setVisible(visibility);
-        biannualError.setVisible(visibility);
-        mallNameError.setVisible(visibility);
-        mallAddressError.setVisible(visibility);
-        createStoreStatus.setVisible(visibility);
-        createMallStatus.setVisible(visibility);
+    public void clearFields() {
+        storeNameField.setText("");
+        mallCMB.setSelectedIndex(0);
+        floorCMB.setSelectedIndex(0);
+        classCMB.setSelectedIndex(0);
+        spaceField.setText("");
+        purposeCMB.setSelectedIndex(0);
+        monthlyField.setText("");
+        quarterlyField.setText("");
+        biannualField.setText("");
+        annualField.setText("");
+        mallFloorsField.setText("");
     }
 
     private void populateCMBs() {
@@ -789,6 +715,91 @@ public class CreatePropertyForm extends javax.swing.JFrame implements InsertForm
         }
     }
 
+//    @Override
+//    public void clearErrors() {
+//        storeFieldError.setText("");
+//        storeNumberError.setText("");
+//        spaceError.setText("");
+//        monthlyError.setText("");
+//        quarterlyError.setText("");
+//        annualError.setText("");
+//        biannualError.setText("");
+//        mallNameError.setText("");
+//        mallAddressError.setText("");
+//        createStoreStatus.setText("");
+//        createStoreStatus.setText("");
+//        mallFloorsError.setText("");
+//
+//        setErrorVisibility(false);
+//    }
+//    @Override
+//    public void displayErrors(Errors errors) {
+//        try {
+//            ArrayList<String> messages;
+//
+//            messages = errors.getErrorByAttribute(new Attribute(Name.NAME, Table.PROPERTIES));
+//            storeFieldError.setText(messages.get(0));
+//
+//            messages = errors.getErrorByAttribute(new Attribute(Name.STORE_NUM, Table.PROPERTIES));
+//            storeNumberError.setText(messages.get(0));
+//
+//            messages = errors.getErrorByAttribute(new Attribute(Name.SPACE, Table.PROPERTIES));
+//            spaceError.setText(messages.get(0));
+//
+//            messages = errors.getErrorByAttribute(new Attribute(Name.MONTHLY_RATE, Table.PROPERTIES));
+//            monthlyError.setText(messages.get(0));
+//
+//            messages = errors.getErrorByAttribute(new Attribute(Name.QUARTERLY_RATE, Table.PROPERTIES));
+//            quarterlyError.setText(messages.get(0));
+//
+//            messages = errors.getErrorByAttribute(new Attribute(Name.ANNUAL_RATE, Table.PROPERTIES));
+//            annualError.setText(messages.get(0));
+//
+//            messages = errors.getErrorByAttribute(new Attribute(Name.BI_ANNUAL_RATE, Table.PROPERTIES));
+//            biannualError.setText(messages.get(0));
+//
+//            messages = errors.getErrorByAttribute(new Attribute(Name.NAME, Table.MALLS));
+//            mallNameError.setText(messages.get(0));
+//
+//            messages = errors.getErrorByAttribute(new Attribute(Name.ADDRESS, Table.MALLS));
+//            mallAddressError.setText(messages.get(0));
+//
+//            messages = errors.getErrorByAttribute(new Attribute(Name.NUM_FLOORS, Table.MALLS));
+//            mallFloorsError.setText(messages.get(0));
+//
+//            setErrorVisibility(true);
+//        } catch (UnvalidatedAttributeException ex) {
+//            ex.printStackTrace();
+//            Logger.getLogger(CreatePropertyForm.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
+//    @Override
+//    public void displayActionStatus(boolean successful) {
+//        int currentPane = jTabbedPane1.getSelectedIndex();
+//        if (successful) {
+//            if (currentPane == 0) {
+//                createStoreStatus.setText("Store Created Successfully");
+//                createStoreStatus.setVisible(true);
+//
+//            } else {
+//                createMallStatus.setText("Mall Created Successfully");
+//                createMallStatus.setVisible(true);
+//            }
+//        }
+//    }
+//    private void setErrorVisibility(boolean visibility) {
+//        storeFieldError.setVisible(visibility);
+//        storeNumberError.setVisible(visibility);
+//        spaceError.setVisible(visibility);
+//        monthlyError.setVisible(visibility);
+//        quarterlyError.setVisible(visibility);
+//        annualError.setVisible(visibility);
+//        biannualError.setVisible(visibility);
+//        mallNameError.setVisible(visibility);
+//        mallAddressError.setVisible(visibility);
+//        createStoreStatus.setVisible(visibility);
+//        createMallStatus.setVisible(visibility);
+//    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel annualError;
     private javax.swing.JTextField annualField;

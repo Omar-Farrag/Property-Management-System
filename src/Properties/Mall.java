@@ -10,11 +10,23 @@ import DatabaseManagement.QueryResult;
 import DatabaseManagement.Table;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.sql.ResultSet;
 
-public class Mall implements PropertyManagementInterface {
+public class Mall {
+
+    private String name;
+    private String address;
+    private int numFloors;
+    private String mallNum;
+
+    private Mall instance;
+
+    private Mall(String name, String address, int numFloors, String mallNum) {
+        this.name = name;
+        this.address = address;
+        this.numFloors = numFloors;
+        this.mallNum = mallNum;
+    }
 
     public static ArrayList<String> getListOfMalls() {
         ArrayList<String> malls = new ArrayList<>();
@@ -64,21 +76,22 @@ public class Mall implements PropertyManagementInterface {
         return numFloors;
     }
 
-    @Override
-    public QueryResult insert() {
+    public static QueryResult insert(AttributeCollection toInsert) throws SQLException, DBManagementException {
+        toInsert = toInsert.filter(Table.MALLS);
+        return DatabaseManager.getInstance().insert(Table.MALLS, toInsert);
 
-        return null;
     }
 
-    @Override
-    public QueryResult modify() {
-
-        return null;
+    public static QueryResult modify(AttributeCollection newValues, Filters toModify) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-    @Override
-    public QueryResult delete() {
-
-        return null;
+    public static QueryResult delete(Filters toDelete) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+
+    public static Mall retrieve(String mallNum) {
+        throw new UnsupportedOperationException();
+    }
+
 }

@@ -1,6 +1,5 @@
 package DatabaseManagement.ConstraintsHandling;
 
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -11,7 +10,6 @@ import DatabaseManagement.ConstraintsHandling.ValidationParameters.OperationType
 import DatabaseManagement.Exceptions.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
 
 public class ConstraintChecker {
 
@@ -29,24 +27,22 @@ public class ConstraintChecker {
         metaData = MetaDataExtractor.getInstance();
         validator = new Validator();
 
-
     }
 
     public static ConstraintChecker getInstance() {
         return instance == null ? instance = new ConstraintChecker() : instance;
     }
 
-
     public Errors checkInsertion(Table t, AttributeCollection toInsert)
             throws DBManagementException {
         checkAttributeExistence(t, toInsert);
         int numAttributes = metaData.getTableAttributes(t).size();
-        if (numAttributes != toInsert.size())
+        if (numAttributes != toInsert.size()) {
             throw new InsufficientAttributesException(t, numAttributes, toInsert.size());
+        }
         return checkConstraints(t, toInsert, OperationType.INSERT, new Filters());
 
     }
-
 
     public Errors checkRetrieval(Filters filters, AttributeCollection toGet)
             throws DBManagementException {
@@ -58,13 +54,11 @@ public class ConstraintChecker {
 
     }
 
-
     public Errors checkRetrieval(Table t, Filters filters) throws DBManagementException {
         AttributeCollection filterCollection = new AttributeCollection(filters);
         checkAttributeExistence(t, filterCollection);
         return new Errors();
     }
-
 
     public Errors checkRetrieval(AttributeCollection toGet) throws DBManagementException {
 
@@ -72,13 +66,11 @@ public class ConstraintChecker {
         return new Errors();
     }
 
-
     public Errors checkDeletion(Table t, Filters filters) throws SQLException, DBManagementException {
         AttributeCollection filterCollection = new AttributeCollection(filters);
         checkAttributeExistence(t, filterCollection);
         return checkReferencingTables(t, filters);
     }
-
 
     public Errors checkUpdate(Table t, Filters filters, AttributeCollection newValues, boolean cascade)
             throws SQLException, DBManagementException {
@@ -89,7 +81,7 @@ public class ConstraintChecker {
 //        Errors constraintErrorsFilters = checkConstraints(t, new AttributeCollection(filters),OperationType.UPDATE,
 //                filters);
         if (cascade) {
-            if(!constraintErrorsNew.noErrors()){
+            if (!constraintErrorsNew.noErrors()) {
                 return constraintErrorsNew;
             }
 //            if (!constraintErrorsNew.noErrors() || !constraintErrorsFilters.noErrors())
@@ -101,7 +93,6 @@ public class ConstraintChecker {
         }
         return new Errors();
     }
-
 
     private Errors checkReferencingTables(Table t, Filters f) throws TableNotFoundException, AttributeNotFoundException, SQLException, IncompatibleFilterException, ConstraintNotFoundException {
         Errors errors = new Errors();
@@ -124,10 +115,10 @@ public class ConstraintChecker {
                 for (Map.Entry<Table, Filters> entry : referencingAttributes.entrySet()) {
                     try {
                         if (DB.retrieve(entry.getKey(), entry.getValue()).getRowsAffected() > 0) {
-                            String errorMessage =
-                                    "Cannot Delete/Modify Entry With " + attribute.getStringName() +
-                                            " = " +
-                                            toDeleteValue + " because it is referenced by table " + entry.getKey().getTableName();
+                            String errorMessage
+                                    = "Cannot Delete/Modify Entry With " + attribute.getStringName()
+                                    + " = "
+                                    + toDeleteValue + " because it is referenced by table " + entry.getKey().getTableName();
 
                             errors.add(attribute, errorMessage);
                         }
@@ -140,7 +131,7 @@ public class ConstraintChecker {
         return errors;
     }
 
-    private Errors checkConstraints(Table t, AttributeCollection allAttributes, OperationType type,Filters filters) throws TableNotFoundException,
+    private Errors checkConstraints(Table t, AttributeCollection allAttributes, OperationType type, Filters filters) throws TableNotFoundException,
             ConstraintNotFoundException {
         JSONObject table = metaData.getTableInfoFromMetaData(t);
         JSONObject tableAttributes = (JSONObject) table.get("Attributes");
@@ -151,11 +142,10 @@ public class ConstraintChecker {
             for (Object obj : attributeConstraints) {
                 String constraint = (String) obj;
                 try {
-                    ValidationParameters parameters = new ValidationParameters(constraint,attribute, allAttributes,
+                    ValidationParameters parameters = new ValidationParameters(constraint, attribute, allAttributes,
                             type, filters);
                     errors.add(attribute, validator.validate(parameters));
-                } catch (
-                        MissingValidatorException e) {
+                } catch (MissingValidatorException e) {
                     System.out.println(e.getMessage());
                     e.printStackTrace();
                 } catch (DBManagementException e) {
@@ -190,14 +180,14 @@ public class ConstraintChecker {
 //        }
 //        return errors;
 //    }
-
     private void checkAttributeExistence(Table t, AttributeCollection toValidate) throws AttributeNotFoundException, TableNotFoundException {
         JSONObject table = metaData.getTableInfoFromMetaData(t);
         JSONObject tableAttributes = (JSONObject) table.get("Attributes");
 
         for (Attribute attribute : toValidate.attributes()) {
-            if (!tableAttributes.containsKey(attribute.getStringName()))
+            if (!tableAttributes.containsKey(attribute.getStringName())) {
                 throw new AttributeNotFoundException(t.getTableName(), attribute.getStringName());
+            }
         }
     }
 
@@ -205,13 +195,14 @@ public class ConstraintChecker {
         for (Attribute attribute : toGet.attributes()) {
             JSONObject table = metaData.getTableInfoFromMetaData(attribute.getT());
             JSONObject tableAttributes = (JSONObject) table.get("Attributes");
-            if (!tableAttributes.containsKey(attribute.getStringName()))
+            if (!tableAttributes.containsKey(attribute.getStringName())) {
                 throw new AttributeNotFoundException(attribute.getT().getTableName(), attribute.getStringName());
+            }
         }
     }
 
-
     public class Errors {
+
         private final HashMap<Attribute, ArrayList<String>> attribute_to_errors;
 
         private Errors() {
@@ -223,18 +214,20 @@ public class ConstraintChecker {
                 return;
             }
 
-            if (!attribute_to_errors.containsKey(attribute))
+            if (!attribute_to_errors.containsKey(attribute)) {
                 attribute_to_errors.put(attribute, new ArrayList<String>());
+            }
 
             attribute_to_errors.get(attribute).add(errorMessage);
-
 
         }
 
         public Errors append(Errors error) {
-            for (Map.Entry<Attribute, ArrayList<String>> entry : error.attribute_to_errors.entrySet())
-                for (String message : entry.getValue())
+            for (Map.Entry<Attribute, ArrayList<String>> entry : error.attribute_to_errors.entrySet()) {
+                for (String message : entry.getValue()) {
                     add(entry.getKey(), message);
+                }
+            }
             return this;
         }
 
@@ -243,11 +236,20 @@ public class ConstraintChecker {
         }
 
         public ArrayList<String> getErrorByAttribute(Attribute attribute) throws UnvalidatedAttributeException {
-            if (!attribute_to_errors.containsKey(attribute))
-//                throw new UnvalidatedAttributeException(attribute);
+            if (!attribute_to_errors.containsKey(attribute)) //                throw new UnvalidatedAttributeException(attribute);
+            {
                 return new ArrayList<>();
-            else
+            } else {
                 return attribute_to_errors.get(attribute);
+            }
+        }
+
+        public ArrayList<String> getAllErrors() {
+            ArrayList<String> allErrors = new ArrayList<>();
+            for (Map.Entry<Attribute, ArrayList<String>> entry : attribute_to_errors.entrySet()) {
+                allErrors.addAll(entry.getValue());
+            }
+            return allErrors;
         }
 
     }

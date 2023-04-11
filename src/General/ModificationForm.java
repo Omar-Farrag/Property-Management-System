@@ -6,12 +6,8 @@ public interface ModificationForm {
 
     public void getFilters();
 
-    public void clearErrors();
-
-    public void displayErrors();
-
-    public void displayActionStatus();
-
     public void populateFields();
+
+    public void clearFields();
 
 }
