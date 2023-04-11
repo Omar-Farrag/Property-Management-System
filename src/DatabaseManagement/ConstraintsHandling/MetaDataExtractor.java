@@ -35,8 +35,9 @@ public class MetaDataExtractor {
         resolver = ReferentialResolver.getInstance();
 
         currentApplicationTables = Table.getApplicationTables();
-        if (!new File(metaDataFile).exists())
+        if (!new File(metaDataFile).exists()) {
             initMetaDataFile();
+        }
 
         readMetaDataFromFile();
 
@@ -55,12 +56,14 @@ public class MetaDataExtractor {
 
             String fileContent = "";
             String line;
-            while ((line = bin.readLine()) != null)
+            while ((line = bin.readLine()) != null) {
                 fileContent += line;
+            }
 
             JSONArray metaData = (JSONArray) new JSONParser().parse(fileContent);
-            if (metaData.isEmpty())
+            if (metaData.isEmpty()) {
                 throw new EmptyFileException(metaDataFile);
+            }
 
             for (Object table : metaData) {
                 JSONObject tableJSONObject = (JSONObject) table;
@@ -76,19 +79,20 @@ public class MetaDataExtractor {
                         Name attName = Name.valueOf(attribute.toString());
                         String constraintName = constraints.get(i).toString();
 
-                        if (constraintName.startsWith("P"))
+                        if (constraintName.startsWith("P")) {
                             resolver.insertPrimary(t, attName, constraintName.substring(2));
-                        else if (constraintName.startsWith("U"))
+                        } else if (constraintName.startsWith("U")) {
                             resolver.insertUnique(t, attName, constraintName.substring(2));
-                        else if (constraintName.startsWith("R"))
+                        } else if (constraintName.startsWith("R")) {
                             resolver.insertForeign(t, attName, constraintName.substring(2));
+                        }
                     }
                 }
             }
             bin.close();
-        } catch (IOException |
-                 ParseException |
-                 EmptyFileException e) {
+        } catch (IOException
+                | ParseException
+                | EmptyFileException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
             initMetaDataFile();
@@ -97,10 +101,11 @@ public class MetaDataExtractor {
     }
 
     public JSONObject getTableInfoFromMetaData(Table t) throws TableNotFoundException {
-        if (!table_to_object.containsKey(t.getTableName()))
+        if (!table_to_object.containsKey(t.getTableName())) {
             throw new TableNotFoundException();
-        else
+        } else {
             return table_to_object.get(t.getTableName());
+        }
     }
 
     private Boolean initMetaDataFile() {
@@ -110,25 +115,24 @@ public class MetaDataExtractor {
 
             String formattedTableNames = "'" + String.join(",", currentApplicationTables).replace(",", "','") + "'";
             constraintsTable = DatabaseManager.getInstance().executeStatement(
-                    " SELECT U.TABLE_NAME," +
-                            "U.COLUMN_NAME," +
-                            "CONSTRAINT_TYPE," +
-                            " SEARCH_CONDITION," +
-                            " U.CONSTRAINT_NAME," +
-                            " R_CONSTRAINT_NAME" +
-                            " FROM USER_CONS_COLUMNS U" +
-                            " JOIN ALL_CONSTRAINTS A" +
-                            " ON ( U.TABLE_NAME = A.TABLE_NAME" +
-                            " AND U.CONSTRAINT_NAME = A.CONSTRAINT_NAME )" +
-                            " WHERE U.OWNER = '" + DatabaseManager.getInstance().getUsername() + "'" +
-                            " AND A.OWNER = '" + DatabaseManager.getInstance().getUsername() + "'" +
-                            " AND U.TABLE_NAME in (" + formattedTableNames + ") ORDER BY CONSTRAINT_TYPE");
+                    " SELECT U.TABLE_NAME,"
+                    + "U.COLUMN_NAME,"
+                    + "CONSTRAINT_TYPE,"
+                    + " SEARCH_CONDITION,"
+                    + " U.CONSTRAINT_NAME,"
+                    + " R_CONSTRAINT_NAME"
+                    + " FROM USER_CONS_COLUMNS U"
+                    + " JOIN ALL_CONSTRAINTS A"
+                    + " ON ( U.TABLE_NAME = A.TABLE_NAME"
+                    + " AND U.CONSTRAINT_NAME = A.CONSTRAINT_NAME )"
+                    + " WHERE U.OWNER = '" + DatabaseManager.getInstance().getUsername() + "'"
+                    + " AND A.OWNER = '" + DatabaseManager.getInstance().getUsername() + "'"
+                    + " AND U.TABLE_NAME in (" + formattedTableNames + ") ORDER BY CONSTRAINT_TYPE");
 
             tableDataTypes = DatabaseManager.getInstance().executeStatement(
-                    " select *" +
-                            " from user_tab_columns" +
-                            " order by TABLE_NAME,column_id"
-
+                    " select *"
+                    + " from user_tab_columns"
+                    + " order by TABLE_NAME,column_id"
             );
 
             extractTables(metaData);
@@ -137,14 +141,12 @@ public class MetaDataExtractor {
             fout.flush();
 
             return true;
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
         return false;
     }
-
 
     private void extractTables(JSONArray metaData) {
 
@@ -161,8 +163,7 @@ public class MetaDataExtractor {
                 metaData.add(table);
 //                table_to_object.put(tableName, table);
             }
-        } catch (
-                SQLException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
@@ -181,8 +182,9 @@ public class MetaDataExtractor {
             ArrayList<String> constraintStrings = extractConstraints(tableName, attributeName);
             constraints.add(extractDataType(columns.getRow(), tableName));
 
-            for (String constraint : constraintStrings)
+            for (String constraint : constraintStrings) {
                 constraints.add(constraint);
+            }
 
             attributes.put(attributeName, constraints);
         }
@@ -199,16 +201,16 @@ public class MetaDataExtractor {
 
                     tableDataTypes.absolute(tableDataTypes.getRow() + rowNumber - 1);
                     String dataType = tableDataTypes.getString("DATA_TYPE");
-                    if (dataType.toLowerCase().equals("number"))
+                    if (dataType.toLowerCase().equals("number")) {
                         dataType += extractPrecisionAndScale(tableDataTypes);
-                    else if (dataType.toLowerCase().equals("varchar2") || dataType.toLowerCase().equals("char"))
+                    } else if (dataType.toLowerCase().equals("varchar2") || dataType.toLowerCase().equals("char")) {
                         dataType += extractMaxLength(tableDataTypes);
+                    }
                     return dataType;
                 }
 
             }
-        } catch (
-                SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return "";
@@ -220,7 +222,8 @@ public class MetaDataExtractor {
     }
 
     private String extractPrecisionAndScale(ResultSet tableDescription) throws SQLException {
-        return "_" + tableDescription.getString("DATA_PRECISION") + "_" + tableDescription.getString("DATA_SCALE");
+        String precision = tableDescription.getString("DATA_PRECISION");
+        return "_" + (precision == null ? "38" : precision) + "_" + tableDescription.getString("DATA_SCALE");
     }
 
     private ArrayList<String> extractConstraints(String tableName, String columnName) throws SQLException {
@@ -233,56 +236,64 @@ public class MetaDataExtractor {
 
                 String constraint = constraintsTable.getString("CONSTRAINT_TYPE").toUpperCase();
 
-                if (constraint.equals("C"))
+                if (constraint.equals("C")) {
                     constraint += "_"
                             + constraintsTable.getString("SEARCH_CONDITION").replace("\"", "").replace("\n", "")
-                            .replace("   ", "");
-                else if (constraint.equals("R"))
+                                    .replace("   ", "");
+                } else if (constraint.equals("R")) {
                     constraint += "_" + constraintsTable.getString("R_CONSTRAINT_NAME");
-                else if (constraint.equals("P"))
+                } else if (constraint.equals("P")) {
                     constraint += "_" + constraintsTable.getString("CONSTRAINT_NAME");
-                else if (constraint.equals("U"))
+                } else if (constraint.equals("U")) {
                     constraint += "_" + constraintsTable.getString("CONSTRAINT_NAME");
-
+                }
 
                 constraints.add(constraint);
             }
         }
         return constraints;
     }
+
     public Key getPrimaryKeys(Table t) {
-        return getKeys(t,"P_");
+        return getKeys(t, "P_");
     }
-    public Key getUniqueKeys(Table t){
-        return getKeys(t,"U_");
+
+    public Key getUniqueKeys(Table t) {
+        return getKeys(t, "U_");
     }
-    private Key getKeys(Table t, String toStartWith){
+
+    private Key getKeys(Table t, String toStartWith) {
         Key key = new Key();
         JSONObject attributes = getTableAttributes(t);
 
-        for(Object att : attributes.keySet()){
+        for (Object att : attributes.keySet()) {
             String attributeName = att.toString();
-                if(isKey((JSONArray) attributes.get(attributeName),toStartWith))
-                    key.add(new Attribute(Name.valueOf(attributeName),t));
+            if (isKey((JSONArray) attributes.get(attributeName), toStartWith)) {
+                key.add(new Attribute(Name.valueOf(attributeName), t));
             }
+        }
         return key;
     }
-    private boolean isKey(JSONArray constraints, String toStartWith){
-        for(Object constraint : constraints)
-            if(constraint.toString().startsWith(toStartWith))
+
+    private boolean isKey(JSONArray constraints, String toStartWith) {
+        for (Object constraint : constraints) {
+            if (constraint.toString().startsWith(toStartWith)) {
                 return true;
+            }
+        }
 
         return false;
     }
 
+    public static class Key {
 
-    public static class Key{
         private final ArrayList<Attribute> keyAttributes;
 
-        public Key(){
+        public Key() {
             keyAttributes = new ArrayList<>();
         }
-        public void add(Attribute attribute){
+
+        public void add(Attribute attribute) {
             keyAttributes.add(attribute);
         }
 
@@ -292,19 +303,25 @@ public class MetaDataExtractor {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
             Key that = (Key) o;
 
-            for(Attribute thisAttribute : keyAttributes){
+            for (Attribute thisAttribute : keyAttributes) {
                 boolean found = false;
-                for(Attribute thatAttribute : that.keyAttributes){
+                for (Attribute thatAttribute : that.keyAttributes) {
                     if (thisAttribute.equals(thatAttribute) && thisAttribute.getValue().equals(thatAttribute.getValue())) {
                         found = true;
                         break;
                     }
                 }
-                if(!found) return false;
+                if (!found) {
+                    return false;
+                }
             }
             return true;
 
@@ -313,8 +330,10 @@ public class MetaDataExtractor {
         @Override
         public int hashCode() {
             ArrayList<String> values = new ArrayList<>();
-            for(Attribute attribute :
-                    keyAttributes) values.add(attribute.getStringName() + attribute.getValue() + attribute.getT().getTableName());
+            for (Attribute attribute
+                    : keyAttributes) {
+                values.add(attribute.getStringName() + attribute.getValue() + attribute.getT().getTableName());
+            }
             Collections.sort(values);
             return Objects.hash(values);
         }
@@ -322,20 +341,19 @@ public class MetaDataExtractor {
 
     public static void main(String[] args) {
         Key key = new Key();
-        key.add(new Attribute(Name.USER_ID,"A1",Table.USERS));
-        key.add(new Attribute(Name.USER_ID,"A2",Table.USERS));
-        key.add(new Attribute(Name.USER_ID,"A3",Table.USERS));
+        key.add(new Attribute(Name.USER_ID, "A1", Table.USERS));
+        key.add(new Attribute(Name.USER_ID, "A2", Table.USERS));
+        key.add(new Attribute(Name.USER_ID, "A3", Table.USERS));
 
         Key key2 = new Key();
-        key2.add(new Attribute(Name.USER_ID,"A3",Table.USERS));
-        key2.add(new Attribute(Name.FNAME,"A1",Table.USERS));
-        key2.add(new Attribute(Name.USER_ID,"A2",Table.USERS));
+        key2.add(new Attribute(Name.USER_ID, "A3", Table.USERS));
+        key2.add(new Attribute(Name.FNAME, "A1", Table.USERS));
+        key2.add(new Attribute(Name.USER_ID, "A2", Table.USERS));
 
         Key key3 = new Key();
-        key3.add(new Attribute(Name.USER_ID,"A1",Table.USERS));
-        key3.add(new Attribute(Name.USER_ID,"A3",Table.USERS));
-        key3.add(new Attribute(Name.USER_ID,"A25",Table.USERS));
-
+        key3.add(new Attribute(Name.USER_ID, "A1", Table.USERS));
+        key3.add(new Attribute(Name.USER_ID, "A3", Table.USERS));
+        key3.add(new Attribute(Name.USER_ID, "A25", Table.USERS));
 
         HashSet<Key> keys = new HashSet<>();
 

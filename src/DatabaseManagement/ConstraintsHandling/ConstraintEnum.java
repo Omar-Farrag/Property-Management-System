@@ -14,7 +14,7 @@ public enum ConstraintEnum {
     NOT_NULL("^C_\\s*\\w+\\s+IS NOT NULL"),
     LIKE("^C_\\s*\\w+\\s+LIKE\\s+'[^']*'$"),
     BETWEEN("^C_\\s*\\w+\\s+BETWEEN\\s+\\w+\\s+AND\\s+\\w+\\s*$"),
-    IN("^C_\\s+\\w+\\s+IN\\s*\\(\\s*('[^']*'\\s*(,\\s*'[^']*')*\\s*)\\s*\\)\\s*$"),
+    IN("^C_\\w+\\s+IN\\s+\\(\\s*'[\\w+\\s*]*'\\s*(?:,\\s*'[\\w+\\s*]*')+\\s*\\)$"),
     REGEXP_LIKE("^C_\\s*REGEXP_LIKE\\(\\w+, '[^']*'\\)$"),
     NUMBER("NUMBER_\\d{1,}_\\d{1,}"),
     FLOAT("FLOAT"),

@@ -63,9 +63,12 @@ public class AttributeCollection {
      * Adds an attribute to the attribute collection
      *
      * @param attribute Attribute to be added to the collection
+     * @return The current attribute collection with the new attribute added.
+     * Useful for cascading the adds;
      */
-    public void add(Attribute attribute) {
+    public AttributeCollection add(Attribute attribute) {
         attributes.add(attribute);
+        return this;
     }
 
     /**
@@ -96,6 +99,25 @@ public class AttributeCollection {
      */
     public void clear() {
         attributes.clear();
+    }
+
+    /**
+     * Finds and gets the attribute called [name] in the collection that is in
+     * table [t]
+     *
+     * @param t
+     * @param name
+     * @return Attribute that matches the table and name. Returns null if no
+     * such attribute is found
+     */
+    public Attribute getAttribute(Table t, Name name) {
+        Attribute toMatch = new Attribute(name, t);
+        for (Attribute attribute : attributes) {
+            if (attribute.equals(toMatch)) {
+                return attribute;
+            }
+        }
+        return null;
     }
 
     /**

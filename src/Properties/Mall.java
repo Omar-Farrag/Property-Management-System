@@ -79,7 +79,6 @@ public class Mall {
     public static QueryResult insert(AttributeCollection toInsert) throws SQLException, DBManagementException {
         toInsert = toInsert.filter(Table.MALLS);
         return DatabaseManager.getInstance().insert(Table.MALLS, toInsert);
-
     }
 
     public static QueryResult modify(AttributeCollection newValues, Filters toModify) {

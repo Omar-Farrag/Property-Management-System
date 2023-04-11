@@ -6,11 +6,14 @@ import DatabaseManagement.Filters;
 import DatabaseManagement.QueryResult;
 import Properties.Mall;
 import Properties.Store;
+import java.awt.Color;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+import javax.swing.UIManager;
 
 public class Controller {
 
@@ -57,7 +60,21 @@ public class Controller {
         for (String error : errors) {
             messageToDisplay += "\u2022 " + error + "\n";
         }
-        javax.swing.JLabel label = new javax.swing.JLabel(messageToDisplay);
+        JTextArea text = new JTextArea(messageToDisplay);
+//        javax.swing.JLabel label = new javax.swing.JLabel(messageToDisplay);
+        text.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 18));
+        Color bgColor = UIManager.getColor("OptionPane.background");
+        text.setBackground(bgColor);
+        JOptionPane.showMessageDialog(null, text, "ERROR", JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Displays given error message in an error dialog box
+     *
+     * @param message error message to be displayed;
+     */
+    public void displayErrors(String message) {
+        javax.swing.JLabel label = new javax.swing.JLabel(message);
         label.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 18));
         JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.ERROR_MESSAGE);
     }
@@ -89,7 +106,9 @@ public class Controller {
 
         try {
             QueryResult result = Store.insert(form.getAttributes());
-            if (result.noErrors()) {
+            if (result == null) {
+                displayErrors("Store already exists");
+            } else if (result.noErrors()) {
                 displaySuccessMessage("Store created successfully!");
                 form.clearFields();
             } else {
@@ -130,9 +149,9 @@ public class Controller {
      */
     public void insertMall(InsertForm form) {
         try {
-            QueryResult result = Store.insert(form.getAttributes());
+            QueryResult result = Mall.insert(form.getAttributes());
             if (result.noErrors()) {
-                displaySuccessMessage("Store created successfully!");
+                displaySuccessMessage("Mall created successfully!");
                 form.clearFields();
             } else {
                 displayErrors(result);
