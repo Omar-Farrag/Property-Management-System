@@ -291,13 +291,10 @@
                                           </Group>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="biannualError" max="32767" attributes="0"/>
-                                              <Component id="annualError" alignment="0" max="32767" attributes="0"/>
                                               <Component id="biannualField" alignment="0" max="32767" attributes="0"/>
                                               <Group type="102" attributes="0">
                                                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                                      <Component id="storeFieldError" pref="480" max="32767" attributes="0"/>
-                                                      <Component id="mallCMB" alignment="0" max="32767" attributes="0"/>
+                                                      <Component id="mallCMB" alignment="0" pref="480" max="32767" attributes="0"/>
                                                       <Component id="floorCMB" alignment="0" max="32767" attributes="0"/>
                                                       <Component id="storeNameField" alignment="0" max="32767" attributes="0"/>
                                                   </Group>
@@ -320,33 +317,21 @@
                                           </Group>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                              <Component id="monthlyError" pref="480" max="32767" attributes="0"/>
                                               <Component id="storeNumberField" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="classCMB" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="classCMB" alignment="0" pref="480" max="32767" attributes="0"/>
                                               <Component id="spaceField" alignment="0" max="32767" attributes="0"/>
                                               <Component id="monthlyField" alignment="0" max="32767" attributes="0"/>
                                               <Component id="purposeCMB" alignment="0" max="32767" attributes="0"/>
                                               <Component id="quarterlyField" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="spaceError" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="storeNumberError" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="quarterlyError" alignment="0" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
                                   <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="createStoreButton" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="293" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="createStoreStatus" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="243" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
+                                  <EmptySpace min="0" pref="336" max="32767" attributes="0"/>
+                                  <Component id="createStoreButton" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="293" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
@@ -365,9 +350,7 @@
                                       <Component id="jLabel24" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="storeNameField" alignment="0" min="-2" pref="18" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
-                                  <Component id="storeFieldError" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="jLabel26" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="mallCMB" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -382,9 +365,7 @@
                                       <Component id="jLabel30" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="storeNumberField" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                                  <Component id="storeNumberError" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="jLabel32" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="classCMB" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -394,9 +375,7 @@
                                       <Component id="jLabel35" linkSize="1" min="-2" max="-2" attributes="0"/>
                                       <Component id="spaceField" min="-2" pref="18" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="spaceError" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace pref="28" max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="jLabel36" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="purposeCMB" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -406,34 +385,24 @@
                                       <Component id="jLabel38" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="monthlyField" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                                  <Component id="monthlyError" min="-2" pref="16" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="jLabel41" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="quarterlyField" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                                  <Component id="quarterlyError" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="jLabel42" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="biannualField" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                                  <Component id="biannualError" min="-2" pref="16" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="jLabel45" linkSize="1" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="annualField" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="annualError" min="-2" pref="16" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
                                   <Component id="createStoreButton" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="createStoreStatus" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="18" max="32767" attributes="0"/>
+                                  <EmptySpace pref="40" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -465,17 +434,6 @@
                         </Component>
                         <Component class="javax.swing.JTextField" name="storeNameField">
                         </Component>
-                        <Component class="javax.swing.JLabel" name="storeFieldError">
-                          <Properties>
-                            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                            </Property>
-                            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="0" green="0" red="ff" type="rgb"/>
-                            </Property>
-                            <Property name="text" type="java.lang.String" value="Error Message"/>
-                          </Properties>
-                        </Component>
                         <Component class="javax.swing.JLabel" name="jLabel26">
                           <Properties>
                             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -502,17 +460,6 @@
                             <Property name="opaque" type="boolean" value="true"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="spaceError">
-                          <Properties>
-                            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                            </Property>
-                            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="0" green="0" red="ff" type="rgb"/>
-                            </Property>
-                            <Property name="text" type="java.lang.String" value="Error Message"/>
-                          </Properties>
-                        </Component>
                         <Component class="javax.swing.JLabel" name="jLabel30">
                           <Properties>
                             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -528,17 +475,6 @@
                         </Component>
                         <Component class="javax.swing.JTextField" name="spaceField">
                         </Component>
-                        <Component class="javax.swing.JLabel" name="storeNumberError">
-                          <Properties>
-                            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                            </Property>
-                            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="0" green="0" red="ff" type="rgb"/>
-                            </Property>
-                            <Property name="text" type="java.lang.String" value="Error Message"/>
-                          </Properties>
-                        </Component>
                         <Component class="javax.swing.JLabel" name="jLabel32">
                           <Properties>
                             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -552,29 +488,7 @@
                             <Property name="opaque" type="boolean" value="true"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="quarterlyError">
-                          <Properties>
-                            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                            </Property>
-                            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="0" green="0" red="ff" type="rgb"/>
-                            </Property>
-                            <Property name="text" type="java.lang.String" value="Error Message"/>
-                          </Properties>
-                        </Component>
                         <Component class="javax.swing.JTextField" name="storeNumberField">
-                        </Component>
-                        <Component class="javax.swing.JLabel" name="monthlyError">
-                          <Properties>
-                            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                            </Property>
-                            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="0" green="0" red="ff" type="rgb"/>
-                            </Property>
-                            <Property name="text" type="java.lang.String" value="Error Message"/>
-                          </Properties>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel35">
                           <Properties>
@@ -674,17 +588,6 @@
                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="createStoreButtonActionPerformed"/>
                           </Events>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="createStoreStatus">
-                          <Properties>
-                            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                            </Property>
-                            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="cc" green="0" red="0" type="rgb"/>
-                            </Property>
-                            <Property name="text" type="java.lang.String" value="Form Submitted Successfully/Error"/>
-                          </Properties>
-                        </Component>
                         <Component class="javax.swing.JComboBox" name="mallCMB">
                           <Properties>
                             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
@@ -732,28 +635,6 @@
                           <AuxValues>
                             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                           </AuxValues>
-                        </Component>
-                        <Component class="javax.swing.JLabel" name="biannualError">
-                          <Properties>
-                            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                            </Property>
-                            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="0" green="0" red="ff" type="rgb"/>
-                            </Property>
-                            <Property name="text" type="java.lang.String" value="Error Message"/>
-                          </Properties>
-                        </Component>
-                        <Component class="javax.swing.JLabel" name="annualError">
-                          <Properties>
-                            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                            </Property>
-                            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                              <Color blue="0" green="0" red="ff" type="rgb"/>
-                            </Property>
-                            <Property name="text" type="java.lang.String" value="Error Message"/>
-                          </Properties>
                         </Component>
                         <Component class="javax.swing.JComboBox" name="purposeCMB">
                           <Properties>

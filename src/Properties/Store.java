@@ -125,7 +125,11 @@ public class Store {
         QueryResult result = DB.retrieveMax(new Attribute(Name.LOCATION_NUM, Table.LOCS));
         ResultSet max = result.getResult();
         max.next();
-        return max.getInt(1) + 1;
+        if (max.getInt(1) == 0) {
+            return 1;
+        } else {
+            return max.getInt(1) + 1;
+        }
     }
 
 }

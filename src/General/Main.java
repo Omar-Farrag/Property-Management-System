@@ -5,6 +5,7 @@
 package General;
 
 import DataEntryInterface.DataEntryUserInterface;
+import DatabaseManagement.DatabaseManager;
 
 /**
  *
@@ -16,10 +17,11 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
-        (new LogInScreen()).setVisible(true);
-        (new GeneralUserInterface()).setVisible(true);
+        DatabaseManager.getInstance();
+//        (new LogInScreen()).setVisible(true);
+//        (new GeneralUserInterface()).setVisible(true);
+
         (new DataEntryUserInterface()).setVisible(true);
     }
-    
+
 }
