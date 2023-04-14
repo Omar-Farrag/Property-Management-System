@@ -57,13 +57,11 @@ public class Validator {
         try {
             if (operationType.equals(OperationType.UPDATE)) {
                 if (!validPKUpdate(parameters)) {
-                    return parameters.getToValidate().getStringName() + " cannot be used "
-                            + "because it would duplicate an existing primary key";
+                    return parameters.getToValidate().getStringName() + ": value entered is unavailable";
                 }
             } else if (operationType.equals(OperationType.INSERT)) {
                 if (!validPKInsert(parameters)) {
-                    return parameters.getToValidate().getStringName() + " cannot be used "
-                            + "because it would duplicate an existing primary key";
+                    return parameters.getToValidate().getStringName() + ": value entered is unavailable";
                 }
             }
 
@@ -143,13 +141,11 @@ public class Validator {
         try {
             if (operationType.equals(OperationType.UPDATE)) {
                 if (!validUKUpdate(parameters)) {
-                    return parameters.getToValidate().getStringName() + " cannot be used "
-                            + "because it would duplicate an existing primary key";
+                    return parameters.getToValidate().getStringName() + ": value entered is unavailable";
                 }
             } else if (operationType.equals(OperationType.INSERT)) {
                 if (!validUKInsert(parameters)) {
-                    return parameters.getToValidate().getStringName() + " cannot be used "
-                            + "because it would duplicate an existing primary key";
+                    return parameters.getToValidate().getStringName() + ": value entered is unavailable";
                 }
             }
 
@@ -238,7 +234,7 @@ public class Validator {
         try {
             result = DatabaseManager.getInstance().executeStatement(query);
             if (!result.next()) {
-                return toValidate.getStringName() + " = " + toValidate.getStringValue() + ": This value is referencing a non-existent entry";
+                return toValidate.getStringName() + " = " + toValidate.getStringValue() + ": No " + toValidate.getStringName() + " with the value " + toValidate.getValue() + " extists";
             } else {
                 return "";
             }
