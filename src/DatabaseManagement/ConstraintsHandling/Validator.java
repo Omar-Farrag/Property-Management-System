@@ -142,12 +142,12 @@ public class Validator {
         try {
             if (operationType.equals(OperationType.UPDATE)) {
                 if (!validPKUpdate(parameters)) {
-                    return parameters.getToValidate().getStringName() + " cannot be used "
+                    return "cannot be used "
                             + "because it would duplicate an existing primary key";
                 }
             } else if (operationType.equals(OperationType.INSERT)) {
                 if (!validPKInsert(parameters)) {
-                    return parameters.getToValidate().getStringName() + " cannot be used "
+                    return "cannot be used "
                             + "because it would duplicate an existing primary key";
                 }
             }
@@ -228,12 +228,12 @@ public class Validator {
         try {
             if (operationType.equals(OperationType.UPDATE)) {
                 if (!validUKUpdate(parameters)) {
-                    return parameters.getToValidate().getStringName() + " cannot be used "
+                    return "cannot be used "
                             + "because it would duplicate an existing primary key";
                 }
             } else if (operationType.equals(OperationType.INSERT)) {
                 if (!validUKInsert(parameters)) {
-                    return parameters.getToValidate().getStringName() + " cannot be used "
+                    return "cannot be used "
                             + "because it would duplicate an existing primary key";
                 }
             }

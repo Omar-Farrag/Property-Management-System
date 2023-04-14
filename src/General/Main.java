@@ -17,6 +17,8 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        System.out.println("\u001B[31m" + "Hello, world!" + "\u001B[0m");
+
         DatabaseManager.getInstance();
 //        (new LogInScreen()).setVisible(true);
 //        (new GeneralUserInterface()).setVisible(true);
