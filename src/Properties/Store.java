@@ -97,13 +97,20 @@ public class Store {
             QueryResult locationInsertion = DB.insert(Table.LOCS, newLocationEntry);
 
             if (!locationInsertion.noErrors()) {
+
                 return locationInsertion;
             }
 
             newLocationNum = new Attribute(Name.LOCATION_NUM, String.valueOf(generatedLocationNum), Table.PROPERTIES);
             toInsert.add(newLocationNum);
             toInsert = toInsert.filter(Table.PROPERTIES);
-            return DatabaseManager.getInstance().insert(Table.PROPERTIES, toInsert);
+            QueryResult storeInsertion = DatabaseManager.getInstance().insert(Table.PROPERTIES, toInsert);
+            if (!storeInsertion.noErrors()) {
+                Filters deletionFilter = new Filters();
+                deletionFilter.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(generatedLocationNum), Table.LOCS));
+                DB.delete(Table.LOCS, deletionFilter);
+            }
+            return storeInsertion;
         }
 
     }
