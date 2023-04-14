@@ -115,6 +115,7 @@ public class Controller {
                 displayErrors(result);
             }
         } catch (SQLException ex) {
+            ex.printStackTrace();
             displaySQLError();
         } catch (DBManagementException ex) {
             ex.printStackTrace();

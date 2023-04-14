@@ -7,16 +7,12 @@ package DataEntryInterface;
 import DatabaseManagement.Attribute;
 import DatabaseManagement.Attribute.Name;
 import DatabaseManagement.AttributeCollection;
-import DatabaseManagement.ConstraintsHandling.ConstraintChecker.Errors;
-import DatabaseManagement.Exceptions.UnvalidatedAttributeException;
 import DatabaseManagement.Table;
 import General.Controller;
 import General.InsertForm;
-import java.awt.Checkbox;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
 
 /**
  *
@@ -24,8 +20,9 @@ import java.util.logging.Logger;
  */
 public class CreatePropertyForm extends javax.swing.JFrame implements InsertForm {
 
-    private Controller controller;
-    private String[] floor_to_letter;
+    private final Controller controller;
+    private final String[] floor_to_letter;
+    private int currentTab = 0;
 
     /**
      * Creates new form CreateNewPropertyForm
@@ -101,15 +98,11 @@ public class CreatePropertyForm extends javax.swing.JFrame implements InsertForm
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         mallNameField = new javax.swing.JTextField();
-        mallNameError = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         mallAddressField = new javax.swing.JTextField();
-        mallAddressError = new javax.swing.JLabel();
         createMallButton = new javax.swing.JButton();
-        createMallStatus = new javax.swing.JLabel();
         floorsLabel = new javax.swing.JLabel();
         mallFloorsField = new javax.swing.JTextField();
-        mallFloorsError = new javax.swing.JLabel();
 
         jCheckBox1.setText("jCheckBox1");
 
@@ -436,19 +429,11 @@ public class CreatePropertyForm extends javax.swing.JFrame implements InsertForm
         jLabel3.setForeground(new java.awt.Color(0, 102, 0));
         jLabel3.setText("Please fill in this form then submit");
 
-        mallNameError.setBackground(new java.awt.Color(255, 255, 255));
-        mallNameError.setForeground(new java.awt.Color(255, 0, 0));
-        mallNameError.setText("Error Message");
-
         jLabel5.setBackground(new java.awt.Color(204, 204, 204));
         jLabel5.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Mall Address:");
         jLabel5.setOpaque(true);
-
-        mallAddressError.setBackground(new java.awt.Color(255, 255, 255));
-        mallAddressError.setForeground(new java.awt.Color(255, 0, 0));
-        mallAddressError.setText("Error Message");
 
         createMallButton.setBackground(new java.awt.Color(204, 204, 204));
         createMallButton.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
@@ -459,56 +444,37 @@ public class CreatePropertyForm extends javax.swing.JFrame implements InsertForm
             }
         });
 
-        createMallStatus.setBackground(new java.awt.Color(255, 255, 255));
-        createMallStatus.setForeground(new java.awt.Color(0, 0, 204));
-        createMallStatus.setText("Form Submitted Successfully/Error");
-
         floorsLabel.setBackground(new java.awt.Color(204, 204, 204));
         floorsLabel.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         floorsLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         floorsLabel.setText("Floors");
         floorsLabel.setOpaque(true);
 
-        mallFloorsError.setBackground(new java.awt.Color(255, 255, 255));
-        mallFloorsError.setForeground(new java.awt.Color(255, 0, 0));
-        mallFloorsError.setText("Error Message");
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(floorsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(mallNameError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(mallNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 542, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(mallAddressField, javax.swing.GroupLayout.PREFERRED_SIZE, 542, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(mallFloorsField, javax.swing.GroupLayout.PREFERRED_SIZE, 542, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 39, Short.MAX_VALUE))
-                            .addComponent(mallAddressError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(mallFloorsError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel3)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(40, 40, 40)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(floorsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(mallNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 542, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(mallAddressField, javax.swing.GroupLayout.PREFERRED_SIZE, 542, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(mallFloorsField, javax.swing.GroupLayout.PREFERRED_SIZE, 542, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap(45, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel3)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(createMallButton)
-                        .addGap(47, 47, 47))
-                    .addComponent(createMallStatus, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addGap(239, 239, 239))
+                .addGap(0, 404, Short.MAX_VALUE)
+                .addComponent(createMallButton)
+                .addGap(286, 286, 286))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -519,25 +485,17 @@ public class CreatePropertyForm extends javax.swing.JFrame implements InsertForm
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(mallNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(mallNameError)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(34, 34, 34)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(mallAddressField, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(mallAddressError)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(34, 34, 34)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(floorsLabel)
                     .addComponent(mallFloorsField, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(mallFloorsError)
-                .addGap(49, 49, 49)
+                .addGap(71, 71, 71)
                 .addComponent(createMallButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(createMallStatus)
-                .addContainerGap())
+                .addGap(142, 142, 142))
         );
 
         jScrollPane1.setViewportView(jPanel1);
@@ -554,7 +512,7 @@ public class CreatePropertyForm extends javax.swing.JFrame implements InsertForm
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE))
+                .addComponent(jScrollPane1))
         );
 
         jTabbedPane1.addTab("Mall", jPanel2);
@@ -574,10 +532,12 @@ public class CreatePropertyForm extends javax.swing.JFrame implements InsertForm
     }// </editor-fold>//GEN-END:initComponents
 
     private void createStoreButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createStoreButtonActionPerformed
+        currentTab = 0;
         controller.insertStore(this);
     }//GEN-LAST:event_createStoreButtonActionPerformed
 
     private void createMallButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createMallButtonActionPerformed
+        currentTab = 1;
         controller.insertMall(this);
     }//GEN-LAST:event_createMallButtonActionPerformed
 
@@ -591,7 +551,7 @@ public class CreatePropertyForm extends javax.swing.JFrame implements InsertForm
         int floors = controller.getFloors(mallName);
 
         floorCMB.removeAllItems();
-        for (int i = 0; i <= floors; i++) {
+        for (int i = 0; i < floors; i++) {
             floorCMB.addItem(String.valueOf(i));
         }
     }//GEN-LAST:event_mallCMBActionPerformed
@@ -599,21 +559,85 @@ public class CreatePropertyForm extends javax.swing.JFrame implements InsertForm
     @Override
     public AttributeCollection getAttributes() {
         AttributeCollection fields = new AttributeCollection();
+        if (currentTab == 0) {
+            String floor = floor_to_letter[(Integer.parseInt(floorCMB.getSelectedItem().toString().trim()))];
+            fields.add(new Attribute(Name.NAME, storeNameField.getText().trim(), Table.PROPERTIES));
+            fields.add(new Attribute(Name.NAME, mallCMB.getSelectedItem().toString().trim(), Table.MALLS));
+            fields.add(new Attribute(Name.STORE_NUM, floor + storeNumberField.getText().trim(), Table.LOCS));
+            fields.add(new Attribute(Name.CLASS, classCMB.getSelectedItem().toString().trim(), Table.PROPERTIES));
+            fields.add(new Attribute(Name.SPACE, spaceField.getText().trim(), Table.PROPERTIES));
+            fields.add(new Attribute(Name.PURPOSE, purposeCMB.getSelectedItem().toString().trim(), Table.PROPERTIES));
+            fields.add(new Attribute(Name.MONTHLY_RATE, monthlyField.getText().trim(), Table.PROPERTIES));
+            fields.add(new Attribute(Name.QUARTERLY_RATE, quarterlyField.getText().trim(), Table.PROPERTIES));
+            fields.add(new Attribute(Name.BI_ANNUAL_RATE, biannualField.getText().trim(), Table.PROPERTIES));
+            fields.add(new Attribute(Name.ANNUAL_RATE, annualField.getText().trim(), Table.PROPERTIES));
+        } else if (currentTab == 1) {
+            fields.add(new Attribute(Name.NAME, mallNameField.getText().trim(), Table.MALLS));
+            fields.add(new Attribute(Name.NUM_FLOORS, mallFloorsField.getText().trim(), Table.MALLS));
+            fields.add(new Attribute(Name.ADDRESS, mallAddressField.getText().trim(), Table.MALLS));
 
-        fields.add(new Attribute(Name.NAME, storeNameField.getText().trim(), Table.PROPERTIES));
-        fields.add(new Attribute(Name.NAME, mallCMB.getSelectedItem().toString().trim(), Table.MALLS));
-        String floor = floor_to_letter[(Integer.parseInt(floorCMB.getSelectedItem().toString().trim()))];
-        fields.add(new Attribute(Name.STORE_NUM, floor + storeNumberField.getText().trim(), Table.LOCS));
-        fields.add(new Attribute(Name.CLASS, classCMB.getSelectedItem().toString().trim(), Table.PROPERTIES));
-        fields.add(new Attribute(Name.SPACE, spaceField.getText().trim(), Table.PROPERTIES));
-        fields.add(new Attribute(Name.PURPOSE, purposeCMB.getSelectedItem().toString().trim(), Table.PROPERTIES));
-        fields.add(new Attribute(Name.MONTHLY_RATE, monthlyField.getText().trim(), Table.PROPERTIES));
-        fields.add(new Attribute(Name.QUARTERLY_RATE, quarterlyField.getText().trim(), Table.PROPERTIES));
-        fields.add(new Attribute(Name.BI_ANNUAL_RATE, biannualField.getText().trim(), Table.PROPERTIES));
-        fields.add(new Attribute(Name.ANNUAL_RATE, annualField.getText().trim(), Table.PROPERTIES));
-        fields.add(new Attribute(Name.NUM_FLOORS, mallFloorsField.getText().trim(), Table.MALLS));
-
+        }
         return fields;
+    }
+
+    public String[] getFloor_to_letter() {
+        return floor_to_letter;
+    }
+
+    public String getAnnualField() {
+        return annualField.getText().trim();
+    }
+
+    public String getBiannualField() {
+        return biannualField.getText().trim();
+    }
+
+    public String getClassCMB() {
+        return classCMB.getSelectedItem().toString().trim();
+    }
+
+    public String getFloorCMB() {
+        return floorCMB.getSelectedItem().toString().trim();
+    }
+
+    public String getMallAddressField() {
+        return mallAddressField.getText().trim();
+    }
+
+    public String getMallCMB() {
+        return mallCMB.getSelectedItem().toString().trim();
+    }
+
+    public String getMallFloorsField() {
+        return mallFloorsField.getText().trim();
+    }
+
+    public String getMallNameField() {
+        return mallNameField.getText().trim();
+    }
+
+    public String getMonthlyField() {
+        return monthlyField.getText().trim();
+    }
+
+    public String getPurposeCMB() {
+        return purposeCMB.getSelectedItem().toString().trim();
+    }
+
+    public String getQuarterlyField() {
+        return quarterlyField.getText().trim();
+    }
+
+    public String getSpaceField() {
+        return spaceField.getText().trim();
+    }
+
+    public String getStoreNameField() {
+        return storeNameField.getText().trim();
+    }
+
+    public String getStoreNumberField() {
+        return storeNumberField.getText().trim();
     }
 
     @Override
@@ -630,6 +654,8 @@ public class CreatePropertyForm extends javax.swing.JFrame implements InsertForm
         biannualField.setText("");
         annualField.setText("");
         mallFloorsField.setText("");
+        mallNameField.setText("");
+        mallAddressField.setText("");
     }
 
     private void populateCMBs() {
@@ -664,7 +690,6 @@ public class CreatePropertyForm extends javax.swing.JFrame implements InsertForm
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JComboBox<String> classCMB;
     private javax.swing.JButton createMallButton;
-    private javax.swing.JLabel createMallStatus;
     private javax.swing.JButton createStoreButton;
     private javax.swing.JComboBox<String> floorCMB;
     private javax.swing.JLabel floorsLabel;
@@ -708,12 +733,9 @@ public class CreatePropertyForm extends javax.swing.JFrame implements InsertForm
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToggleButton jToggleButton1;
-    private javax.swing.JLabel mallAddressError;
     private javax.swing.JTextField mallAddressField;
     private javax.swing.JComboBox<String> mallCMB;
-    private javax.swing.JLabel mallFloorsError;
     private javax.swing.JTextField mallFloorsField;
-    private javax.swing.JLabel mallNameError;
     private javax.swing.JTextField mallNameField;
     private javax.swing.JTextField monthlyField;
     private javax.swing.JComboBox<String> purposeCMB;

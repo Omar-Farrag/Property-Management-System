@@ -78,6 +78,7 @@ public class Mall {
 
     public static QueryResult insert(AttributeCollection toInsert) throws SQLException, DBManagementException {
         toInsert = toInsert.filter(Table.MALLS);
+        toInsert.add(new Attribute(Name.MALL_NUM, String.valueOf(generateMallNum()), Table.MALLS));
         return DatabaseManager.getInstance().insert(Table.MALLS, toInsert);
     }
 
@@ -91,6 +92,18 @@ public class Mall {
 
     public static Mall retrieve(String mallNum) {
         throw new UnsupportedOperationException();
+    }
+
+    private static int generateMallNum() throws SQLException {
+        DatabaseManager DB = DatabaseManager.getInstance();
+        QueryResult result = DB.retrieveMax(new Attribute(Name.MALL_NUM, Table.MALLS));
+        ResultSet max = result.getResult();
+        max.next();
+        if (max.getInt(1) == 0) {
+            return 1;
+        } else {
+            return max.getInt(1) + 1;
+        }
     }
 
 }

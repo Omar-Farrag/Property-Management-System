@@ -255,24 +255,39 @@ public class MetaDataExtractor {
     }
 
     public Key getPrimaryKeys(Table t) {
-        return getKeys(t, "P_");
-    }
-
-    public Key getUniqueKeys(Table t) {
-        return getKeys(t, "U_");
-    }
-
-    private Key getKeys(Table t, String toStartWith) {
         Key key = new Key();
         JSONObject attributes = getTableAttributes(t);
 
         for (Object att : attributes.keySet()) {
             String attributeName = att.toString();
-            if (isKey((JSONArray) attributes.get(attributeName), toStartWith)) {
+            if (isKey((JSONArray) attributes.get(attributeName), "P_")) {
                 key.add(new Attribute(Name.valueOf(attributeName), t));
             }
         }
         return key;
+    }
+
+    public ArrayList<Key> getUniqueKeys(Table t) {
+        HashMap<String, Key> keys = new HashMap<>();
+
+        JSONObject attributes = getTableAttributes(t);
+
+        for (Object att : attributes.keySet()) {
+            String attributeName = att.toString();
+            String keyConstraintName = getKeyConstraintName((JSONArray) attributes.get(attributeName), "U_");
+
+            if (!keyConstraintName.isEmpty()) {
+                Key existingKey = keys.get(keyConstraintName);
+                if (existingKey != null) {
+                    existingKey.add(new Attribute(Name.valueOf(attributeName), t));
+                } else {
+                    Key newKey = new Key();
+                    newKey.add(new Attribute(Name.valueOf(attributeName), t));
+                    keys.put(keyConstraintName, newKey);
+                }
+            }
+        }
+        return new ArrayList<>(keys.values());
     }
 
     private boolean isKey(JSONArray constraints, String toStartWith) {
@@ -281,8 +296,16 @@ public class MetaDataExtractor {
                 return true;
             }
         }
-
         return false;
+    }
+
+    private String getKeyConstraintName(JSONArray constraints, String toStartWith) {
+        for (Object constraint : constraints) {
+            if (constraint.toString().startsWith(toStartWith)) {
+                return constraint.toString();
+            }
+        }
+        return "";
     }
 
     public static class Key {

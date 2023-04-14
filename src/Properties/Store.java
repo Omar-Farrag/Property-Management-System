@@ -78,18 +78,19 @@ public class Store {
         mallNumbers.next();
         String mallNumber = mallNumbers.getString(Name.MALL_NUM.getName());
 
-        //Look in the locs table if there is an exisiting mall/store combination
+//        //Look in the locs table if there is an exisiting mall/store combination
         Attribute mallNum = new Attribute(Name.MALL_NUM, mallNumber, Table.LOCS);
         Attribute storeNum = toInsert.getAttribute(Table.LOCS, Name.STORE_NUM);
 
         filters.clear();
         filters.addEqual(mallNum);
         filters.addEqual(storeNum);
-
+//
         QueryResult locationNum = DB.retrieve(Table.LOCS, filters);
         if (locationNum.getRowsAffected() > 0) {
             return null;
         } else {
+
             AttributeCollection newLocationEntry = new AttributeCollection(filters);
             int generatedLocationNum = generateLocationNum();
             Attribute newLocationNum = new Attribute(Name.LOCATION_NUM, String.valueOf(generatedLocationNum), Table.LOCS);
@@ -97,7 +98,6 @@ public class Store {
             QueryResult locationInsertion = DB.insert(Table.LOCS, newLocationEntry);
 
             if (!locationInsertion.noErrors()) {
-
                 return locationInsertion;
             }
 

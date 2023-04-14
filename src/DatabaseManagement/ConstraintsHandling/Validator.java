@@ -164,55 +164,61 @@ public class Validator {
         Attribute toValidate = parameters.getToValidate();
         AttributeCollection allAttributes = parameters.getAllAttributes();
 
-        Key uniqueKeys = MetaDataExtractor.getInstance().getUniqueKeys(toValidate.getT());
+        ArrayList<Key> uniqueKeys = MetaDataExtractor.getInstance().getUniqueKeys(toValidate.getT());
 
         Filters filters = new Filters();
 
-        for (Attribute key : uniqueKeys.getKeyAttributes()) {
-            Name name = key.getAttributeName();
-            String value = allAttributes.getValue(key);
-            Table t = key.getT();
-            Attribute valuedAttribute = new Attribute(name, value, t);
-            filters.addEqual(valuedAttribute);
+        for (Key uniqueKey : uniqueKeys) {
+            for (Attribute key : uniqueKey.getKeyAttributes()) {
+                Name name = key.getAttributeName();
+                String value = allAttributes.getValue(key);
+                Table t = key.getT();
+                Attribute valuedAttribute = new Attribute(name, value, t);
+                filters.addEqual(valuedAttribute);
+            }
+            String query = "Select * from " + toValidate.getT().getAliasedName() + " "
+                    + filters.getFilterClause();
+
+            ResultSet result = DatabaseManager.getInstance().executeStatement(query);
+            if (result.next()) {
+                return false;
+            }
         }
-        String query = "Select * from " + toValidate.getT().getAliasedName() + " "
-                + filters.getFilterClause();
-
-        ResultSet result = DatabaseManager.getInstance().executeStatement(query);
-        return !result.next();
-
+        return true;
     }
 
     private boolean validUKUpdate(ValidationParameters parameters) throws SQLException {
         Attribute toValidate = parameters.getToValidate();
         Filters filters = parameters.getFilters();
-        Key uniqueKeys = MetaDataExtractor.getInstance().getUniqueKeys(toValidate.getT());
+        ArrayList<Key> uniqueKeys = MetaDataExtractor.getInstance().getUniqueKeys(toValidate.getT());
 
-        if (uniqueKeys.getKeyAttributes().size() <= 1) {
-            String query = "Select * from " + toValidate.getT().getAliasedName()
-                    + " where " + toValidate.getStringName() + " = " + toValidate.getStringValue();
-            ResultSet result = DatabaseManager.getInstance().executeStatement(query);
-            return !result.next();
-        }
-
+//        if (uniqueKeys.getKeyAttributes().size() <= 1) {
+//            String query = "Select * from " + toValidate.getT().getAliasedName()
+//                    + " where " + toValidate.getStringName() + " = " + toValidate.getStringValue();
+//            ResultSet result = DatabaseManager.getInstance().executeStatement(query);
+//            return !result.next();
+//        }
         String query = "Select * from " + toValidate.getT().getAliasedName() + " " + filters.getFilterClause();
         ResultSet result = DatabaseManager.getInstance().executeStatement(query);
 
         HashSet<Key> keys = new HashSet<>();
-
         while (result.next()) {
-            Key key = new Key();
-            for (Attribute attribute : uniqueKeys.getKeyAttributes()) {
-                Name name = attribute.getAttributeName();
-                String value = result.getString(name.getName());
-                Table t = attribute.getT();
-                Attribute valuedAttribute = new Attribute(name, value, t);
-                key.add(valuedAttribute);
-            }
-            if (keys.contains(key)) {
-                return false;
-            } else {
-                keys.add(key);
+
+            for (Key uniqueKey : uniqueKeys) {
+
+                Key key = new Key();
+                for (Attribute attribute : uniqueKey.getKeyAttributes()) {
+                    Name name = attribute.getAttributeName();
+                    String value = result.getString(name.getName());
+                    Table t = attribute.getT();
+                    Attribute valuedAttribute = new Attribute(name, value, t);
+                    key.add(valuedAttribute);
+                }
+                if (keys.contains(key)) {
+                    return false;
+                } else {
+                    keys.add(key);
+                }
             }
         }
         return true;
