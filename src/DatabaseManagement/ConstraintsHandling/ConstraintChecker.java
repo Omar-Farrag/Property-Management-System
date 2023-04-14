@@ -247,12 +247,7 @@ public class ConstraintChecker {
         public ArrayList<String> getAllErrors() {
             ArrayList<String> allErrors = new ArrayList<>();
             for (Map.Entry<Attribute, ArrayList<String>> entry : attribute_to_errors.entrySet()) {
-                for (String error : entry.getValue()) {
-                    allErrors.add(entry.getKey().getStringName() + ":" + error);
-                }
-            }
-            for (String error : allErrors) {
-                System.out.println(error);
+                allErrors.addAll(entry.getValue());
             }
             return allErrors;
         }

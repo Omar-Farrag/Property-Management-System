@@ -30,91 +30,6 @@ public class Validator {
         initConstraintsToValidatorMap();
     }
 
-//    public static void main(String[] args) {
-//        AttributeCollection collection = new AttributeCollection();
-////
-//        ConstraintChecker checker = ConstraintChecker.getInstance();
-//        System.out.println("Done initializing");
-////        new Scanner(System.in).nextLine();
-////
-//        try {
-//            Attribute x1 = new Attribute(Name.LEASE_NUM, "L123456789", Table.LEASES);
-//            Attribute x2 = new Attribute(Name.LOCATION_NUM, "", Table.LEASES);
-//            Attribute x3 = new Attribute(Name.END_DATE, "", Table.LEASES);
-//            Attribute x4 = new Attribute(Name.START_DATE, "", Table.LEASES);
-//            Attribute x5 = new Attribute(Name.PAYMENT_OPTION, "", Table.LEASES);
-//            Attribute x6 = new Attribute(Name.LEASER_ID, "", Table.LEASES);
-//
-//            Attribute x7 = new Attribute(Name.MALL_NUM, "M12", Table.LOCS);
-//            Attribute x8 = new Attribute(Name.LOCATION_NUM, "1234567890", Table.LOCS);
-//            Attribute x9 = new Attribute(Name.STORE_NUM, "G20", Table.LOCS);
-//
-////            Attribute y = new Attribute(Attribute.Name.ADDRESS, "ABC");
-////            // Attribute z = new Attribute(Attribute.Name.STORE_NUM, "ABC");
-////
-//            collection.add(x1);
-//            collection.add(x2);
-//            collection.add(x3);
-//            collection.add(x4);
-//            collection.add(x5);
-//            collection.add(x6);
-//
-//            QueryResult res = DatabaseManager.getInstance().insert(Table.LEASES, collection);
-//            if (res.noErrors()) {
-//                System.out.println(res.getRowsAffected());
-//            } else {
-//                for (Attribute attribute : collection.attributes()) {
-//                    printList(res.getErrorByAttribute(attribute));
-//                }
-//            }
-////            collection.add(y);
-////            // collection.add(z);
-////
-////            ConstraintChecker.Errors errors = checker.checkInsertion(Table.MALLS, collection);
-////            ArrayList<String> errorsList1 = errors.getErrorByAttribute(x);
-////            ArrayList<String> errorsList2 = errors.getErrorByAttribute(y);
-////            // ArrayList<String> errorsList3 = errors.getErrorByAttribute(z);
-////
-////            printList(errorsList1);
-////            printList(errorsList2);
-////            // printList(errorsList3);
-////
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//            e.printStackTrace();
-//        }
-//
-////        String dateTimeString1 = "29-MAR-2023";
-////        String dateTimeString2 = "29-MAR-2023";
-////
-////        String dateFormat = "dd-MMM-yyyy";
-////        SimpleDateFormat simpleFormat = new SimpleDateFormat(dateFormat);
-////        simpleFormat.setLenient(false);
-////
-////
-////        Comparable comp1 = null;
-////        Comparable comp2 = null;
-////        try {
-////            comp1 = simpleFormat.parse(dateTimeString1);
-////            comp2 = simpleFormat.parse(dateTimeString2);
-////        } catch (ParseException e) {
-////            throw new RuntimeException(e);
-////        }
-////
-////        System.out.println(comp1.compareTo(comp2));
-////        String value1 = "Go89u";
-////        String pattern1 = "C_REGEXP_LIKE(STORE_NUM, '^[GFST]\\w*')";
-//////        Pattern
-////        Validator validator = new Validator();
-////        System.out.println(validator.testValidateREGEXP_LIKE(value1, pattern1));
-//    }
-    public static void printList(ArrayList<String> errors) {
-        for (String error : errors) {
-            System.out.println(error);
-        }
-        System.out.println();
-    }
-
     public String validate(ValidationParameters parameters) throws DBManagementException {
         ValidationFunction validationFunc = find(parameters.getConstraint());
         return validationFunc.validate(parameters);
@@ -142,12 +57,12 @@ public class Validator {
         try {
             if (operationType.equals(OperationType.UPDATE)) {
                 if (!validPKUpdate(parameters)) {
-                    return "cannot be used "
+                    return parameters.getToValidate().getStringName() + " cannot be used "
                             + "because it would duplicate an existing primary key";
                 }
             } else if (operationType.equals(OperationType.INSERT)) {
                 if (!validPKInsert(parameters)) {
-                    return "cannot be used "
+                    return parameters.getToValidate().getStringName() + " cannot be used "
                             + "because it would duplicate an existing primary key";
                 }
             }
@@ -228,12 +143,12 @@ public class Validator {
         try {
             if (operationType.equals(OperationType.UPDATE)) {
                 if (!validUKUpdate(parameters)) {
-                    return "cannot be used "
+                    return parameters.getToValidate().getStringName() + " cannot be used "
                             + "because it would duplicate an existing primary key";
                 }
             } else if (operationType.equals(OperationType.INSERT)) {
                 if (!validUKInsert(parameters)) {
-                    return "cannot be used "
+                    return parameters.getToValidate().getStringName() + " cannot be used "
                             + "because it would duplicate an existing primary key";
                 }
             }
@@ -334,7 +249,7 @@ public class Validator {
         if (comparisonResult.fieldIsNull || comparisonResult.result == -1) {
             return "";
         } else if (comparisonResult.testFailed) {
-            return "Value you entered could not be compared with"
+            return parameters.getToValidate().getStringName() + ": Value you entered could not be compared with"
                     + " stored ranges";
         } else {
             return comparisonResult.leftOperand + " must be less than " + comparisonResult.rightOperand;
@@ -347,7 +262,7 @@ public class Validator {
         if (comparisonResult.fieldIsNull || comparisonResult.result == 1) {
             return "";
         } else if (comparisonResult.testFailed) {
-            return "Value you entered could not be compared with"
+            return parameters.getToValidate().getStringName() + ": Value you entered could not be compared with"
                     + " stored ranges";
         } else {
             return comparisonResult.leftOperand + " must be greater than " + comparisonResult.rightOperand;
@@ -360,7 +275,7 @@ public class Validator {
         if (comparisonResult.fieldIsNull || comparisonResult.result == 0) {
             return "";
         } else if (comparisonResult.testFailed) {
-            return "Value you entered could not be compared with"
+            return parameters.getToValidate().getStringName() + ": Value you entered could not be compared with"
                     + " stored ranges";
         } else {
             return comparisonResult.leftOperand + " must be equal to " + comparisonResult.rightOperand;
@@ -373,7 +288,7 @@ public class Validator {
         if (comparisonResult.fieldIsNull || comparisonResult.result != 0) {
             return "";
         } else if (comparisonResult.testFailed) {
-            return "Value you entered could not be compared with"
+            return parameters.getToValidate().getStringName() + ": Value you entered could not be compared with"
                     + " stored ranges";
         } else {
             return comparisonResult.leftOperand + " must not be equal to " + comparisonResult.rightOperand;
@@ -386,7 +301,7 @@ public class Validator {
         if (comparisonResult.fieldIsNull || comparisonResult.result <= 0) {
             return "";
         } else if (comparisonResult.testFailed) {
-            return "Value you entered could not be compared with"
+            return parameters.getToValidate().getStringName() + ": Value you entered could not be compared with"
                     + " stored ranges";
         } else {
             return comparisonResult.leftOperand + " must be less than or equal to " + comparisonResult.rightOperand;
@@ -399,7 +314,7 @@ public class Validator {
         if (comparisonResult.fieldIsNull || comparisonResult.result >= 0) {
             return "";
         } else if (comparisonResult.testFailed) {
-            return "Value you entered could not be compared with"
+            return parameters.getToValidate().getStringName() + ": Value you entered could not be compared with"
                     + " stored ranges";
         } else {
             return comparisonResult.leftOperand + " must be greater than or equal to " + comparisonResult.rightOperand;
@@ -451,7 +366,7 @@ public class Validator {
         Attribute toValidate = parameters.getToValidate();
 
         if (toValidate.getValue() == null || toValidate.getValue().isEmpty()) {
-            return toValidate.getStringName() + " cannot be null";
+            return toValidate.getStringName() + ": Field cannot be null";
         } else {
             return "";
         }
@@ -488,9 +403,9 @@ public class Validator {
                     return "";
                 }
             }
-            return toValidate.getStringName() + " must be between " + range[0] + " and " + range[1];
+            return toValidate.getStringName() + ": Must be between " + range[0] + " and " + range[1];
         } catch (ParseException | NumberFormatException e) {
-            return "Value entered could not be compared with stored ranges";
+            return parameters.getToValidate().getStringName() + ": Value entered could not be compared with stored ranges";
         } catch (NullPointerException e) {
             return "";
         }
@@ -509,7 +424,7 @@ public class Validator {
                 return "";
             }
         }
-        return toValidate.getStringName() + " must be in one of these values: " + String.join(",",
+        return toValidate.getStringName() + ": must be in one of these values: " + String.join(",",
                 acceptedValues);
     }
 
@@ -524,7 +439,7 @@ public class Validator {
         if (value == null || value.isEmpty() || regexMatch(value, pattern)) {
             return "";
         } else {
-            return toValidate.getStringName() + " must be in the following format: " + pattern;
+            return toValidate.getStringName() + ": must be in the following format: " + pattern;
         }
     }
 
@@ -541,7 +456,7 @@ public class Validator {
         if (value == null || value.isEmpty() || regexMatch(value, pattern)) {
             return "";
         } else {
-            return toValidate.getStringName() + " must be in the following format: " + pattern;
+            return toValidate.getStringName() + ": must be in the following format: " + pattern;
         }
     }
 
@@ -569,7 +484,7 @@ public class Validator {
             int scale = Integer.parseInt(decomposedConstraint[2]);
 
             if (number.scale() > scale) {
-                return "Number must not have more than " + scale + " digits after the decimal "
+                return toValidate.getStringName() + ": Number must not have more than " + scale + " digits after the decimal "
                         + "point";
             }
 
@@ -580,12 +495,12 @@ public class Validator {
             // (number = 123456.00) to achieve a scale of 2 results in number's precision
             // becoming 8, which exceeds the maximum allowed precision of 7
             if (number.precision() + scale > precision) {
-                return "Number must not have more than " + (precision - scale) + " digits before "
+                return toValidate.getStringName() + ": Number must not have more than " + (precision - scale) + " digits before "
                         + "the decimal point";
             }
 
             if (number.precision() > precision) {
-                return "Number must not exceed " + precision + " digits";
+                return toValidate.getStringName() + ": Number must not exceed " + precision + " digits";
             }
 
             return "";
@@ -593,7 +508,7 @@ public class Validator {
             if (toValidate.getValue().isEmpty()) {
                 return "";
             } else {
-                return "Value entered is not a number";
+                return toValidate.getStringName() + ": Value entered is not a number";
             }
         } catch (NullPointerException e) {
             return "";
@@ -609,7 +524,7 @@ public class Validator {
             if (toValidate.getValue().isEmpty()) {
                 return "";
             } else {
-                return "Value entered is not a floating point number";
+                return toValidate.getStringName() + ": Value entered is not a floating point number";
             }
         } catch (NullPointerException e) {
             return "";
@@ -626,7 +541,7 @@ public class Validator {
                 return "";
             }
             if (toValidate.getValue().length() != length) {
-                return "Value must have " + length + " characters exactly";
+                return toValidate.getStringName() + ": Value must have " + length + " characters exactly";
             } else {
                 return "";
             }
@@ -642,7 +557,7 @@ public class Validator {
         int maxLength = Integer.parseInt(constraint.split("_")[1]);
         try {
             if (toValidate.getValue().length() > maxLength) {
-                return "Value too long. A maximum of " + maxLength + " characters is allowed";
+                return toValidate.getStringName() + ": Value too long. A maximum of " + maxLength + " characters is allowed";
             } else {
                 return "";
             }
@@ -668,7 +583,7 @@ public class Validator {
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(toValidate.getValue());
             if (!matcher.matches()) {
-                return "Invalid Date Format. Date must be in this format: dd-MMM-yyyy (eg. "
+                return toValidate.getStringName() + ": Invalid Date Format. Date must be in this format: dd-MMM-yyyy (eg. "
                         + "01-JAN-1970)";
             }
 
@@ -685,7 +600,7 @@ public class Validator {
                 if (toValidate.getValue().isEmpty()) {
                     return "";
                 } else {
-                    return "Invalid Date Format. Date must be in this format: dd-MMM-yyyy (eg. "
+                    return toValidate.getStringName() + ": Invalid Date Format. Date must be in this format: dd-MMM-yyyy (eg. "
                             + "01-JAN-1970)";
                 }
             }
@@ -706,7 +621,7 @@ public class Validator {
             if (validAsDate.isEmpty()) {
                 return "";
             } else {
-                return "Invalid Timestamp. Must be in format dd-MMM-yyyy hh:mm:ss a.";
+                return parameters.getToValidate().getStringName() + ": Invalid Timestamp. Must be in format dd-MMM-yyyy hh:mm:ss a.";
             }
         }
     }
@@ -791,10 +706,4 @@ public class Validator {
         }
     }
 
-    public static void main(String[] args) {
-        String stPattern = "^[GFSHO]\\d+";
-        Pattern pattern = Pattern.compile(stPattern);
-        Matcher matcher = pattern.matcher("G22");
-        System.out.println(matcher.matches());
-    }
 }
