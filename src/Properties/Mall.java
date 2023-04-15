@@ -17,17 +17,26 @@ public class Mall {
     private String name;
     private String address;
     private int numFloors;
-    private String mallNum;
+    private int mallNum;
 
-    private Mall instance;
+    private final static DatabaseManager DB = DatabaseManager.getInstance();
 
-    private Mall(String name, String address, int numFloors, String mallNum) {
-        this.name = name;
-        this.address = address;
-        this.numFloors = numFloors;
-        this.mallNum = mallNum;
+    /**
+     * Leave the constructor as private. If you want an instance of the mall,
+     * call the retrieve function to retrieve it from Database. This is done to
+     * ensure that any instance of the mall class represents an actual mall in
+     * the database, not just some random mall that we created in the program
+     *
+     * @param store
+     * @throws SQLException
+     */
+    private Mall(ResultSet mall) throws SQLException {
+        setValues(mall);
     }
 
+    /**
+     * @return List of all malls that the real estate company owns
+     */
     public static ArrayList<String> getListOfMalls() {
         ArrayList<String> malls = new ArrayList<>();
 
@@ -36,7 +45,7 @@ public class Mall {
             AttributeCollection toGet = new AttributeCollection();
             toGet.add(new Attribute(Name.NAME, Table.MALLS));
 
-            QueryResult result = DatabaseManager.getInstance().retrieve(toGet);
+            QueryResult result = DB.retrieve(toGet);
 
             if (result.noErrors()) {
                 ResultSet rs = result.getResult();
@@ -52,6 +61,12 @@ public class Mall {
 
     }
 
+    /**
+     * Gets the number of floors that the given mall has
+     *
+     * @param mallName Mall whose number of floors is to be obtained
+     * @return number of floors in mall [mallName]
+     */
     public static int getFloors(String mallName) {
 
         int numFloors = 0;
@@ -62,7 +77,7 @@ public class Mall {
 
             Filters filters = new Filters();
             filters.addEqual(new Attribute(Name.NAME, mallName, Table.MALLS));
-            QueryResult result = DatabaseManager.getInstance().retrieve(toGet, filters);
+            QueryResult result = DB.retrieve(toGet, filters);
 
             if (result.noErrors()) {
                 ResultSet rs = result.getResult();
@@ -76,26 +91,90 @@ public class Mall {
         return numFloors;
     }
 
+    /**
+     * Inserts a new mall into the database
+     *
+     * @param toInsert
+     * @return QueryResult of the insertion operation. Returns null if the mall
+     * already exists
+     *
+     * @throws SQLException
+     * @throws DBManagementException
+     */
     public static QueryResult insert(AttributeCollection toInsert) throws SQLException, DBManagementException {
         toInsert = toInsert.filter(Table.MALLS);
         toInsert.add(new Attribute(Name.MALL_NUM, String.valueOf(generateMallNum()), Table.MALLS));
-        return DatabaseManager.getInstance().insert(Table.MALLS, toInsert);
+        return DB.insert(Table.MALLS, toInsert);
     }
 
-    public static QueryResult modify(AttributeCollection newValues, Filters toModify) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    /**
+     * Modifies the mall in the program and in database
+     *
+     * @param newValues New values for the attributes of the mall
+     * @return result of the modification operation
+     * @throws SQLException
+     * @throws DBManagementException
+     */
+    public QueryResult modify(AttributeCollection newValues) throws SQLException, DBManagementException {
+        Filters filters = new Filters();
+        filters.addEqual(new Attribute(Name.MALL_NUM, String.valueOf(mallNum), Table.MALLS));
+        QueryResult result = DB.modify(Table.MALLS, filters, newValues, true);
+
+        if (!result.noErrors()) {
+            return result;
+        }
+
+        filters.clear();
+        filters.addEqual(newValues.getAttribute(Table.MALLS, Name.MALL_NUM));
+
+        QueryResult modifiedMall = DB.retrieve(Table.MALLS, filters);
+        setValues(modifiedMall.getResult());
+
+        return result;
     }
 
-    public static QueryResult delete(Filters toDelete) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    /**
+     * Deletes a mall from the database and nullifies clears this mall object
+     *
+     * @return result of the deletion operation
+     * @throws SQLException
+     * @throws DBManagementException
+     */
+    public QueryResult delete() throws SQLException, DBManagementException {
+
+        Filters filters = new Filters();
+        filters.addEqual(new Attribute(Name.MALL_NUM, String.valueOf(mallNum), Table.MALLS));
+        QueryResult result = DB.delete(Table.MALLS, filters);
+        if (result.noErrors()) {
+            clear();
+        }
+        return result;
     }
 
-    public static Mall retrieve(String mallNum) {
-        throw new UnsupportedOperationException();
+    /**
+     * Retrieves the mall with the given mall number from the database.
+     *
+     * @param mallNum mall number of the mall to be retrieved
+     * @return A fully initialized Mall instance containing the same attributes
+     * as those in Database. If there is no mall with the given mall number,
+     * function returns null.
+     *
+     * @throws SQLException
+     * @throws DBManagementException
+     */
+    public static Mall retrieve(int mallNum) throws SQLException, DBManagementException {
+        Filters filters = new Filters();
+        filters.addEqual(new Attribute(Name.MALL_NUM, String.valueOf(mallNum), Table.MALLS));
+        QueryResult mall = DB.retrieve(Table.MALLS, filters);
+
+        if (mall.getRowsAffected() < 1) {
+            return null;
+        }
+        return new Mall(mall.getResult());
+
     }
 
     private static int generateMallNum() throws SQLException {
-        DatabaseManager DB = DatabaseManager.getInstance();
         QueryResult result = DB.retrieveMax(new Attribute(Name.MALL_NUM, Table.MALLS));
         ResultSet max = result.getResult();
         max.next();
@@ -106,4 +185,17 @@ public class Mall {
         }
     }
 
+    private void setValues(ResultSet mall) throws SQLException {
+        name = mall.getString(Name.NAME.name());
+        address = mall.getString(Name.ADDRESS.name());
+        numFloors = mall.getInt(Name.NUM_FLOORS.name());
+        mallNum = mall.getInt(Name.MALL_NUM.name());
+    }
+
+    private void clear() {
+        name = null;
+        address = null;
+        numFloors = 0;
+        mallNum = 0;
+    }
 }
