@@ -158,6 +158,7 @@ public class DatabaseManager {
      * the DB.
      * @throws DBManagementException Print the message to know why the exception
      * was thrown
+     *
      */
     public QueryResult retrieve(Table t, Filters filters) throws SQLException, DBManagementException {
 
@@ -168,6 +169,36 @@ public class DatabaseManager {
             throw new RuntimeException(e);
         }
         String query = "Select * from " + t.getAliasedName() + " " + filters.getFilterClause();
+        return handleDBOperation(error, query, false);
+    }
+
+    /**
+     * Joins the tables containing the attributes of the given filter and
+     * retrieves the rows that satisfy the conditions in the filter. All
+     * attributes in those tables are selected. Bear in mind that the tables
+     * containing the attributes must be eligible for joining, otherwise an
+     * exception is thrown
+     *
+     * @param filters conditions that a row must satisfy to be retrieved
+     * @return QueryResult containing the result set of the retrieval operation
+     * @throws SQLException If an error occurs while retrieving the data from
+     * the DB.
+     * @throws DBManagementException Print the message to know why the exception
+     * was thrown
+     *
+     * @deprecated use {@link #retrieve(Table t, Filters filters)} instead.
+     *
+     */
+    @Deprecated
+    public QueryResult retrieve(Filters filters) throws SQLException, DBManagementException {
+        Errors error = null;
+        try {
+            error = ConstraintChecker.getInstance().checkRetrieval(filters);
+        } catch (DBManagementException e) {
+            throw new RuntimeException(e);
+        }
+        String query
+                = "Select * from " + new QueryGenerator(new AttributeCollection(filters)).getFromClause();
         return handleDBOperation(error, query, false);
     }
 
@@ -251,7 +282,13 @@ public class DatabaseManager {
 
 //        System.out.println(sqlStatement);
         Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        return stmt.executeQuery(sqlStatement);
+        try {
+            return stmt.executeQuery(sqlStatement);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw new SQLException();
+        }
+
     }
 
     /**

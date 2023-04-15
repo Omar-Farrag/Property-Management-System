@@ -125,7 +125,8 @@ public class AttributeCollection {
      * table are kept
      *
      * @param t Table which an attribute must be in to remain in the collection
-     * @return New attribute collection containing only the filtered attributes
+     * @return New attribute collection containing only the filtered attributes.
+     * The original attributeCollection is unaffected
      */
     public AttributeCollection filter(Table t) {
         Set<Attribute> toKeep = new LinkedHashSet<>(attributes);

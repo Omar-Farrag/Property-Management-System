@@ -1,10 +1,13 @@
 package General;
 
+import DatabaseManagement.AttributeCollection;
+import DatabaseManagement.Filters;
+
 public interface ModificationForm {
 
-    public void getAttributes();
+    public AttributeCollection getAttributes();
 
-    public void getFilters();
+    public Filters getFilters();
 
     public void populateFields();
 

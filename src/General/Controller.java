@@ -11,43 +11,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 
 public class Controller {
-
-    /**
-     * @return List of all mall names in the database
-     */
-    public ArrayList<String> getListOfMalls() {
-        return Mall.getListOfMalls();
-    }
-
-    /**
-     * Returns the number of floors in a given mall
-     *
-     * @param mallName Name of the malls whose floors are to be retrieved
-     * @return number of floors in the mall
-     */
-    public int getFloors(String mallName) {
-        return Mall.getFloors(mallName);
-    }
-
-    /**
-     * @return The list of classes used in the store classification system Right
-     * now, it returns 'A','B','C', 'D'
-     */
-    public ArrayList<String> getClasses() {
-        return Store.getClasses();
-    }
-
-    /**
-     * @return The list of purposes that a store can be used for
-     */
-    public ArrayList<String> getPurposes() {
-        return Store.getPurposes();
-    }
 
     /**
      * Displays all errors in a database operation in a separate dialog window
@@ -65,7 +34,10 @@ public class Controller {
         text.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 18));
         Color bgColor = UIManager.getColor("OptionPane.background");
         text.setBackground(bgColor);
-        JOptionPane.showMessageDialog(null, text, "ERROR", JOptionPane.ERROR_MESSAGE);
+        JOptionPane pane = new JOptionPane(text, JOptionPane.ERROR_MESSAGE);
+        JDialog dialog = pane.createDialog("ERROR");
+        dialog.setAlwaysOnTop(true); // make the dialog always on top
+        dialog.setVisible(true);
     }
 
     /**
@@ -74,15 +46,25 @@ public class Controller {
      * @param message error message to be displayed;
      */
     public void displayErrors(String message) {
-        javax.swing.JLabel label = new javax.swing.JLabel(message);
-        label.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 18));
-        JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.ERROR_MESSAGE);
+        JOptionPane pane = new JOptionPane(message, JOptionPane.ERROR_MESSAGE);
+        JDialog dialog = pane.createDialog("ERROR");
+        dialog.setAlwaysOnTop(true); // make the dialog always on top
+        dialog.setVisible(true);
     }
 
-    public void displaySQLError() {
+    /**
+     * Displays the SQL error message whenever there is a SQL error
+     */
+    public void displaySQLError(SQLException e) {
         javax.swing.JLabel label = new javax.swing.JLabel("Something went wrong...Please Try Again Later");
         label.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 18));
-        JOptionPane.showMessageDialog(null, label, "ERROR", JOptionPane.ERROR_MESSAGE);
+
+        JOptionPane pane = new JOptionPane(label, JOptionPane.ERROR_MESSAGE);
+        JDialog dialog = pane.createDialog("ERROR");
+        dialog.setAlwaysOnTop(true); // make the dialog always on top
+        dialog.setVisible(true);
+
+        e.printStackTrace();
     }
 
     /**
@@ -93,9 +75,17 @@ public class Controller {
     public void displaySuccessMessage(String message) {
         javax.swing.JLabel label = new javax.swing.JLabel(message);
         label.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 18));
-        JOptionPane.showMessageDialog(null, label, "Success", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane pane = new JOptionPane(label, JOptionPane.INFORMATION_MESSAGE);
+        JDialog dialog = pane.createDialog("ERROR");
+        dialog.setAlwaysOnTop(true); // make the dialog always on top
+        dialog.setVisible(true);
     }
 
+    /**
+     *******************************************************************************************************************
+     *******************************************************STORES******************************************************
+     * ******************************************************************************************************************
+     */
     /**
      * Insert in database a new store based on the input in the received form
      * collection
@@ -115,8 +105,7 @@ public class Controller {
                 displayErrors(result);
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            displaySQLError();
+            displaySQLError(ex);
         } catch (DBManagementException ex) {
             ex.printStackTrace();
         }
@@ -124,13 +113,26 @@ public class Controller {
     }
 
     /**
-     * Modifies a store in the database based on the input in the received form
+     * Modifies the given store in the database on the input in the received
+     * form
      *
+     * @param store store to be modified
      * @param form The form that called this function
      *
      */
-    public void modifyStore(ModificationForm form) {
-
+    public void modifyStore(Store store, ModificationForm form) {
+        try {
+            QueryResult modificationResult = store.modify(form.getAttributes());
+            if (modificationResult.noErrors()) {
+                displaySuccessMessage("Store modified successfully");
+            } else {
+                displayErrors(modificationResult);
+            }
+        } catch (SQLException ex) {
+            displaySQLError(ex);
+        } catch (DBManagementException ex) {
+            displayErrors("Could not modify the store");
+        }
     }
 
     /**
@@ -142,6 +144,26 @@ public class Controller {
 
     }
 
+    /**
+     * @return The list of classes used in the store classification system Right
+     * now, it returns 'A','B','C', 'D'
+     */
+    public ArrayList<String> getClasses() {
+        return Store.getClasses();
+    }
+
+    /**
+     * @return The list of purposes that a store can be used for
+     */
+    public ArrayList<String> getPurposes() {
+        return Store.getPurposes();
+    }
+
+    /**
+     *******************************************************************************************************************
+     *******************************************************MALLS*******************************************************
+     * ******************************************************************************************************************
+     */
     /**
      * Insert in database a new mall based on the input in the received form
      * collection
@@ -158,7 +180,7 @@ public class Controller {
                 displayErrors(result);
             }
         } catch (SQLException ex) {
-            displaySQLError();
+            displaySQLError(ex);
         } catch (DBManagementException ex) {
             ex.printStackTrace();
         }
@@ -180,6 +202,54 @@ public class Controller {
      */
     public void deleteMall(ModificationForm form) {
 
+    }
+
+    /**
+     * Gets the list of stores in the given mall
+     *
+     * @param mallName name of mall whose stores are to be retrieved
+     * @return list of stores in mall [mallName]
+     */
+    public ArrayList<Store> getListOfStores(String mallName) {
+        try {
+            Mall mall = Mall.retrieve(mallName);
+            return mall.getStores();
+        } catch (SQLException ex) {
+            displaySQLError(ex);
+        } catch (DBManagementException ex) {
+            displayErrors("Could not get list of stores in mall " + mallName);
+        }
+        return new ArrayList<Store>();
+    }
+
+    /**
+     * @return List of all mall names in the database
+     */
+    public ArrayList<Mall> getListOfMalls() {
+        try {
+            return Mall.getListOfMalls();
+        } catch (SQLException ex) {
+            displaySQLError(ex);
+        }
+        return new ArrayList<>();
+    }
+
+    /**
+     * Returns mall with the given mallName
+     *
+     * @param mallName Name of the mall to be retrieved
+     * @return the mall itself with all its attributes initialized as per
+     * database. Returns null if no such mall is found
+     */
+    public Mall getMall(String mallName) {
+        try {
+            return Mall.retrieve(mallName);
+        } catch (SQLException ex) {
+            displaySQLError(ex);
+        } catch (DBManagementException ex) {
+            displayErrors("Could not retrieve mall " + mallName);
+        }
+        return null;
     }
 
 }

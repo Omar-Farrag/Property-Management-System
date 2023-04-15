@@ -11,8 +11,7 @@ import DatabaseManagement.Table;
 import General.Controller;
 import General.InsertForm;
 import java.util.ArrayList;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
+import Properties.Mall;
 
 /**
  *
@@ -548,7 +547,8 @@ public class CreatePropertyForm extends javax.swing.JFrame implements InsertForm
             return;
         }
         String mallName = selectedMall.toString().trim();
-        int floors = controller.getFloors(mallName);
+        Mall mall = controller.getMall(mallName);
+        int floors = mall.getNumFloors();
 
         floorCMB.removeAllItems();
         for (int i = 0; i < floors; i++) {
@@ -580,66 +580,6 @@ public class CreatePropertyForm extends javax.swing.JFrame implements InsertForm
         return fields;
     }
 
-    public String[] getFloor_to_letter() {
-        return floor_to_letter;
-    }
-
-    public String getAnnualField() {
-        return annualField.getText().trim();
-    }
-
-    public String getBiannualField() {
-        return biannualField.getText().trim();
-    }
-
-    public String getClassCMB() {
-        return classCMB.getSelectedItem().toString().trim();
-    }
-
-    public String getFloorCMB() {
-        return floorCMB.getSelectedItem().toString().trim();
-    }
-
-    public String getMallAddressField() {
-        return mallAddressField.getText().trim();
-    }
-
-    public String getMallCMB() {
-        return mallCMB.getSelectedItem().toString().trim();
-    }
-
-    public String getMallFloorsField() {
-        return mallFloorsField.getText().trim();
-    }
-
-    public String getMallNameField() {
-        return mallNameField.getText().trim();
-    }
-
-    public String getMonthlyField() {
-        return monthlyField.getText().trim();
-    }
-
-    public String getPurposeCMB() {
-        return purposeCMB.getSelectedItem().toString().trim();
-    }
-
-    public String getQuarterlyField() {
-        return quarterlyField.getText().trim();
-    }
-
-    public String getSpaceField() {
-        return spaceField.getText().trim();
-    }
-
-    public String getStoreNameField() {
-        return storeNameField.getText().trim();
-    }
-
-    public String getStoreNumberField() {
-        return storeNumberField.getText().trim();
-    }
-
     @Override
     public void clearFields() {
         storeNameField.setText("");
@@ -660,17 +600,19 @@ public class CreatePropertyForm extends javax.swing.JFrame implements InsertForm
 
     private void populateCMBs() {
 
-        ArrayList<String> values;
+        ArrayList<Mall> malls;
 
         mallCMB.removeAllItems();
         floorCMB.removeAllItems();
         classCMB.removeAllItems();
         purposeCMB.removeAllItems();
 
-        values = controller.getListOfMalls();
-        for (String mall : values) {
-            mallCMB.addItem(mall);
+        malls = controller.getListOfMalls();
+        for (Mall mall : malls) {
+            mallCMB.addItem(mall.getName());
         }
+
+        ArrayList<String> values;
 
         values = controller.getClasses();
         for (String classValue : values) {

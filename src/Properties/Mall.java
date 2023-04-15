@@ -27,7 +27,8 @@ public class Mall {
      * ensure that any instance of the mall class represents an actual mall in
      * the database, not just some random mall that we created in the program
      *
-     * @param store
+     * @param mall result set pointing to the row containing the mall
+     * information
      * @throws SQLException
      */
     private Mall(ResultSet mall) throws SQLException {
@@ -37,58 +38,19 @@ public class Mall {
     /**
      * @return List of all malls that the real estate company owns
      */
-    public static ArrayList<String> getListOfMalls() {
-        ArrayList<String> malls = new ArrayList<>();
+    public static ArrayList<Mall> getListOfMalls() throws SQLException {
+        ArrayList<Mall> malls = new ArrayList<>();
 
-        try {
+        QueryResult result = DB.retrieve(Table.MALLS);
 
-            AttributeCollection toGet = new AttributeCollection();
-            toGet.add(new Attribute(Name.NAME, Table.MALLS));
-
-            QueryResult result = DB.retrieve(toGet);
-
-            if (result.noErrors()) {
-                ResultSet rs = result.getResult();
-                while (rs.next()) {
-                    malls.add(rs.getString(Name.NAME.getName()));
-                }
+        if (result.noErrors()) {
+            ResultSet rs = result.getResult();
+            while (rs.next()) {
+                malls.add(new Mall(rs));
             }
-        } catch (SQLException | DBManagementException ex) {
-            ex.printStackTrace();
         }
-
         return malls;
 
-    }
-
-    /**
-     * Gets the number of floors that the given mall has
-     *
-     * @param mallName Mall whose number of floors is to be obtained
-     * @return number of floors in mall [mallName]
-     */
-    public static int getFloors(String mallName) {
-
-        int numFloors = 0;
-        try {
-
-            AttributeCollection toGet = new AttributeCollection();
-            toGet.add(new Attribute(Name.NUM_FLOORS, Table.MALLS));
-
-            Filters filters = new Filters();
-            filters.addEqual(new Attribute(Name.NAME, mallName, Table.MALLS));
-            QueryResult result = DB.retrieve(toGet, filters);
-
-            if (result.noErrors()) {
-                ResultSet rs = result.getResult();
-                rs.next();
-                numFloors = rs.getInt(Name.NUM_FLOORS.getName());
-
-            }
-        } catch (SQLException | DBManagementException ex) {
-            ex.printStackTrace();
-        }
-        return numFloors;
     }
 
     /**
@@ -152,6 +114,28 @@ public class Mall {
     }
 
     /**
+     * @return List of all stores in this mall
+     */
+    public ArrayList<Store> getStores() throws SQLException, DBManagementException {
+        Filters filter = new Filters();
+        filter.addEqual(new Attribute(Name.MALL_NUM, String.valueOf(mallNum), Table.LOCS));
+
+        AttributeCollection toGet = new AttributeCollection().add(new Attribute(Name.LOCATION_NUM, Table.LOCS));
+
+        //Retrieve location numbers where the mall number is equal to this mall's mall number
+        QueryResult retrievalResult = DB.retrieve(toGet, filter);
+        ResultSet locationNumbers = retrievalResult.getResult();
+
+        ArrayList<Store> stores = new ArrayList<>();
+
+        while (locationNumbers.next()) {
+            Store store = Store.retrieve(locationNumbers.getString(1));
+            stores.add(store);
+        }
+        return stores;
+    }
+
+    /**
      * Retrieves the mall with the given mall number from the database.
      *
      * @param mallNum mall number of the mall to be retrieved
@@ -174,6 +158,31 @@ public class Mall {
 
     }
 
+    /**
+     * Retrieves the mall with the given mall number from the database.
+     *
+     * @param mallNum mall number of the mall to be retrieved
+     * @return A fully initialized Mall instance containing the same attributes
+     * as those in Database. If there is no mall with the given mall number,
+     * function returns null.
+     *
+     * @throws SQLException
+     * @throws DBManagementException
+     */
+    public static Mall retrieve(String mallName) throws SQLException, DBManagementException {
+        Filters filters = new Filters();
+        filters.addEqual(new Attribute(Name.NAME, mallName, Table.MALLS));
+        QueryResult mall = DB.retrieve(Table.MALLS, filters);
+
+        if (mall.getRowsAffected() < 1) {
+            return null;
+        }
+        ResultSet newMall = mall.getResult();
+        newMall.next();
+        return new Mall(newMall);
+
+    }
+
     private static int generateMallNum() throws SQLException {
         QueryResult result = DB.retrieveMax(new Attribute(Name.MALL_NUM, Table.MALLS));
         ResultSet max = result.getResult();
@@ -186,10 +195,10 @@ public class Mall {
     }
 
     private void setValues(ResultSet mall) throws SQLException {
-        name = mall.getString(Name.NAME.name());
-        address = mall.getString(Name.ADDRESS.name());
-        numFloors = mall.getInt(Name.NUM_FLOORS.name());
-        mallNum = mall.getInt(Name.MALL_NUM.name());
+        name = mall.getString(Name.NAME.getName());
+        address = mall.getString(Name.ADDRESS.getName());
+        numFloors = mall.getInt(Name.NUM_FLOORS.getName());
+        mallNum = mall.getInt(Name.MALL_NUM.getName());
     }
 
     private void clear() {
@@ -197,5 +206,21 @@ public class Mall {
         address = null;
         numFloors = 0;
         mallNum = 0;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public int getNumFloors() {
+        return numFloors;
+    }
+
+    public int getMallNum() {
+        return mallNum;
     }
 }

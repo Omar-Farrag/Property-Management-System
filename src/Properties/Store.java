@@ -11,12 +11,13 @@ import DatabaseManagement.Table;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Store {
 
-    private String locationNum;
+    private int locationNum;
     private float space;
     private float monthlyRate;
     private float quarterlyRate;
@@ -25,7 +26,10 @@ public class Store {
     private String purpose;
     private String storeClass;
     private String name;
+    private int storeNumber;
+    private int floor;
 
+    private HashMap<String, Integer> charFloor_to_intFloor = new HashMap<>();
     private final static DatabaseManager DB = DatabaseManager.getInstance();
 
     /**
@@ -34,10 +38,18 @@ public class Store {
      * ensure that any instance of the store class represents an actual store in
      * the database, not just some random store that we created in the program
      *
-     * @param store
+     * @param store Result set pointing to the row containing the store
+     * information
      * @throws SQLException
      */
-    private Store(ResultSet store) throws SQLException {
+    private Store(ResultSet store) throws SQLException, DBManagementException {
+        charFloor_to_intFloor = new HashMap<>();
+        charFloor_to_intFloor.put("G", 0);
+        charFloor_to_intFloor.put("F", 1);
+        charFloor_to_intFloor.put("S", 2);
+        charFloor_to_intFloor.put("H", 3);
+        charFloor_to_intFloor.put("O", 4);
+
         setValues(store);
     }
 
@@ -114,13 +126,15 @@ public class Store {
      */
     public static Store retrieve(String locationNum) throws SQLException, DBManagementException {
         Filters filters = new Filters();
-        filters.addEqual(new Attribute(Name.LOCATION_NUM, locationNum, Table.PROPERTIES));
+        filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.PROPERTIES));
         QueryResult store = DB.retrieve(Table.PROPERTIES, filters);
 
         if (store.getRowsAffected() < 1) {
             return null;
         }
-        return new Store(store.getResult());
+        ResultSet storeRow = store.getResult();
+        storeRow.next();
+        return new Store(storeRow);
 
     }
 
@@ -163,17 +177,26 @@ public class Store {
     public QueryResult modify(AttributeCollection newValues) throws SQLException, DBManagementException {
 
         Filters filters = new Filters();
-        filters.addEqual(new Attribute(Name.LOCATION_NUM, locationNum, Table.PROPERTIES));
-        QueryResult result = DB.modify(Table.PROPERTIES, filters, newValues, true);
+        filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.PROPERTIES));
+
+        QueryResult result = DB.modify(Table.PROPERTIES, filters, newValues.filter(Table.PROPERTIES), true);
+
+        filters.clear();
+        filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.LOCS));
+        QueryResult result2 = DB.modify(Table.LOCS, filters, newValues.filter(Table.LOCS), true);
 
         if (!result.noErrors()) {
             return result;
         }
+        if (!result2.noErrors()) {
+            return result2;
+        }
 
         filters.clear();
-        filters.addEqual(newValues.getAttribute(Table.PROPERTIES, Name.LOCATION_NUM));
+        filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.PROPERTIES));
 
         QueryResult modifiedStore = DB.retrieve(Table.PROPERTIES, filters);
+        modifiedStore.getResult().next();
         setValues(modifiedStore.getResult());
 
         return result;
@@ -190,7 +213,7 @@ public class Store {
     public QueryResult delete() throws SQLException, DBManagementException {
 
         Filters filters = new Filters();
-        filters.addEqual(new Attribute(Name.LOCATION_NUM, locationNum, Table.PROPERTIES));
+        filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.PROPERTIES));
         QueryResult result = DB.delete(Table.PROPERTIES, filters);
         if (result.noErrors()) {
             clear();
@@ -209,8 +232,8 @@ public class Store {
         }
     }
 
-    private void setValues(ResultSet store) throws SQLException {
-        locationNum = store.getString(Name.LOCATION_NUM.name());
+    private void setValues(ResultSet store) throws SQLException, DBManagementException {
+        locationNum = store.getInt(Name.LOCATION_NUM.name());
         space = store.getFloat(Name.SPACE.name());
         monthlyRate = store.getFloat(Name.MONTHLY_RATE.name());
         quarterlyRate = store.getFloat(Name.QUARTERLY_RATE.name());
@@ -219,10 +242,24 @@ public class Store {
         purpose = store.getString(Name.PURPOSE.name());
         storeClass = store.getString(Name.CLASS.name());
         name = store.getString(Name.NAME.name());
+
+        Filters filters = new Filters();
+        filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.LOCS));
+        QueryResult result = DB.retrieve(Table.LOCS, filters);
+
+        ResultSet locInfo = result.getResult();
+        locInfo.next();
+
+        String storeNUM = locInfo.getString(Name.STORE_NUM.getName());
+
+        String c = storeNUM.substring(0, 1);
+        floor = charFloor_to_intFloor.get(c);
+        storeNumber = Integer.parseInt(storeNUM.substring(1));
+
     }
 
     private void clear() {
-        locationNum = null;
+        locationNum = 0;
         space = 0;
         monthlyRate = 0;
         quarterlyRate = 0;
@@ -231,6 +268,50 @@ public class Store {
         purpose = null;
         storeClass = null;
         name = null;
+    }
+
+    public int getLocationNum() {
+        return locationNum;
+    }
+
+    public float getSpace() {
+        return space;
+    }
+
+    public float getMonthlyRate() {
+        return monthlyRate;
+    }
+
+    public float getQuarterlyRate() {
+        return quarterlyRate;
+    }
+
+    public float getBiAnnualRate() {
+        return biAnnualRate;
+    }
+
+    public float getAnnualRate() {
+        return annualRate;
+    }
+
+    public String getPurpose() {
+        return purpose;
+    }
+
+    public String getStoreClass() {
+        return storeClass;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getStoreNumber() {
+        return storeNumber;
+    }
+
+    public int getFloor() {
+        return floor;
     }
 
 }

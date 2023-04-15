@@ -421,7 +421,7 @@ public class Validator {
                 = constraint.split("IN")[1].replace("(", "").replace(")", "").trim().split(",");
 
         for (String value : acceptedValues) {
-            value = value.replace("'", "");
+            value = value.replace("'", "").trim();
             if (value.equals(toValidate.getValue())) {
                 return "";
             }

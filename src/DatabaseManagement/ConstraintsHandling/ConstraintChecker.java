@@ -66,6 +66,12 @@ public class ConstraintChecker {
         return new Errors();
     }
 
+    public Errors checkRetrieval(Filters filter) throws DBManagementException {
+
+        checkAttributeExistence(new AttributeCollection(filter));
+        return new Errors();
+    }
+
     public Errors checkDeletion(Table t, Filters filters) throws SQLException, DBManagementException {
         AttributeCollection filterCollection = new AttributeCollection(filters);
         checkAttributeExistence(t, filterCollection);
@@ -156,30 +162,6 @@ public class ConstraintChecker {
         return errors;
     }
 
-//    private Errors checkConstraints(AttributeCollection toValidate,String operationType) throws TableNotFoundException,
-//            ConstraintNotFoundException {
-//        Errors errors = new Errors();
-//
-//        for (Attribute attribute : toValidate.attributes()) {
-//            JSONObject table = metaData.getTableInfoFromMetaData(attribute.getT());
-//            JSONObject tableAttributes = (JSONObject) table.get("Attributes");
-//            JSONArray attributeConstraints = (JSONArray) tableAttributes.get(attribute.getStringName());
-//
-//            for (Object obj : attributeConstraints) {
-//                String constraint = (String) obj;
-//                try {
-//                    errors.add(attribute, validator.validate(constraint, attribute, toValidate,operationType));
-//                } catch (
-//                        MissingValidatorException e) {
-//                    System.out.println(e.getMessage());
-//                    e.printStackTrace();
-//                } catch (DBManagementException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            }
-//        }
-//        return errors;
-//    }
     private void checkAttributeExistence(Table t, AttributeCollection toValidate) throws AttributeNotFoundException, TableNotFoundException {
         JSONObject table = metaData.getTableInfoFromMetaData(t);
         JSONObject tableAttributes = (JSONObject) table.get("Attributes");
