@@ -278,11 +278,15 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel13.setText("Current");
 
+        currentStoreNumber.setForeground(new java.awt.Color(255, 0, 204));
+
         jLabel49.setBackground(new java.awt.Color(204, 204, 204));
         jLabel49.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jLabel49.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel49.setText("Store Number:");
         jLabel49.setOpaque(true);
+
+        newStoreNumber.setForeground(new java.awt.Color(0, 0, 255));
 
         jLabel14.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(255, 0, 204));
@@ -329,6 +333,10 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
         jLabel56.setText("Space:");
         jLabel56.setOpaque(true);
 
+        currentSpace.setForeground(new java.awt.Color(255, 0, 204));
+
+        newSpace.setForeground(new java.awt.Color(0, 0, 255));
+
         jLabel21.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         jLabel21.setForeground(new java.awt.Color(0, 0, 255));
         jLabel21.setText("New");
@@ -343,6 +351,10 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
         jLabel59.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel59.setText("Monthly Rate");
         jLabel59.setOpaque(true);
+
+        currentMonthly.setForeground(new java.awt.Color(255, 0, 204));
+
+        newMonthly.setForeground(new java.awt.Color(0, 0, 255));
 
         jLabel24.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         jLabel24.setForeground(new java.awt.Color(255, 0, 204));
@@ -368,6 +380,14 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
         jLabel64.setText("Quarterly Rate:");
         jLabel64.setOpaque(true);
 
+        currentQuarterly.setForeground(new java.awt.Color(255, 0, 204));
+
+        newQuarterly.setForeground(new java.awt.Color(0, 0, 255));
+
+        newBiAnnual.setForeground(new java.awt.Color(0, 0, 255));
+
+        currentBiAnnual.setForeground(new java.awt.Color(255, 0, 204));
+
         jLabel37.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         jLabel37.setForeground(new java.awt.Color(255, 0, 204));
         jLabel37.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -388,9 +408,13 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
         jLabel69.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel69.setText("Current");
 
+        currentAnnual.setForeground(new java.awt.Color(255, 0, 204));
+
         jLabel72.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         jLabel72.setForeground(new java.awt.Color(0, 0, 255));
         jLabel72.setText("New");
+
+        newAnnual.setForeground(new java.awt.Color(0, 0, 255));
 
         jLabel73.setBackground(new java.awt.Color(204, 204, 204));
         jLabel73.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
@@ -398,8 +422,10 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
         jLabel73.setText("Annual Rate:");
         jLabel73.setOpaque(true);
 
+        currentMallCMB.setForeground(new java.awt.Color(255, 0, 204));
         currentMallCMB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        newMallCMB.setForeground(new java.awt.Color(0, 0, 255));
         newMallCMB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         newMallCMB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -407,16 +433,26 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
             }
         });
 
+        currentFloorCMB.setForeground(new java.awt.Color(255, 0, 204));
         currentFloorCMB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        newFloorCMB.setForeground(new java.awt.Color(0, 0, 255));
         newFloorCMB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        currentStoreName.setForeground(new java.awt.Color(255, 0, 204));
+
+        newStoreName.setForeground(new java.awt.Color(0, 0, 255));
+
+        currentPurposeCMB.setForeground(new java.awt.Color(255, 0, 204));
         currentPurposeCMB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        newPurposeCMB.setForeground(new java.awt.Color(0, 0, 255));
         newPurposeCMB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        currentClassCMB.setForeground(new java.awt.Color(255, 0, 204));
         currentClassCMB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        newClassCMB.setForeground(new java.awt.Color(0, 0, 255));
         newClassCMB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         ModifyBtn2.setBackground(new java.awt.Color(0, 0, 255));
@@ -779,21 +815,29 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
         jLabel52.setText("Mall Name:");
         jLabel52.setOpaque(true);
 
+        currentMallName.setForeground(new java.awt.Color(255, 0, 204));
+
+        newMallName.setForeground(new java.awt.Color(0, 0, 255));
+
         jLabel45.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        jLabel45.setForeground(new java.awt.Color(0, 0, 255));
+        jLabel45.setForeground(new java.awt.Color(255, 0, 204));
         jLabel45.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel45.setText("Current");
 
         jLabel55.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        jLabel55.setForeground(new java.awt.Color(255, 0, 255));
+        jLabel55.setForeground(new java.awt.Color(0, 0, 255));
         jLabel55.setText("New");
 
+        newAddress.setForeground(new java.awt.Color(0, 0, 255));
+
         jLabel61.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        jLabel61.setForeground(new java.awt.Color(255, 0, 255));
+        jLabel61.setForeground(new java.awt.Color(0, 0, 255));
         jLabel61.setText("New");
 
+        currentAddress.setForeground(new java.awt.Color(255, 0, 204));
+
         jLabel66.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        jLabel66.setForeground(new java.awt.Color(0, 0, 255));
+        jLabel66.setForeground(new java.awt.Color(255, 0, 204));
         jLabel66.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel66.setText("Current");
 
@@ -1345,18 +1389,6 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
         currentMonthly.setEnabled(false);
         currentMallName.setEnabled(false);
         currentAddress.setEnabled(false);
-
-        currentMallCMB.setForeground(Color.PINK);
-        currentFloorCMB.setForeground(Color.PINK);
-        currentPurposeCMB.setForeground(Color.PINK);
-        currentClassCMB.setForeground(Color.PINK);
-        currentStoreName.setForeground(Color.PINK);
-        currentStoreNumber.setForeground(Color.PINK);
-        currentSpace.setForeground(Color.PINK);
-        currentAnnual.setForeground(Color.PINK);
-        currentBiAnnual.setForeground(Color.PINK);
-        currentQuarterly.setForeground(Color.PINK);
-        currentMonthly.setForeground(Color.PINK);
 
     }
 
