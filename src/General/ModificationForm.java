@@ -11,6 +11,6 @@ public interface ModificationForm {
 
     public void populateFields();
 
-    public void clearFields();
+    public void resetFields();
 
 }

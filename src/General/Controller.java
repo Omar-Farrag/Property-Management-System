@@ -1,8 +1,6 @@
 package General;
 
-import DatabaseManagement.AttributeCollection;
 import DatabaseManagement.Exceptions.DBManagementException;
-import DatabaseManagement.Filters;
 import DatabaseManagement.QueryResult;
 import Properties.Mall;
 import Properties.Store;
@@ -136,12 +134,25 @@ public class Controller {
     }
 
     /**
-     * Deletes a store from database based on the input in the received form
+     * Deletes the given store from database based on the input in the received
+     * form
      *
      * @param form The form that called this function
      */
-    public void deleteStore(ModificationForm form) {
-
+    public void deleteStore(Store store, ModificationForm form) {
+        try {
+            QueryResult deletionResult = store.delete();
+            if (!deletionResult.noErrors()) {
+                displayErrors(deletionResult);
+            } else {
+                displaySuccessMessage("Store deleted successfully");
+                form.resetFields();
+            }
+        } catch (SQLException ex) {
+            displaySQLError(ex);
+        } catch (DBManagementException ex) {
+            displayErrors("Could not delete the store");
+        }
     }
 
     /**
@@ -187,20 +198,49 @@ public class Controller {
     }
 
     /**
-     * Modifies a mall in the database based on the input in the received form
+     * Modifies the given mall in the database based on the input in the
+     * received form
      *
      * @param form The form that called this function
      */
-    public void modifyMall(ModificationForm form) {
+    public void modifyMall(Mall mall, ModificationForm form) {
+        try {
+            QueryResult modificationResult = mall.modify(form.getAttributes());
 
+            if (modificationResult.noErrors()) {
+                displaySuccessMessage("Mall modified successfully");
+                form.resetFields();
+            } else {
+                displayErrors(modificationResult);
+            }
+
+        } catch (SQLException ex) {
+            displaySQLError(ex);
+        } catch (DBManagementException ex) {
+            displayErrors("Could not modify the mall");
+        }
     }
 
     /**
-     * Deletes a mall from database based on the input in the received form
+     * Deletes the given mall from the database based on the input in the
+     * received form
      *
      * @param form The form that called this function
      */
-    public void deleteMall(ModificationForm form) {
+    public void deleteMall(Mall mall, ModificationForm form) {
+        try {
+            QueryResult deletionResult = mall.delete();
+            if (!deletionResult.noErrors()) {
+                displayErrors(deletionResult);
+            } else {
+                displaySuccessMessage("Mall deleted successfully");
+                form.resetFields();
+            }
+        } catch (SQLException ex) {
+            displaySQLError(ex);
+        } catch (DBManagementException ex) {
+            displayErrors("Could not delete the mall");
+        }
 
     }
 

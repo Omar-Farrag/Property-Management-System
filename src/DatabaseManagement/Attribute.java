@@ -18,7 +18,7 @@ public class Attribute {
      */
     public Attribute(Name attributeName, String value, Table t) {
         this.attributeName = attributeName;
-        this.attributeValue = value;
+        this.attributeValue = value.replace("'", "''");
         this.type = attributeName.type;
         this.t = t;
 

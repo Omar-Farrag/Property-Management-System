@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import General.ModificationForm;
 import Properties.Mall;
 import Properties.Store;
+import java.awt.Color;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -25,8 +27,9 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
     private Controller controller;
     private int currentTab;
     private Store currentStore;
-    private Mall currentMall;
-    private Mall newMall;
+    private Mall currentStoreTabMall;
+    private Mall newStoreTabMall;
+    private Mall currentMallTabMall;
     String[] floors = new String[]{"G", "F", "S", "H", "O"};
 
     /**
@@ -37,6 +40,7 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
         currentTab = 0;
         initComponents();
         populateFilterMallCMBs();
+        hideCurrentFields();
         jScrollPane2.getVerticalScrollBar().setUnitIncrement(20);
     }
 
@@ -128,22 +132,22 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
         jPanel1 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel42 = new javax.swing.JLabel();
-        jComboBox13 = new javax.swing.JComboBox<>();
+        mallCMB = new javax.swing.JComboBox<>();
         jLabel44 = new javax.swing.JLabel();
         jLabel52 = new javax.swing.JLabel();
-        jTextField19 = new javax.swing.JTextField();
-        jTextField32 = new javax.swing.JTextField();
+        currentMallName = new javax.swing.JTextField();
+        newMallName = new javax.swing.JTextField();
         jLabel45 = new javax.swing.JLabel();
         jLabel55 = new javax.swing.JLabel();
-        jTextField33 = new javax.swing.JTextField();
+        newAddress = new javax.swing.JTextField();
         jLabel61 = new javax.swing.JLabel();
-        jTextField20 = new javax.swing.JTextField();
+        currentAddress = new javax.swing.JTextField();
         jLabel66 = new javax.swing.JLabel();
         jLabel71 = new javax.swing.JLabel();
-        jButton11 = new javax.swing.JButton();
-        jButton12 = new javax.swing.JButton();
-        jButton13 = new javax.swing.JButton();
-        jButton14 = new javax.swing.JButton();
+        deleteMallBtn2 = new javax.swing.JButton();
+        modifyMallBtn2 = new javax.swing.JButton();
+        deleteMallBtn1 = new javax.swing.JButton();
+        modifyMallBtn1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("MODIFY/DELETE PROPERTY");
@@ -200,6 +204,11 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
         DeleteBtn2.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         DeleteBtn2.setForeground(new java.awt.Color(255, 255, 255));
         DeleteBtn2.setText("DELETE");
+        DeleteBtn2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DeleteBtn2ActionPerformed(evt);
+            }
+        });
 
         filterStoreCMB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         filterStoreCMB.addActionListener(new java.awt.event.ActionListener() {
@@ -414,11 +423,21 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
         ModifyBtn2.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         ModifyBtn2.setForeground(new java.awt.Color(255, 255, 255));
         ModifyBtn2.setText("MODIFY");
+        ModifyBtn2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ModifyBtn2ActionPerformed(evt);
+            }
+        });
 
         DeleteBtn1.setBackground(new java.awt.Color(255, 0, 0));
         DeleteBtn1.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         DeleteBtn1.setForeground(new java.awt.Color(255, 255, 255));
         DeleteBtn1.setText("DELETE");
+        DeleteBtn1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DeleteBtn1ActionPerformed(evt);
+            }
+        });
 
         ModifyBtn1.setBackground(new java.awt.Color(0, 0, 255));
         ModifyBtn1.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
@@ -740,7 +759,12 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
         jLabel42.setText("Mall:");
         jLabel42.setOpaque(true);
 
-        jComboBox13.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        mallCMB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        mallCMB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mallCMBActionPerformed(evt);
+            }
+        });
 
         jLabel44.setBackground(new java.awt.Color(0, 0, 0));
         jLabel44.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
@@ -779,25 +803,45 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
         jLabel71.setText("Address:");
         jLabel71.setOpaque(true);
 
-        jButton11.setBackground(new java.awt.Color(255, 0, 0));
-        jButton11.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        jButton11.setForeground(new java.awt.Color(255, 255, 255));
-        jButton11.setText("DELETE");
+        deleteMallBtn2.setBackground(new java.awt.Color(255, 0, 0));
+        deleteMallBtn2.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        deleteMallBtn2.setForeground(new java.awt.Color(255, 255, 255));
+        deleteMallBtn2.setText("DELETE");
+        deleteMallBtn2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteMallBtn2ActionPerformed(evt);
+            }
+        });
 
-        jButton12.setBackground(new java.awt.Color(0, 0, 255));
-        jButton12.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        jButton12.setForeground(new java.awt.Color(255, 255, 255));
-        jButton12.setText("MODIFY");
+        modifyMallBtn2.setBackground(new java.awt.Color(0, 0, 255));
+        modifyMallBtn2.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        modifyMallBtn2.setForeground(new java.awt.Color(255, 255, 255));
+        modifyMallBtn2.setText("MODIFY");
+        modifyMallBtn2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                modifyMallBtn2ActionPerformed(evt);
+            }
+        });
 
-        jButton13.setBackground(new java.awt.Color(255, 0, 0));
-        jButton13.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        jButton13.setForeground(new java.awt.Color(255, 255, 255));
-        jButton13.setText("DELETE");
+        deleteMallBtn1.setBackground(new java.awt.Color(255, 0, 0));
+        deleteMallBtn1.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        deleteMallBtn1.setForeground(new java.awt.Color(255, 255, 255));
+        deleteMallBtn1.setText("DELETE");
+        deleteMallBtn1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteMallBtn1ActionPerformed(evt);
+            }
+        });
 
-        jButton14.setBackground(new java.awt.Color(0, 0, 255));
-        jButton14.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
-        jButton14.setForeground(new java.awt.Color(255, 255, 255));
-        jButton14.setText("MODIFY");
+        modifyMallBtn1.setBackground(new java.awt.Color(0, 0, 255));
+        modifyMallBtn1.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        modifyMallBtn1.setForeground(new java.awt.Color(255, 255, 255));
+        modifyMallBtn1.setText("MODIFY");
+        modifyMallBtn1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                modifyMallBtn1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -817,10 +861,10 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
                                     .addComponent(jLabel71, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextField19)
-                                    .addComponent(jTextField32, javax.swing.GroupLayout.PREFERRED_SIZE, 505, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField33, javax.swing.GroupLayout.PREFERRED_SIZE, 505, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField20))
+                                    .addComponent(currentMallName)
+                                    .addComponent(newMallName, javax.swing.GroupLayout.PREFERRED_SIZE, 505, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(newAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 505, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(currentAddress))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel45)
@@ -832,20 +876,20 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel44, javax.swing.GroupLayout.PREFERRED_SIZE, 505, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jComboBox13, javax.swing.GroupLayout.PREFERRED_SIZE, 505, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                    .addComponent(mallCMB, javax.swing.GroupLayout.PREFERRED_SIZE, 505, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addGap(48, 67, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton11)
+                        .addComponent(deleteMallBtn2)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton12)
+                        .addComponent(modifyMallBtn2)
                         .addGap(264, 264, 264))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton13)
+                        .addComponent(deleteMallBtn1)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton14)
+                        .addComponent(modifyMallBtn1)
                         .addGap(267, 267, 267))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -856,39 +900,39 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel42)
-                    .addComponent(jComboBox13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(mallCMB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton13)
-                    .addComponent(jButton14))
+                    .addComponent(deleteMallBtn1)
+                    .addComponent(modifyMallBtn1))
                 .addGap(34, 34, 34)
                 .addComponent(jLabel44)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField19, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(currentMallName, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel45))
                         .addGap(5, 5, 5)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField32, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(newMallName, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel55)))
                     .addComponent(jLabel52, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField20, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(currentAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel66))
                         .addGap(5, 5, 5)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField33, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(newAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel61)))
                     .addComponent(jLabel71, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(25, 25, 25)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton11)
-                    .addComponent(jButton12))
+                    .addComponent(deleteMallBtn2)
+                    .addComponent(modifyMallBtn2))
                 .addGap(156, 156, 156))
         );
 
@@ -932,8 +976,8 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
         }
 
         String mallName = selectedMall.toString().trim();
-        currentMall = controller.getMall(mallName);
-        newMall = currentMall;
+        currentStoreTabMall = controller.getMall(mallName);
+        newStoreTabMall = currentStoreTabMall;
 
         populateCurrentFloorCMBs();
         populateNewFloorCMBs();
@@ -957,7 +1001,7 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
             return;
         }
         currentStore = stores.get(currentStoreIndex);
-
+        currentTab = 0;
         populateFields();
     }//GEN-LAST:event_filterStoreCMBActionPerformed
 
@@ -967,15 +1011,119 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
             return;
         }
         String newMallName = selectedNewMall.toString();
-        newMall = controller.getMall(newMallName);
+        newStoreTabMall = controller.getMall(newMallName);
+
+        currentTab = 0;
 
         populateNewFloorCMBs();
 
     }//GEN-LAST:event_newMallCMBActionPerformed
 
     private void ModifyBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ModifyBtn1ActionPerformed
+        //Prompt the user to confirm delete operation
+        int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to modify? Store " + currentStore.getName() + " will be modified", "Delete Confirmation", JOptionPane.YES_NO_OPTION);
+        if (option == JOptionPane.NO_OPTION || option == JOptionPane.CLOSED_OPTION || option == JOptionPane.CLOSED_OPTION) {
+            return;
+        }
+        currentTab = 0;
+
         controller.modifyStore(currentStore, this);
     }//GEN-LAST:event_ModifyBtn1ActionPerformed
+
+    private void DeleteBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteBtn1ActionPerformed
+        //Prompt the user to confirm delete operation
+        int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete? Store " + currentStore.getName() + " will be deleted", "Delete Confirmation", JOptionPane.YES_NO_OPTION);
+        if (option == JOptionPane.NO_OPTION || option == JOptionPane.CLOSED_OPTION || option == JOptionPane.CLOSED_OPTION) {
+            return;
+        }
+        currentTab = 0;
+
+        controller.deleteStore(currentStore, this);
+    }//GEN-LAST:event_DeleteBtn1ActionPerformed
+
+    private void ModifyBtn2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ModifyBtn2ActionPerformed
+        //Prompt the user to confirm delete operation
+        int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to modify? Store " + currentStore.getName() + " will be modified", "Delete Confirmation", JOptionPane.YES_NO_OPTION);
+        if (option == JOptionPane.NO_OPTION || option == JOptionPane.CLOSED_OPTION || option == JOptionPane.CLOSED_OPTION) {
+            return;
+        }
+        currentTab = 0;
+
+        controller.modifyStore(currentStore, this);
+    }//GEN-LAST:event_ModifyBtn2ActionPerformed
+
+    private void DeleteBtn2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteBtn2ActionPerformed
+        //Prompt the user to confirm delete operation
+        int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete? Store " + currentStore.getName() + " will be deleted", "Delete Confirmation", JOptionPane.YES_NO_OPTION);
+        if (option == JOptionPane.NO_OPTION || option == JOptionPane.CLOSED_OPTION || option == JOptionPane.CLOSED_OPTION) {
+            return;
+        }
+        currentTab = 0;
+
+        controller.deleteStore(currentStore, this);
+
+    }//GEN-LAST:event_DeleteBtn2ActionPerformed
+
+    private void modifyMallBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyMallBtn1ActionPerformed
+        //Prompt the user to confirm delete operation
+        int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to modify? Mall " + currentStore.getName() + " will be modified", "Delete Confirmation", JOptionPane.YES_NO_OPTION);
+        if (option == JOptionPane.NO_OPTION || option == JOptionPane.CLOSED_OPTION || option == JOptionPane.CLOSED_OPTION) {
+            return;
+        }
+        currentTab = 1;
+
+        controller.modifyMall(currentMallTabMall, this);
+
+    }//GEN-LAST:event_modifyMallBtn1ActionPerformed
+
+    private void deleteMallBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteMallBtn1ActionPerformed
+        //Prompt the user to confirm delete operation
+        int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete? Store " + currentStore.getName() + " will be deleted", "Delete Confirmation", JOptionPane.YES_NO_OPTION);
+        if (option == JOptionPane.NO_OPTION || option == JOptionPane.CLOSED_OPTION || option == JOptionPane.CLOSED_OPTION) {
+            return;
+        }
+        currentTab = 1;
+
+        controller.deleteMall(currentMallTabMall, this);
+
+    }//GEN-LAST:event_deleteMallBtn1ActionPerformed
+
+    private void modifyMallBtn2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modifyMallBtn2ActionPerformed
+        //Prompt the user to confirm delete operation
+        int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to modify? Store " + currentStore.getName() + " will be modified", "Delete Confirmation", JOptionPane.YES_NO_OPTION);
+        if (option == JOptionPane.NO_OPTION || option == JOptionPane.CLOSED_OPTION || option == JOptionPane.CLOSED_OPTION) {
+            return;
+        }
+        currentTab = 1;
+
+        controller.modifyMall(currentMallTabMall, this);
+
+    }//GEN-LAST:event_modifyMallBtn2ActionPerformed
+
+    private void deleteMallBtn2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteMallBtn2ActionPerformed
+        //Prompt the user to confirm delete operation
+        int option = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete? Store " + currentStore.getName() + " will be deleted", "Delete Confirmation", JOptionPane.YES_NO_OPTION);
+        if (option == JOptionPane.NO_OPTION || option == JOptionPane.CLOSED_OPTION || option == JOptionPane.CLOSED_OPTION) {
+            return;
+        }
+        currentTab = 1;
+        controller.deleteMall(currentMallTabMall, this);
+
+    }//GEN-LAST:event_deleteMallBtn2ActionPerformed
+
+    private void mallCMBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mallCMBActionPerformed
+        Object selectedMall = mallCMB.getSelectedItem();
+        if (selectedMall == null) {
+            return;
+        }
+
+        String mallName = selectedMall.toString().trim();
+        currentMallTabMall = controller.getMall(mallName);
+        currentTab = 1;
+
+        populateFields();
+
+    }//GEN-LAST:event_mallCMBActionPerformed
 
     @Override
     public AttributeCollection getAttributes() {
@@ -993,8 +1141,10 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
             attributes.add(new Attribute(Name.MONTHLY_RATE, newMonthly.getText(), Table.PROPERTIES));
 
             attributes.add(new Attribute(Name.STORE_NUM, floor + newStoreNumber.getText(), Table.LOCS));
-            attributes.add(new Attribute(Name.MALL_NUM, String.valueOf(newMall.getMallNum()), Table.LOCS));
+            attributes.add(new Attribute(Name.MALL_NUM, String.valueOf(newStoreTabMall.getMallNum()), Table.LOCS));
         } else {
+            attributes.add(new Attribute(Name.NAME, newMallName.getText(), Table.MALLS));
+            attributes.add(new Attribute(Name.ADDRESS, newAddress.getText(), Table.MALLS));
 
         }
         return attributes;
@@ -1021,11 +1171,13 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
     }
 
     @Override
-    public void clearFields() {
+    public void resetFields() {
         filterMallCMB.removeAllItems();
         filterFloorCMB.removeAllItems();
         filterStoreCMB.removeAllItems();
         clearEditFields();
+
+        populateFilterMallCMBs();
     }
 
     private void clearEditFields() {
@@ -1057,9 +1209,9 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
     private void populateStoreTabFields() {
         clearEditFields();
         populateEditMallCMBs();
-        newMall = currentMall;
-        currentMallCMB.setSelectedItem(currentMall.getName());
-        newMallCMB.setSelectedItem(newMall.getName());
+        newStoreTabMall = currentStoreTabMall;
+        currentMallCMB.setSelectedItem(currentStoreTabMall.getName());
+        newMallCMB.setSelectedItem(newStoreTabMall.getName());
 
         populateCurrentFloorCMBs();
         populateNewFloorCMBs();
@@ -1096,6 +1248,11 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
     }
 
     private void populateMallTabFields() {
+        currentMallName.setText(currentMallTabMall.getName());
+        newMallName.setText(currentMallTabMall.getName());
+
+        currentAddress.setText(currentMallTabMall.getAddress());
+        newAddress.setText(currentMallTabMall.getAddress());
 
     }
 
@@ -1118,14 +1275,17 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
         ArrayList<Mall> malls;
 
         filterMallCMB.removeAllItems();
+        mallCMB.removeAllItems();
+
         malls = controller.getListOfMalls();
         for (Mall mall : malls) {
             filterMallCMB.addItem(mall.getName());
+            mallCMB.addItem(mall.getName());
         }
     }
 
     private void populateCurrentFloorCMBs() {
-        int floors = currentMall.getNumFloors();
+        int floors = currentStoreTabMall.getNumFloors();
 
         filterFloorCMB.removeAllItems();
         currentFloorCMB.removeAllItems();
@@ -1137,7 +1297,7 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
     }
 
     private void populateNewFloorCMBs() {
-        int floors = newMall.getNumFloors();
+        int floors = newStoreTabMall.getNumFloors();
 
         newFloorCMB.removeAllItems();
 
@@ -1171,30 +1331,58 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
 
     }
 
+    private void hideCurrentFields() {
+        currentMallCMB.setEnabled(false);
+        currentFloorCMB.setEnabled(false);
+        currentPurposeCMB.setEnabled(false);
+        currentClassCMB.setEnabled(false);
+        currentStoreName.setEnabled(false);
+        currentStoreNumber.setEnabled(false);
+        currentSpace.setEnabled(false);
+        currentAnnual.setEnabled(false);
+        currentBiAnnual.setEnabled(false);
+        currentQuarterly.setEnabled(false);
+        currentMonthly.setEnabled(false);
+        currentMallName.setEnabled(false);
+        currentAddress.setEnabled(false);
+
+        currentMallCMB.setForeground(Color.PINK);
+        currentFloorCMB.setForeground(Color.PINK);
+        currentPurposeCMB.setForeground(Color.PINK);
+        currentClassCMB.setForeground(Color.PINK);
+        currentStoreName.setForeground(Color.PINK);
+        currentStoreNumber.setForeground(Color.PINK);
+        currentSpace.setForeground(Color.PINK);
+        currentAnnual.setForeground(Color.PINK);
+        currentBiAnnual.setForeground(Color.PINK);
+        currentQuarterly.setForeground(Color.PINK);
+        currentMonthly.setForeground(Color.PINK);
+
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton DeleteBtn1;
     private javax.swing.JButton DeleteBtn2;
     private javax.swing.JButton ModifyBtn1;
     private javax.swing.JButton ModifyBtn2;
+    private javax.swing.JTextField currentAddress;
     private javax.swing.JTextField currentAnnual;
     private javax.swing.JTextField currentBiAnnual;
     private javax.swing.JComboBox<String> currentClassCMB;
     private javax.swing.JComboBox<String> currentFloorCMB;
     private javax.swing.JComboBox<String> currentMallCMB;
+    private javax.swing.JTextField currentMallName;
     private javax.swing.JTextField currentMonthly;
     private javax.swing.JComboBox<String> currentPurposeCMB;
     private javax.swing.JTextField currentQuarterly;
     private javax.swing.JTextField currentSpace;
     private javax.swing.JTextField currentStoreName;
     private javax.swing.JTextField currentStoreNumber;
+    private javax.swing.JButton deleteMallBtn1;
+    private javax.swing.JButton deleteMallBtn2;
     private javax.swing.JComboBox<String> filterFloorCMB;
     private javax.swing.JComboBox<String> filterMallCMB;
     private javax.swing.JComboBox<String> filterStoreCMB;
-    private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton14;
-    private javax.swing.JComboBox<String> jComboBox13;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1252,15 +1440,16 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextField jTextField19;
-    private javax.swing.JTextField jTextField20;
-    private javax.swing.JTextField jTextField32;
-    private javax.swing.JTextField jTextField33;
+    private javax.swing.JComboBox<String> mallCMB;
+    private javax.swing.JButton modifyMallBtn1;
+    private javax.swing.JButton modifyMallBtn2;
+    private javax.swing.JTextField newAddress;
     private javax.swing.JTextField newAnnual;
     private javax.swing.JTextField newBiAnnual;
     private javax.swing.JComboBox<String> newClassCMB;
     private javax.swing.JComboBox<String> newFloorCMB;
     private javax.swing.JComboBox<String> newMallCMB;
+    private javax.swing.JTextField newMallName;
     private javax.swing.JTextField newMonthly;
     private javax.swing.JComboBox<String> newPurposeCMB;
     private javax.swing.JTextField newQuarterly;

@@ -529,6 +529,9 @@
                             </Property>
                             <Property name="text" type="java.lang.String" value="DELETE"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="DeleteBtn2ActionPerformed"/>
+                          </Events>
                         </Component>
                         <Component class="javax.swing.JComboBox" name="filterStoreCMB">
                           <Properties>
@@ -1157,6 +1160,9 @@
                             </Property>
                             <Property name="text" type="java.lang.String" value="MODIFY"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ModifyBtn2ActionPerformed"/>
+                          </Events>
                         </Component>
                         <Component class="javax.swing.JButton" name="DeleteBtn1">
                           <Properties>
@@ -1171,6 +1177,9 @@
                             </Property>
                             <Property name="text" type="java.lang.String" value="DELETE"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="DeleteBtn1ActionPerformed"/>
+                          </Events>
                         </Component>
                         <Component class="javax.swing.JButton" name="ModifyBtn1">
                           <Properties>
@@ -1276,10 +1285,10 @@
                                               </Group>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                  <Component id="jTextField19" alignment="0" max="32767" attributes="0"/>
-                                                  <Component id="jTextField32" alignment="0" min="-2" pref="505" max="-2" attributes="0"/>
-                                                  <Component id="jTextField33" alignment="0" min="-2" pref="505" max="-2" attributes="0"/>
-                                                  <Component id="jTextField20" alignment="0" max="32767" attributes="0"/>
+                                                  <Component id="currentMallName" alignment="0" max="32767" attributes="0"/>
+                                                  <Component id="newMallName" alignment="0" min="-2" pref="505" max="-2" attributes="0"/>
+                                                  <Component id="newAddress" alignment="0" min="-2" pref="505" max="-2" attributes="0"/>
+                                                  <Component id="currentAddress" alignment="0" max="32767" attributes="0"/>
                                               </Group>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="0" attributes="0">
@@ -1294,7 +1303,7 @@
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Group type="103" groupAlignment="0" attributes="0">
                                                   <Component id="jLabel44" min="-2" pref="505" max="-2" attributes="0"/>
-                                                  <Component id="jComboBox13" min="-2" pref="505" max="-2" attributes="0"/>
+                                                  <Component id="mallCMB" min="-2" pref="505" max="-2" attributes="0"/>
                                               </Group>
                                           </Group>
                                       </Group>
@@ -1306,15 +1315,15 @@
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="1" attributes="0">
-                                      <Component id="jButton11" min="-2" max="-2" attributes="0"/>
+                                      <Component id="deleteMallBtn2" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="jButton12" min="-2" max="-2" attributes="0"/>
+                                      <Component id="modifyMallBtn2" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="264" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="1" attributes="0">
-                                      <Component id="jButton13" min="-2" max="-2" attributes="0"/>
+                                      <Component id="deleteMallBtn1" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="jButton14" min="-2" max="-2" attributes="0"/>
+                                      <Component id="modifyMallBtn1" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="267" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
@@ -1329,12 +1338,12 @@
                               <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel42" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jComboBox13" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="mallCMB" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="jButton13" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jButton14" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="deleteMallBtn1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="modifyMallBtn1" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                               <Component id="jLabel44" min="-2" max="-2" attributes="0"/>
@@ -1342,12 +1351,12 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="jTextField19" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
+                                          <Component id="currentMallName" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
                                           <Component id="jLabel45" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="jTextField32" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
+                                          <Component id="newMallName" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
                                           <Component id="jLabel55" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -1357,12 +1366,12 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="jTextField20" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
+                                          <Component id="currentAddress" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
                                           <Component id="jLabel66" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="jTextField33" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
+                                          <Component id="newAddress" alignment="3" min="-2" pref="18" max="-2" attributes="0"/>
                                           <Component id="jLabel61" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -1370,8 +1379,8 @@
                               </Group>
                               <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="jButton11" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jButton12" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="deleteMallBtn2" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="modifyMallBtn2" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="156" max="-2" attributes="0"/>
                           </Group>
@@ -1403,7 +1412,7 @@
                         <Property name="opaque" type="boolean" value="true"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JComboBox" name="jComboBox13">
+                    <Component class="javax.swing.JComboBox" name="mallCMB">
                       <Properties>
                         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                           <StringArray count="4">
@@ -1414,6 +1423,9 @@
                           </StringArray>
                         </Property>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mallCMBActionPerformed"/>
+                      </Events>
                       <AuxValues>
                         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                       </AuxValues>
@@ -1447,9 +1459,9 @@
                         <Property name="opaque" type="boolean" value="true"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="jTextField19">
+                    <Component class="javax.swing.JTextField" name="currentMallName">
                     </Component>
-                    <Component class="javax.swing.JTextField" name="jTextField32">
+                    <Component class="javax.swing.JTextField" name="newMallName">
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel45">
                       <Properties>
@@ -1474,7 +1486,7 @@
                         <Property name="text" type="java.lang.String" value="New"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="jTextField33">
+                    <Component class="javax.swing.JTextField" name="newAddress">
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel61">
                       <Properties>
@@ -1487,7 +1499,7 @@
                         <Property name="text" type="java.lang.String" value="New"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="jTextField20">
+                    <Component class="javax.swing.JTextField" name="currentAddress">
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel66">
                       <Properties>
@@ -1514,7 +1526,7 @@
                         <Property name="opaque" type="boolean" value="true"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JButton" name="jButton11">
+                    <Component class="javax.swing.JButton" name="deleteMallBtn2">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="0" green="0" red="ff" type="rgb"/>
@@ -1527,8 +1539,11 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="DELETE"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteMallBtn2ActionPerformed"/>
+                      </Events>
                     </Component>
-                    <Component class="javax.swing.JButton" name="jButton12">
+                    <Component class="javax.swing.JButton" name="modifyMallBtn2">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="ff" green="0" red="0" type="rgb"/>
@@ -1541,8 +1556,11 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="MODIFY"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="modifyMallBtn2ActionPerformed"/>
+                      </Events>
                     </Component>
-                    <Component class="javax.swing.JButton" name="jButton13">
+                    <Component class="javax.swing.JButton" name="deleteMallBtn1">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="0" green="0" red="ff" type="rgb"/>
@@ -1555,8 +1573,11 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="DELETE"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteMallBtn1ActionPerformed"/>
+                      </Events>
                     </Component>
-                    <Component class="javax.swing.JButton" name="jButton14">
+                    <Component class="javax.swing.JButton" name="modifyMallBtn1">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="ff" green="0" red="0" type="rgb"/>
@@ -1569,6 +1590,9 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="MODIFY"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="modifyMallBtn1ActionPerformed"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>

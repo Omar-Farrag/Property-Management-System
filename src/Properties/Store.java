@@ -215,9 +215,19 @@ public class Store {
         Filters filters = new Filters();
         filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.PROPERTIES));
         QueryResult result = DB.delete(Table.PROPERTIES, filters);
-        if (result.noErrors()) {
-            clear();
+
+        filters.clear();
+        filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.LOCS));
+        QueryResult result2 = DB.delete(Table.LOCS, filters);
+
+        if (!result.noErrors()) {
+            return result;
         }
+        if (!result2.noErrors()) {
+            return result2;
+        }
+
+        clear();
         return result;
     }
 

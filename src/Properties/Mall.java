@@ -87,9 +87,10 @@ public class Mall {
         }
 
         filters.clear();
-        filters.addEqual(newValues.getAttribute(Table.MALLS, Name.MALL_NUM));
+        filters.addEqual(new Attribute(Name.MALL_NUM, String.valueOf(mallNum), Table.MALLS));
 
         QueryResult modifiedMall = DB.retrieve(Table.MALLS, filters);
+        modifiedMall.getResult().next();
         setValues(modifiedMall.getResult());
 
         return result;
