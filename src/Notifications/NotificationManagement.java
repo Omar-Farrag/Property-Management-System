@@ -1,5 +1,8 @@
 package Notifications;
 
+import DatabaseManagement.Exceptions.DBManagementException;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -26,14 +29,13 @@ public interface NotificationManagement {
      * @param userID The user ID whose notifications are to be retrieved
      * @return An arraylist of all the user's notifications
      */
-    public ArrayList<Notification> retrieveNotifications(String userID);
+    public ArrayList<Notification> retrieveNotifications(String userID) throws SQLException, DBManagementException;
 
     /**
      * Removes a given notification from a user's list of notifications
      * 
      * @param notification The notification that is to be dismissed
-     * @return success code (1 means the notification was removed from given user's
-     *         notifications and 0 means it wasn't)
+     * @return number of notifications deleted
      */
     public int dismissNotification(Notification notification);
 }
