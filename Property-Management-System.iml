@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/build/production/Property-Management-System" />
+    <output-test url="file://$MODULE_DIR$/build/test/Property-Management-System" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
@@ -19,6 +21,7 @@
         <SOURCES>
           <root url="file://$MODULE_DIR$/src" />
         </SOURCES>
+        <jarDirectory url="file://$MODULE_DIR$" recursive="false" />
         <jarDirectory url="file://$MODULE_DIR$" recursive="false" />
       </library>
     </orderEntry>

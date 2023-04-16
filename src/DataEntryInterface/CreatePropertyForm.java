@@ -581,7 +581,7 @@ public class CreatePropertyForm extends javax.swing.JFrame implements InsertForm
     }
 
     @Override
-    public void clearFields() {
+    public void resetFields() {
         storeNameField.setText("");
         mallCMB.setSelectedIndex(0);
         floorCMB.setSelectedIndex(0);
@@ -596,6 +596,8 @@ public class CreatePropertyForm extends javax.swing.JFrame implements InsertForm
         mallFloorsField.setText("");
         mallNameField.setText("");
         mallAddressField.setText("");
+
+        populateCMBs();
     }
 
     private void populateCMBs() {

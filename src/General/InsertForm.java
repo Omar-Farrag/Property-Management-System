@@ -6,6 +6,6 @@ public interface InsertForm {
 
     public AttributeCollection getAttributes();
 
-    public void clearFields();
+    public void resetFields();
 
 }

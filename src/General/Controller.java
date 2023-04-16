@@ -7,8 +7,6 @@ import Properties.Store;
 import java.awt.Color;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
@@ -98,7 +96,7 @@ public class Controller {
                 displayErrors("Store already exists");
             } else if (result.noErrors()) {
                 displaySuccessMessage("Store created successfully!");
-                form.clearFields();
+                form.resetFields();
             } else {
                 displayErrors(result);
             }
@@ -186,7 +184,7 @@ public class Controller {
             QueryResult result = Mall.insert(form.getAttributes());
             if (result.noErrors()) {
                 displaySuccessMessage("Mall created successfully!");
-                form.clearFields();
+                form.resetFields();
             } else {
                 displayErrors(result);
             }
