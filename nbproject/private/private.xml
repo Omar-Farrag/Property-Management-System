@@ -12,8 +12,11 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/G:/My%20Drive/AUS/3)Junior/Junior%20II/COE%20420/Real%20Estate%20Project/Property-Management-System/src/General/InsertForm.java</file>
             <file>file:/G:/My%20Drive/AUS/3)Junior/Junior%20II/COE%20420/Real%20Estate%20Project/Property-Management-System/src/General/Controller.java</file>
-            <file>file:/G:/My%20Drive/AUS/3)Junior/Junior%20II/COE%20420/Real%20Estate%20Project/Property-Management-System/src/DatabaseManagement/ConstraintsHandling/Validator.java</file>
+            <file>file:/G:/My%20Drive/AUS/3)Junior/Junior%20II/COE%20420/Real%20Estate%20Project/Property-Management-System/src/DataEntryInterface/CreatePropertyForm.java</file>
+            <file>file:/G:/My%20Drive/AUS/3)Junior/Junior%20II/COE%20420/Real%20Estate%20Project/Property-Management-System/src/DataEntryInterface/DataEntryUserInterface.java</file>
+            <file>file:/G:/My%20Drive/AUS/3)Junior/Junior%20II/COE%20420/Real%20Estate%20Project/Property-Management-System/src/DatabaseManagement/DatabaseManagementExample.java</file>
         </group>
     </open-files>
 </project-private>
