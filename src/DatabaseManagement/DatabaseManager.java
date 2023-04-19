@@ -4,6 +4,7 @@ import java.sql.*;
 
 import DatabaseManagement.ConstraintsHandling.ConstraintChecker;
 import DatabaseManagement.ConstraintsHandling.ConstraintChecker.Errors;
+import DatabaseManagement.ConstraintsHandling.MetaDataExtractor;
 import DatabaseManagement.Exceptions.*;
 import DatabaseManagement.QueryGeneration.QueryGenerator;
 

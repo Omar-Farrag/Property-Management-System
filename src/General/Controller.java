@@ -1,12 +1,20 @@
 package General;
 
+import DatabaseManagement.Attribute;
+import DatabaseManagement.Attribute.Name;
+import DatabaseManagement.AttributeCollection;
 import DatabaseManagement.Exceptions.DBManagementException;
 import DatabaseManagement.QueryResult;
+import DatabaseManagement.Table;
 import Properties.Mall;
 import Properties.Store;
+import TableViewer.PropertyBrowsingFilters;
+import TableViewer.TableViewer;
 import java.awt.Color;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
@@ -166,6 +174,24 @@ public class Controller {
      */
     public ArrayList<String> getPurposes() {
         return Store.getPurposes();
+    }
+
+    /**
+     * Opens a new window displaying a list of all available stores for
+     * browsing.
+     */
+    public void browseProperties() {
+        try {
+
+            AttributeCollection toShow = Store.getBrowsingAttributes();
+            TableViewer viewer = new TableViewer("Properties", toShow, new PropertyBrowsingFilters());
+            viewer.setVisible(true);
+
+        } catch (SQLException ex) {
+            displaySQLError(ex);
+        } catch (DBManagementException ex) {
+            displayErrors("Something went wrong while browsing properties...Try again later");
+        }
     }
 
     /**

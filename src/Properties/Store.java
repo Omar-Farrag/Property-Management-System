@@ -8,6 +8,8 @@ import DatabaseManagement.Exceptions.DBManagementException;
 import DatabaseManagement.Filters;
 import DatabaseManagement.QueryResult;
 import DatabaseManagement.Table;
+import TableViewer.PropertyBrowsingFilters;
+import TableViewer.TableViewer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -167,6 +169,27 @@ public class Store {
     }
 
     /**
+     *
+     * @return An attribute collection consisting of the attributes that will be
+     * displayed to the user when browsing through properties
+     */
+    public static AttributeCollection getBrowsingAttributes() {
+        AttributeCollection toShow = new AttributeCollection();
+
+        toShow.add(new Attribute(Name.NAME, Table.PROPERTIES));
+        toShow.add(new Attribute(Name.NAME, Table.MALLS));
+        toShow.add(new Attribute(Name.STORE_NUM, Table.LOCS));
+        toShow.add(new Attribute(Name.CLASS, Table.PROPERTIES));
+        toShow.add(new Attribute(Name.SPACE, Table.PROPERTIES));
+        toShow.add(new Attribute(Name.PURPOSE, Table.PROPERTIES));
+        toShow.add(new Attribute(Name.MONTHLY_RATE, Table.PROPERTIES));
+        toShow.add(new Attribute(Name.QUARTERLY_RATE, Table.PROPERTIES));
+        toShow.add(new Attribute(Name.BI_ANNUAL_RATE, Table.PROPERTIES));
+        toShow.add(new Attribute(Name.ANNUAL_RATE, Table.PROPERTIES));
+        return toShow;
+    }
+
+    /**
      * Modifies the store in the program and in database
      *
      * @param newValues New values for the attributes of the store
@@ -231,6 +254,50 @@ public class Store {
         return result;
     }
 
+    public int getLocationNum() {
+        return locationNum;
+    }
+
+    public float getSpace() {
+        return space;
+    }
+
+    public float getMonthlyRate() {
+        return monthlyRate;
+    }
+
+    public float getQuarterlyRate() {
+        return quarterlyRate;
+    }
+
+    public float getBiAnnualRate() {
+        return biAnnualRate;
+    }
+
+    public float getAnnualRate() {
+        return annualRate;
+    }
+
+    public String getPurpose() {
+        return purpose;
+    }
+
+    public String getStoreClass() {
+        return storeClass;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getStoreNumber() {
+        return storeNumber;
+    }
+
+    public int getFloor() {
+        return floor;
+    }
+
     private static int generateLocationNum() throws SQLException {
         QueryResult result = DB.retrieveMax(new Attribute(Name.LOCATION_NUM, Table.LOCS));
         ResultSet max = result.getResult();
@@ -278,50 +345,6 @@ public class Store {
         purpose = null;
         storeClass = null;
         name = null;
-    }
-
-    public int getLocationNum() {
-        return locationNum;
-    }
-
-    public float getSpace() {
-        return space;
-    }
-
-    public float getMonthlyRate() {
-        return monthlyRate;
-    }
-
-    public float getQuarterlyRate() {
-        return quarterlyRate;
-    }
-
-    public float getBiAnnualRate() {
-        return biAnnualRate;
-    }
-
-    public float getAnnualRate() {
-        return annualRate;
-    }
-
-    public String getPurpose() {
-        return purpose;
-    }
-
-    public String getStoreClass() {
-        return storeClass;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getStoreNumber() {
-        return storeNumber;
-    }
-
-    public int getFloor() {
-        return floor;
     }
 
 }

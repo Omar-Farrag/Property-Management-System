@@ -6,6 +6,7 @@ package General;
 
 import DataEntryInterface.DataEntryUserInterface;
 import DatabaseManagement.DatabaseManager;
+import TenantInterface.TenantUserInterface;
 
 /**
  *
@@ -17,13 +18,11 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        System.out.println("\u001B[31m" + "Hello, world!" + "\u001B[0m");
-
         DatabaseManager.getInstance();
 //        (new LogInScreen()).setVisible(true);
 //        (new GeneralUserInterface()).setVisible(true);
+        new TenantUserInterface().setVisible(true);
 
-        (new DataEntryUserInterface()).setVisible(true);
     }
 
 }
