@@ -172,7 +172,12 @@ public class TableViewer extends JFrame {
             }
             data.add(row);
         }
-        model = new DefaultTableModel(data, columnNames);
+        model = new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
     }
 
     private void initTable() {

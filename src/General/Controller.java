@@ -182,7 +182,6 @@ public class Controller {
      */
     public void browseProperties() {
         try {
-
             AttributeCollection toShow = Store.getBrowsingAttributes();
             TableViewer viewer = new TableViewer("Properties", toShow, new PropertyBrowsingFilters());
             viewer.setVisible(true);

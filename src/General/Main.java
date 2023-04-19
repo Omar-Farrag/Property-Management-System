@@ -5,6 +5,7 @@
 package General;
 
 import DataEntryInterface.DataEntryUserInterface;
+import DatabaseManagement.ConstraintsHandling.ConstraintChecker;
 import DatabaseManagement.DatabaseManager;
 import TenantInterface.TenantUserInterface;
 
@@ -19,6 +20,7 @@ public class Main {
      */
     public static void main(String[] args) {
         DatabaseManager.getInstance();
+        ConstraintChecker.getInstance();
 //        (new LogInScreen()).setVisible(true);
 //        (new GeneralUserInterface()).setVisible(true);
         new TenantUserInterface().setVisible(true);
