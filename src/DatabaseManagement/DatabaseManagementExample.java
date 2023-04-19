@@ -28,7 +28,9 @@ public class DatabaseManagementExample {
             //First check that there is no errors, then get the result set.
             //Do whatever you want with the result set. In this case we are going to print it to the console
             System.out.println("DB.retrieve(Table.USERS);");
-            if (result.noErrors()) printTable(result.getResult());
+            if (result.noErrors()) {
+                printTable(result.getResult());
+            }
 
             System.out.println();
             System.out.println("Type anything to continue");
@@ -43,7 +45,9 @@ public class DatabaseManagementExample {
             collection.add(new Attribute(Name.EMAIL_ADDRESS, Table.USERS));
             result = DB.retrieve(collection);
             System.out.println("DB.retrieve(collection)");
-            if (result.noErrors()) printTable(result.getResult());
+            if (result.noErrors()) {
+                printTable(result.getResult());
+            }
 
             System.out.println();
             System.out.println("Type anything to continue");
@@ -56,7 +60,9 @@ public class DatabaseManagementExample {
             filters.addEqual(new Attribute(Name.FNAME, "Hassan", Table.USERS));
             result = DB.retrieve(Table.USERS, filters);
             System.out.println("DB.retrieve(Table.Users,filters)");
-            if (result.noErrors()) printTable(result.getResult());
+            if (result.noErrors()) {
+                printTable(result.getResult());
+            }
 
             System.out.println();
             System.out.println("Type anything to continue");
@@ -66,7 +72,9 @@ public class DatabaseManagementExample {
             //You can also do both retrieve specific attributes and filter the rows
             result = DB.retrieve(collection, filters);
             System.out.println("DB.retrieve(collection,filters");
-            if (result.noErrors()) printTable(result.getResult());
+            if (result.noErrors()) {
+                printTable(result.getResult());
+            }
 
             System.out.println();
             System.out.println("Type anything to continue");
@@ -89,16 +97,15 @@ public class DatabaseManagementExample {
             if (result.noErrors()) {
                 System.out.println(result.getRowsAffected());
                 printTable(DB.retrieve(Table.USERS).getResult());
-            }
-            else{
-                Name[] values = {Name.USER_ID,Name.FNAME,Name.LNAME, Name.PHONE_NUMBER, Name.EMAIL_ADDRESS,
-                        Name.ROLE_ID};
-                 for(Name att : values){
-                    ArrayList<String> errors = result.getErrorByAttribute(new Attribute(att,Table.USERS));
-                    for(String error : errors){
+            } else {
+                Name[] values = {Name.USER_ID, Name.FNAME, Name.LNAME, Name.PHONE_NUMBER, Name.EMAIL_ADDRESS,
+                    Name.ROLE_ID};
+                for (Name att : values) {
+                    ArrayList<String> errors = result.getAllErrors();
+                    for (String error : errors) {
                         System.out.println(error);
                     }
-                 }
+                }
             }
 
             System.out.println();
@@ -157,7 +164,6 @@ public class DatabaseManagementExample {
         }
     }
 
-
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -175,8 +181,9 @@ public class DatabaseManagementExample {
         System.out.println();
 
         // Printing table's tuples
-        while (table.next())
+        while (table.next()) {
             printRow(table);
+        }
     }
 
     private static void printRow(ResultSet table) throws SQLException {
@@ -186,8 +193,9 @@ public class DatabaseManagementExample {
             // Special processing for date objects to display only the date without the time
             if (table.getMetaData().getColumnName(i).equals("HIREDATE")) {
                 System.out.printf("%-22s", formatDate(table, i));
-            } else
+            } else {
                 System.out.printf("%-22s", table.getString(i));
+            }
         }
         System.out.println();
     }
@@ -196,8 +204,7 @@ public class DatabaseManagementExample {
         try {
             DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
             return dateFormat.format(row.getDate(column));
-        } catch (
-                NullPointerException e) {
+        } catch (NullPointerException e) {
             return "null";
         }
     }
