@@ -30,6 +30,7 @@ public class Store {
     private String name;
     private int storeNumber;
     private int floor;
+    private String availability;
 
     private HashMap<String, Integer> charFloor_to_intFloor = new HashMap<>();
     private final static DatabaseManager DB = DatabaseManager.getInstance();
@@ -171,9 +172,9 @@ public class Store {
     /**
      *
      * @return An attribute collection consisting of the attributes that will be
-     * displayed to the user when browsing through properties
+     * displayed to the user whenever store information is presented
      */
-    public static AttributeCollection getBrowsingAttributes() {
+    public static AttributeCollection getVisibleAttributes() {
         AttributeCollection toShow = new AttributeCollection();
 
         toShow.add(new Attribute(Name.NAME, Table.PROPERTIES));
@@ -319,6 +320,7 @@ public class Store {
         purpose = store.getString(Name.PURPOSE.name());
         storeClass = store.getString(Name.CLASS.name());
         name = store.getString(Name.NAME.name());
+        availability = store.getString(Name.AVAILABILITY.name());
 
         Filters filters = new Filters();
         filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.LOCS));

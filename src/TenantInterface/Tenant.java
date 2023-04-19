@@ -8,4 +8,8 @@ import General.User;
  */
 public class Tenant extends User {
 
+    public Tenant(User user) {
+        super(user);
+    }
+
 }

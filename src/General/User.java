@@ -4,6 +4,17 @@
  */
 package General;
 
-public abstract class User {
-//    String UserID;
+public class User {
+
+    private String userID;
+
+    //Copy Constructor
+    public User(User user) {
+
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
 }

@@ -231,8 +231,8 @@ public class MetaDataExtractor {
         ArrayList<String> constraints = new ArrayList<>();
         constraintsTable.first();
         while (constraintsTable.next()) {
-            if (constraintsTable.getString("TABLE_NAME").equals(tableName)
-                    && constraintsTable.getString("COLUMN_NAME").equals(columnName)) {
+            if (constraintsTable.getString("TABLE_NAME").equalsIgnoreCase(tableName)
+                    && constraintsTable.getString("COLUMN_NAME").equalsIgnoreCase(columnName)) {
 
                 String constraint = constraintsTable.getString("CONSTRAINT_TYPE").toUpperCase();
 

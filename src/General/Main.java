@@ -6,6 +6,7 @@ package General;
 
 import DataEntryInterface.DataEntryUserInterface;
 import DatabaseManagement.ConstraintsHandling.ConstraintChecker;
+import DatabaseManagement.ConstraintsHandling.MetaDataExtractor;
 import DatabaseManagement.DatabaseManager;
 import TenantInterface.TenantUserInterface;
 

@@ -1,11 +1,9 @@
 package General;
 
-import DatabaseManagement.Attribute;
-import DatabaseManagement.Attribute.Name;
 import DatabaseManagement.AttributeCollection;
 import DatabaseManagement.Exceptions.DBManagementException;
 import DatabaseManagement.QueryResult;
-import DatabaseManagement.Table;
+import Leases.Lease;
 import Properties.Mall;
 import Properties.Store;
 import TableViewer.PropertyBrowsingFilters;
@@ -21,6 +19,8 @@ import javax.swing.JTextArea;
 import javax.swing.UIManager;
 
 public class Controller {
+
+    private User loggedInUser;
 
     /**
      * Displays all errors in a database operation in a separate dialog window
@@ -88,7 +88,7 @@ public class Controller {
     /**
      *******************************************************************************************************************
      *******************************************************STORES******************************************************
-     * ******************************************************************************************************************
+     * *****************************************************************************************************************
      */
     /**
      * Insert in database a new store based on the input in the received form
@@ -143,6 +143,7 @@ public class Controller {
      * Deletes the given store from database based on the input in the received
      * form
      *
+     * @param store Store to be deleted
      * @param form The form that called this function
      */
     public void deleteStore(Store store, ModificationForm form) {
@@ -182,7 +183,7 @@ public class Controller {
      */
     public void browseProperties() {
         try {
-            AttributeCollection toShow = Store.getBrowsingAttributes();
+            AttributeCollection toShow = Store.getVisibleAttributes();
             TableViewer viewer = new TableViewer("Properties", toShow, new PropertyBrowsingFilters());
             viewer.setVisible(true);
 
@@ -196,7 +197,7 @@ public class Controller {
     /**
      *******************************************************************************************************************
      *******************************************************MALLS*******************************************************
-     * ******************************************************************************************************************
+     * *****************************************************************************************************************
      */
     /**
      * Insert in database a new mall based on the input in the received form
@@ -224,6 +225,7 @@ public class Controller {
      * Modifies the given mall in the database based on the input in the
      * received form
      *
+     * @param mall Mall to be modified
      * @param form The form that called this function
      */
     public void modifyMall(Mall mall, ModificationForm form) {
@@ -248,6 +250,7 @@ public class Controller {
      * Deletes the given mall from the database based on the input in the
      * received form
      *
+     * @param mall Mall to be deleted
      * @param form The form that called this function
      */
     public void deleteMall(Mall mall, ModificationForm form) {
@@ -315,4 +318,20 @@ public class Controller {
         return null;
     }
 
+    /**
+     ********************************************************************************************************************
+     *******************************************************LEASES*******************************************************
+     * ******************************************************************************************************************
+     */
+    public void viewLeases() {
+        try {
+            AttributeCollection toShow = Lease.getVisibleAttributes();
+            TableViewer viewer = new TableViewer("LEASES", toShow, new PropertyBrowsingFilters());
+            viewer.setVisible(true);
+        } catch (SQLException ex) {
+            displaySQLError(ex);
+        } catch (DBManagementException ex) {
+            displayErrors("Something went wrong while viewing leasess...Try again later");
+        }
+    }
 }
