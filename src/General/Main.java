@@ -8,6 +8,7 @@ import DataEntryInterface.DataEntryUserInterface;
 import DatabaseManagement.ConstraintsHandling.ConstraintChecker;
 import DatabaseManagement.ConstraintsHandling.MetaDataExtractor;
 import DatabaseManagement.DatabaseManager;
+import LeasingAgentInterface.LeasingAgentUserInterface;
 import TenantInterface.TenantUserInterface;
 
 /**
@@ -24,7 +25,7 @@ public class Main {
         ConstraintChecker.getInstance();
 //        (new LogInScreen()).setVisible(true);
 //        (new GeneralUserInterface()).setVisible(true);
-        new TenantUserInterface().setVisible(true);
+        new LeasingAgentUserInterface().setVisible(true);
 
     }
 

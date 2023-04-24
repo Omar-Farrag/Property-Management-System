@@ -3,19 +3,15 @@ package Properties;
 import DatabaseManagement.Attribute;
 import DatabaseManagement.Attribute.Name;
 import DatabaseManagement.AttributeCollection;
-import DatabaseManagement.DatabaseManager;
 import DatabaseManagement.Exceptions.DBManagementException;
 import DatabaseManagement.Filters;
 import DatabaseManagement.QueryResult;
 import DatabaseManagement.Table;
-import TableViewer.PropertyBrowsingFilters;
-import TableViewer.TableViewer;
+import General.Controller;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Store {
 
@@ -30,10 +26,10 @@ public class Store {
     private String name;
     private int storeNumber;
     private int floor;
-    private String availability;
+    private String status;
 
     private HashMap<String, Integer> charFloor_to_intFloor = new HashMap<>();
-    private final static DatabaseManager DB = DatabaseManager.getInstance();
+    private final static Controller controller = new Controller();
 
     /**
      * Leave the constructor as private. If you want an instance of the store,
@@ -66,7 +62,6 @@ public class Store {
      * @throws DBManagementException
      */
     public static QueryResult insert(AttributeCollection toInsert) throws SQLException, DBManagementException {
-        DatabaseManager DB = DatabaseManager.getInstance();
         Filters filters = new Filters();
         AttributeCollection collection = new AttributeCollection();
 
@@ -74,7 +69,7 @@ public class Store {
         Attribute mallName = toInsert.getAttribute(Table.MALLS, Name.NAME);
         filters.addEqual(mallName);
         collection.add(new Attribute(Name.MALL_NUM, Table.MALLS));
-        QueryResult result = DB.retrieve(collection, filters);
+        QueryResult result = controller.retrieve(collection, filters);
         ResultSet mallNumbers = result.getResult();
         mallNumbers.next();
         String mallNumber = mallNumbers.getString(Name.MALL_NUM.getName());
@@ -87,7 +82,7 @@ public class Store {
         filters.addEqual(mallNum);
         filters.addEqual(storeNum);
 
-        QueryResult locationNum = DB.retrieve(Table.LOCS, filters);
+        QueryResult locationNum = controller.retrieve(Table.LOCS, filters);
         if (locationNum.getRowsAffected() > 0) {
             return null;
         } else {
@@ -96,7 +91,7 @@ public class Store {
             int generatedLocationNum = generateLocationNum();
             Attribute newLocationNum = new Attribute(Name.LOCATION_NUM, String.valueOf(generatedLocationNum), Table.LOCS);
             newLocationEntry.add(newLocationNum);
-            QueryResult locationInsertion = DB.insert(Table.LOCS, newLocationEntry);
+            QueryResult locationInsertion = controller.insert(Table.LOCS, newLocationEntry);
 
             if (!locationInsertion.noErrors()) {
                 return locationInsertion;
@@ -105,11 +100,11 @@ public class Store {
             newLocationNum = new Attribute(Name.LOCATION_NUM, String.valueOf(generatedLocationNum), Table.PROPERTIES);
             toInsert.add(newLocationNum);
             toInsert = toInsert.filter(Table.PROPERTIES);
-            QueryResult storeInsertion = DatabaseManager.getInstance().insert(Table.PROPERTIES, toInsert);
+            QueryResult storeInsertion = controller.insert(Table.PROPERTIES, toInsert);
             if (!storeInsertion.noErrors()) {
                 Filters deletionFilter = new Filters();
                 deletionFilter.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(generatedLocationNum), Table.LOCS));
-                DB.delete(Table.LOCS, deletionFilter);
+                controller.delete(Table.LOCS, deletionFilter);
             }
             return storeInsertion;
         }
@@ -130,7 +125,7 @@ public class Store {
     public static Store retrieve(String locationNum) throws SQLException, DBManagementException {
         Filters filters = new Filters();
         filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.PROPERTIES));
-        QueryResult store = DB.retrieve(Table.PROPERTIES, filters);
+        QueryResult store = controller.retrieve(Table.PROPERTIES, filters);
 
         if (store.getRowsAffected() < 1) {
             return null;
@@ -203,11 +198,11 @@ public class Store {
         Filters filters = new Filters();
         filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.PROPERTIES));
 
-        QueryResult result = DB.modify(Table.PROPERTIES, filters, newValues.filter(Table.PROPERTIES), true);
+        QueryResult result = controller.modify(Table.PROPERTIES, newValues.filter(Table.PROPERTIES), filters);
 
         filters.clear();
         filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.LOCS));
-        QueryResult result2 = DB.modify(Table.LOCS, filters, newValues.filter(Table.LOCS), true);
+        QueryResult result2 = controller.modify(Table.LOCS, newValues.filter(Table.LOCS), filters);
 
         if (!result.noErrors()) {
             return result;
@@ -219,7 +214,7 @@ public class Store {
         filters.clear();
         filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.PROPERTIES));
 
-        QueryResult modifiedStore = DB.retrieve(Table.PROPERTIES, filters);
+        QueryResult modifiedStore = controller.retrieve(Table.PROPERTIES, filters);
         modifiedStore.getResult().next();
         setValues(modifiedStore.getResult());
 
@@ -238,11 +233,11 @@ public class Store {
 
         Filters filters = new Filters();
         filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.PROPERTIES));
-        QueryResult result = DB.delete(Table.PROPERTIES, filters);
+        QueryResult result = controller.delete(Table.PROPERTIES, filters);
 
         filters.clear();
         filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.LOCS));
-        QueryResult result2 = DB.delete(Table.LOCS, filters);
+        QueryResult result2 = controller.delete(Table.LOCS, filters);
 
         if (!result.noErrors()) {
             return result;
@@ -300,7 +295,7 @@ public class Store {
     }
 
     private static int generateLocationNum() throws SQLException {
-        QueryResult result = DB.retrieveMax(new Attribute(Name.LOCATION_NUM, Table.LOCS));
+        QueryResult result = controller.retrieveMax(new Attribute(Name.LOCATION_NUM, Table.LOCS));
         ResultSet max = result.getResult();
         max.next();
         if (max.getInt(1) == 0) {
@@ -320,11 +315,11 @@ public class Store {
         purpose = store.getString(Name.PURPOSE.name());
         storeClass = store.getString(Name.CLASS.name());
         name = store.getString(Name.NAME.name());
-        availability = store.getString(Name.AVAILABILITY.name());
+        status = store.getString(Name.STATUS.name());
 
         Filters filters = new Filters();
         filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.LOCS));
-        QueryResult result = DB.retrieve(Table.LOCS, filters);
+        QueryResult result = controller.retrieve(Table.LOCS, filters);
 
         ResultSet locInfo = result.getResult();
         locInfo.next();

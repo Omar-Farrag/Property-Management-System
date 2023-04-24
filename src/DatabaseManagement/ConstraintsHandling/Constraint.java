@@ -20,8 +20,11 @@ public class Constraint {
     }
 
     public ValidationFunction getValidationFunction() throws MissingValidatorException {
-        if (vFunction == null) throw new MissingValidatorException();
-        else return vFunction;
+        if (vFunction == null) {
+            throw new MissingValidatorException();
+        } else {
+            return vFunction;
+        }
     }
 
     @Override
@@ -56,7 +59,6 @@ public class Constraint {
         // Constraint conVARCHAR2 = new Constraint(ConstraintEnum.VARCHAR2);
         // Constraint conDATE = new Constraint(ConstraintEnum.DATE);
         // Constraint conREGEXP_LIKE = new Constraint(ConstraintEnum.REGEXP_LIKE);
-
         // System.out.println("Testing conPRIMARY with " + "P" + " " +
         // conPRIMARY.equals("P"));
         // System.out.println("Testing conUNIQUE with " + "U" + " " +

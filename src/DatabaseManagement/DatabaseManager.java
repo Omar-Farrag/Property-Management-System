@@ -272,6 +272,17 @@ public class DatabaseManager {
     }
 
     /**
+     * Retrieves the set of attributes in a given table
+     *
+     * @param t Table whose attributes are to be retrieved
+     * @return An attributeCollection consisting of the attributes making up the
+     * given table. The returned attribute have no values
+     */
+    public AttributeCollection getAttributes(Table t) {
+        return MetaDataExtractor.getInstance().getAttributeCollection(t);
+    }
+
+    /**
      * Executes the given SQL statement. Only Select SQL statements allowed
      *
      * @param sqlStatement Statement to be executed
@@ -281,12 +292,13 @@ public class DatabaseManager {
      */
     public ResultSet executeStatement(String sqlStatement) throws SQLException {
 
-//        System.out.println(sqlStatement);
+        System.out.println(sqlStatement);
         Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
         try {
             return stmt.executeQuery(sqlStatement);
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            System.out.println(sqlStatement);
             throw new SQLException();
         }
 
@@ -302,6 +314,7 @@ public class DatabaseManager {
      * Statement in the DBMS.
      */
     public int executePreparedStatement(String sqlPreparedStatement) throws SQLException {
+        System.out.println(sqlPreparedStatement);
         PreparedStatement prep = conn.prepareStatement(sqlPreparedStatement);
         return prep.executeUpdate();
     }

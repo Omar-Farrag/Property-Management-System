@@ -3,11 +3,11 @@ package Properties;
 import DatabaseManagement.Attribute;
 import DatabaseManagement.Attribute.Name;
 import DatabaseManagement.AttributeCollection;
-import DatabaseManagement.DatabaseManager;
 import DatabaseManagement.Exceptions.DBManagementException;
 import DatabaseManagement.Filters;
 import DatabaseManagement.QueryResult;
 import DatabaseManagement.Table;
+import General.Controller;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.ResultSet;
@@ -19,7 +19,7 @@ public class Mall {
     private int numFloors;
     private int mallNum;
 
-    private final static DatabaseManager DB = DatabaseManager.getInstance();
+    private static Controller controller;
 
     /**
      * Leave the constructor as private. If you want an instance of the mall,
@@ -41,7 +41,7 @@ public class Mall {
     public static ArrayList<Mall> getListOfMalls() throws SQLException {
         ArrayList<Mall> malls = new ArrayList<>();
 
-        QueryResult result = DB.retrieve(Table.MALLS);
+        QueryResult result = controller.retrieve(Table.MALLS);
 
         if (result.noErrors()) {
             ResultSet rs = result.getResult();
@@ -66,7 +66,7 @@ public class Mall {
     public static QueryResult insert(AttributeCollection toInsert) throws SQLException, DBManagementException {
         toInsert = toInsert.filter(Table.MALLS);
         toInsert.add(new Attribute(Name.MALL_NUM, String.valueOf(generateMallNum()), Table.MALLS));
-        return DB.insert(Table.MALLS, toInsert);
+        return controller.insert(Table.MALLS, toInsert);
     }
 
     /**
@@ -80,7 +80,7 @@ public class Mall {
     public QueryResult modify(AttributeCollection newValues) throws SQLException, DBManagementException {
         Filters filters = new Filters();
         filters.addEqual(new Attribute(Name.MALL_NUM, String.valueOf(mallNum), Table.MALLS));
-        QueryResult result = DB.modify(Table.MALLS, filters, newValues, true);
+        QueryResult result = controller.modify(Table.MALLS, newValues, filters);
 
         if (!result.noErrors()) {
             return result;
@@ -89,7 +89,7 @@ public class Mall {
         filters.clear();
         filters.addEqual(new Attribute(Name.MALL_NUM, String.valueOf(mallNum), Table.MALLS));
 
-        QueryResult modifiedMall = DB.retrieve(Table.MALLS, filters);
+        QueryResult modifiedMall = controller.retrieve(Table.MALLS, filters);
         modifiedMall.getResult().next();
         setValues(modifiedMall.getResult());
 
@@ -107,7 +107,7 @@ public class Mall {
 
         Filters filters = new Filters();
         filters.addEqual(new Attribute(Name.MALL_NUM, String.valueOf(mallNum), Table.MALLS));
-        QueryResult result = DB.delete(Table.MALLS, filters);
+        QueryResult result = controller.delete(Table.MALLS, filters);
         if (result.noErrors()) {
             clear();
         }
@@ -124,7 +124,7 @@ public class Mall {
         AttributeCollection toGet = new AttributeCollection().add(new Attribute(Name.LOCATION_NUM, Table.LOCS));
 
         //Retrieve location numbers where the mall number is equal to this mall's mall number
-        QueryResult retrievalResult = DB.retrieve(toGet, filter);
+        QueryResult retrievalResult = controller.retrieve(toGet, filter);
         ResultSet locationNumbers = retrievalResult.getResult();
 
         ArrayList<Store> stores = new ArrayList<>();
@@ -150,7 +150,7 @@ public class Mall {
     public static Mall retrieve(int mallNum) throws SQLException, DBManagementException {
         Filters filters = new Filters();
         filters.addEqual(new Attribute(Name.MALL_NUM, String.valueOf(mallNum), Table.MALLS));
-        QueryResult mall = DB.retrieve(Table.MALLS, filters);
+        QueryResult mall = controller.retrieve(Table.MALLS, filters);
 
         if (mall.getRowsAffected() < 1) {
             return null;
@@ -162,7 +162,7 @@ public class Mall {
     /**
      * Retrieves the mall with the given mall number from the database.
      *
-     * @param mallNum mall number of the mall to be retrieved
+     * @param mallName Name of the mall to be retrieved
      * @return A fully initialized Mall instance containing the same attributes
      * as those in Database. If there is no mall with the given mall number,
      * function returns null.
@@ -173,7 +173,7 @@ public class Mall {
     public static Mall retrieve(String mallName) throws SQLException, DBManagementException {
         Filters filters = new Filters();
         filters.addEqual(new Attribute(Name.NAME, mallName, Table.MALLS));
-        QueryResult mall = DB.retrieve(Table.MALLS, filters);
+        QueryResult mall = controller.retrieve(Table.MALLS, filters);
 
         if (mall.getRowsAffected() < 1) {
             return null;
@@ -185,7 +185,7 @@ public class Mall {
     }
 
     private static int generateMallNum() throws SQLException {
-        QueryResult result = DB.retrieveMax(new Attribute(Name.MALL_NUM, Table.MALLS));
+        QueryResult result = controller.retrieveMax(new Attribute(Name.MALL_NUM, Table.MALLS));
         ResultSet max = result.getResult();
         max.next();
         if (max.getInt(1) == 0) {

@@ -35,7 +35,7 @@ public class Attribute {
     public Attribute(Name attribute, Table t) {
         this.attributeName = attribute;
         this.attributeValue = "";
-        this.type = Type.STRING;
+        this.type = attribute.type;
         this.t = t;
 
     }
@@ -57,7 +57,7 @@ public class Attribute {
     }
 
     public String getStringValue() {
-        if (type.equals(Type.STRING) || type.equals((Type.DATE))) {
+        if (!type.equals(Type.NUMBER)) {
             return "'" + attributeValue + "'";
         } else if (attributeValue == null) {
             return "NULL";
@@ -123,17 +123,15 @@ public class Attribute {
         UTILITY_PERCENTAGE("UTILITY_PERCENTAGE", Type.NUMBER),
         MAINTENANCE_PERCENTAGE("MAINTENANCE_PERCENTAGE", Type.NUMBER),
         LEASE_PERCENTAGE("LEASE_PERCENTAGE", Type.NUMBER),
-        AVAILABILITY("AVAILABILITY", Type.NUMBER),
         DISCOUNT_NUM("DISCOUNT_NUM", Type.STRING),
         LOCATION_NUM("LOCATION_NUM", Type.NUMBER),
-        END_DATE("END_DATE", Type.DATE),
-        START_DATE("START_DATE", Type.DATE),
+        END_DATE("END_DATE", Type.TIMESTAMP),
+        START_DATE("START_DATE", Type.TIMESTAMP),
         PAYMENT_OPTION("PAYMENT_OPTION", Type.STRING),
         LEASER_ID("LEASER_ID", Type.STRING),
         APPLICANT_ID("APPLICANT_ID", Type.STRING),
         LEASE_END("LEASE_END", Type.DATE),
         LEASE_START("LEASE_START", Type.DATE),
-        RATE("RATE", Type.NUMBER),
         LEASE_REQUEST_NUM("LEASE_REQUEST_NUM", Type.STRING),
         AGENT_ID("AGENT_ID", Type.STRING),
         POTENTIAL_TENANT_ID("POTENTIAL_TENANT_ID", Type.STRING),
@@ -159,12 +157,16 @@ public class Attribute {
         SENDER_ID("SENDER_ID", Type.STRING),
         RECEIVER_ID("RECEIVER_ID", Type.STRING),
         DATE_SENT("DATE_SENT", Type.DATE),
-        NUM_FLOORS("NUM_FLOORS", Type.NUMBER);
+        NUM_FLOORS("NUM_FLOORS", Type.NUMBER),
+        RATE("RATE", Type.NUMBER),
+        DAY("DAY", Type.STRING),
+        SLOT_NUM("SLOT_NUM", Type.NUMBER);
 
         private final String name;
         private final Type type;
 
-        Name(String name, Type type) {
+        Name(String name, Type type
+        ) {
             this.name = name;
             this.type = type;
         }
@@ -175,7 +177,7 @@ public class Attribute {
     }
 
     public enum Type {
-        NUMBER, STRING, DATE;
+        NUMBER, STRING, DATE, TIMESTAMP;
     }
 
     public static void main(String[] args) {

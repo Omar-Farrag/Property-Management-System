@@ -1,52 +1,63 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package TableViewer;
+package TenantInterface;
 
 import DatabaseManagement.Attribute;
-import DatabaseManagement.Attribute.Name;
+import DatabaseManagement.AttributeCollection;
 import DatabaseManagement.Filters;
 import DatabaseManagement.Table;
 import General.Controller;
 import Properties.Mall;
+import TableViewer.TableForm;
 import java.util.ArrayList;
-import javax.swing.JScrollPane;
-import javax.swing.RowFilter;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Dell
  */
-public class PropertyBrowsingFilters extends javax.swing.JPanel implements FilterPane {
+public class PropertyBrowser extends TableForm {
 
     private Controller controller;
+    private String currentStoreNum;
+    private String currentMallName;
+    private String currentStoreClass;
+    private String currentStorePurpose;
+    private String currentMonthlyRate;
+    private String currentQuarterlyRate;
+    private String currentBiAnnualRate;
+    private String currentAnnualRate;
 
-    public PropertyBrowsingFilters() {
+    /**
+     * Creates new form PropertyBrowsing
+     */
+    public PropertyBrowser() {
         initComponents();
+        Table[] tables = new Table[]{Table.PROPERTIES, Table.MALLS};
+        initBaseComponents(tables, TopLabel, ActionBtn);
         controller = new Controller();
         populateMallCMB();
         populatePurposeCMB();
     }
 
     @Override
-    public JScrollPane getScrollPane() {
-        return jScrollPane1;
+    public AttributeCollection getAllAttributes() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public Filters getFilters() {
+    public Filters getBrowsingFilters() {
         Filters filters = new Filters();
 
         String value = storeName.getText().trim();
         if (!value.isEmpty()) {
-            filters.addLike(new Attribute(Name.NAME, "%" + value + "%", Table.PROPERTIES));
+            filters.addLike(new Attribute(Attribute.Name.NAME, "%" + value + "%", Table.PROPERTIES));
         }
 
         value = mallNameCMB.getSelectedItem().toString().trim();
-        if (!value.equalsIgnoreCase("any")) {
-            filters.addEqual(new Attribute(Name.NAME, value, Table.MALLS));
+        if (!value.equalsIgnoreCase("")) {
+            filters.addEqual(new Attribute(Attribute.Name.NAME, value, Table.MALLS));
         }
 
         ArrayList<String> checkedBoxes = new ArrayList<>();
@@ -63,42 +74,95 @@ public class PropertyBrowsingFilters extends javax.swing.JPanel implements Filte
             checkedBoxes.add("D");
         }
         if (!checkedBoxes.isEmpty()) {
-            filters.addIn(new Attribute(Name.CLASS, Table.PROPERTIES), checkedBoxes.toArray(new String[checkedBoxes.size()]));
+            filters.addIn(new Attribute(Attribute.Name.CLASS, Table.PROPERTIES), checkedBoxes.toArray(new String[checkedBoxes.size()]));
         }
 
         value = purposeCMB.getSelectedItem().toString().trim();
-        if (!value.equalsIgnoreCase("any")) {
-            filters.addEqual(new Attribute(Name.PURPOSE, value, Table.PROPERTIES));
+        if (!value.equalsIgnoreCase("")) {
+            filters.addEqual(new Attribute(Attribute.Name.PURPOSE, value, Table.PROPERTIES));
         }
         String min = monthlyMin.getText().trim();
         String max = monthlyMax.getText().trim();
         if (!min.isEmpty() && !max.isEmpty()) {
-            filters.addBetween(new Attribute(Name.MONTHLY_RATE, Table.PROPERTIES), min, max);
+            filters.addBetween(new Attribute(Attribute.Name.MONTHLY_RATE, Table.PROPERTIES), min, max);
         }
         min = quarterlyMin.getText().trim();
         max = quarterlyMax.getText().trim();
         if (!min.isEmpty() && !max.isEmpty()) {
-            filters.addBetween(new Attribute(Name.QUARTERLY_RATE, Table.PROPERTIES), min, max);
+            filters.addBetween(new Attribute(Attribute.Name.QUARTERLY_RATE, Table.PROPERTIES), min, max);
         }
 
         min = biAnnualMin.getText().trim();
         max = biAnnualMax.getText().trim();
         if (!min.isEmpty() && !max.isEmpty()) {
-            filters.addBetween(new Attribute(Name.BI_ANNUAL_RATE, Table.PROPERTIES), min, max);
+            filters.addBetween(new Attribute(Attribute.Name.BI_ANNUAL_RATE, Table.PROPERTIES), min, max);
         }
 
         min = annualMin.getText().trim();
         max = annualMax.getText().trim();
         if (!min.isEmpty() && !max.isEmpty()) {
-            filters.addBetween(new Attribute(Name.ANNUAL_RATE, Table.PROPERTIES), min, max);
+            filters.addBetween(new Attribute(Attribute.Name.ANNUAL_RATE, Table.PROPERTIES), min, max);
         }
 
         return filters;
     }
 
+    @Override
+    public Filters getPKFilter() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void enableFields() {
+        annualMax.setEnabled(true);
+        annualMin.setEnabled(true);
+        biAnnualMax.setEnabled(true);
+        biAnnualMin.setEnabled(true);
+        checkBoxA.setEnabled(true);
+        checkBoxB.setEnabled(true);
+        checkBoxC.setEnabled(true);
+        checkBoxD.setEnabled(true);
+        mallNameCMB.setEnabled(true);
+        monthlyMax.setEnabled(true);
+        monthlyMin.setEnabled(true);
+        purposeCMB.setEnabled(true);
+        quarterlyMax.setEnabled(true);
+        quarterlyMin.setEnabled(true);
+        storeName.setEnabled(true);
+    }
+
+    @Override
+    public void disableUnmodifiableFields() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void populateFields(AttributeCollection toPopulateWith) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void clearFields() {
+        annualMax.setText("");
+        annualMin.setText("");
+        biAnnualMax.setText("");
+        biAnnualMin.setText("");
+        checkBoxA.setSelected(false);
+        checkBoxB.setSelected(false);
+        checkBoxC.setSelected(false);
+        checkBoxD.setSelected(false);
+        mallNameCMB.setSelectedItem("");
+        purposeCMB.setSelectedItem("");
+        monthlyMax.setText("");
+        monthlyMin.setText("");
+        quarterlyMax.setText("");
+        quarterlyMin.setText("");
+        storeName.setText("");
+    }
+
     private void populateMallCMB() {
         mallNameCMB.removeAllItems();
-        mallNameCMB.addItem("Any");
+        mallNameCMB.addItem("");
 
         ArrayList<Mall> listOfMalls = controller.getListOfMalls();
         for (Mall mall : listOfMalls) {
@@ -109,7 +173,7 @@ public class PropertyBrowsingFilters extends javax.swing.JPanel implements Filte
 
     private void populatePurposeCMB() {
         purposeCMB.removeAllItems();
-        purposeCMB.addItem("Any");
+        purposeCMB.addItem("");
 
         ArrayList<String> purposes = controller.getPurposes();
         for (String purpose : purposes) {
@@ -123,7 +187,6 @@ public class PropertyBrowsingFilters extends javax.swing.JPanel implements Filte
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -160,9 +223,10 @@ public class PropertyBrowsingFilters extends javax.swing.JPanel implements Filte
         jLabel15 = new javax.swing.JLabel();
         annualMin = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
+        ActionBtn = new javax.swing.JButton();
+        TopLabel = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(255, 255, 255));
-        setDoubleBuffered(false);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -252,6 +316,11 @@ public class PropertyBrowsingFilters extends javax.swing.JPanel implements Filte
         jLabel16.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
         jLabel16.setText("And");
 
+        ActionBtn.setBackground(new java.awt.Color(0, 204, 0));
+        ActionBtn.setFont(new java.awt.Font("Verdana", 1, 12)); // NOI18N
+        ActionBtn.setForeground(new java.awt.Color(255, 255, 255));
+        ActionBtn.setText("Submit");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -264,11 +333,11 @@ public class PropertyBrowsingFilters extends javax.swing.JPanel implements Filte
                     .addComponent(purposeCMB, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(checkBoxA)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(91, 91, 91)
                         .addComponent(checkBoxB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(61, 61, 61)
+                        .addGap(92, 92, 92)
                         .addComponent(checkBoxC)
-                        .addGap(55, 55, 55)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
                         .addComponent(checkBoxD))
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -278,40 +347,44 @@ public class PropertyBrowsingFilters extends javax.swing.JPanel implements Filte
                     .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(ActionBtn)
+                        .addGap(158, 158, 158))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel15)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(annualMin, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel16)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(annualMax, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel13)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(18, 18, 18)
                                 .addComponent(biAnnualMin, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(18, 18, 18)
                                 .addComponent(jLabel12)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(18, 18, 18)
                                 .addComponent(biAnnualMax, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel1)
-                                .addGap(12, 12, 12)
+                                .addGap(18, 18, 18)
                                 .addComponent(monthlyMin, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(18, 18, 18)
                                 .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(18, 18, 18)
                                 .addComponent(monthlyMax, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGap(18, 18, 18)
                                 .addComponent(quarterlyMin, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(12, 12, 12)
+                                .addGap(18, 18, 18)
                                 .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(quarterlyMax, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(18, 18, 18)
+                                .addComponent(quarterlyMax, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel15)
+                                .addGap(18, 18, 18)
+                                .addComponent(annualMin, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel16)
+                                .addGap(18, 18, 18)
+                                .addComponent(annualMax, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -329,7 +402,7 @@ public class PropertyBrowsingFilters extends javax.swing.JPanel implements Filte
                 .addGap(31, 31, 31)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(checkBoxA)
                     .addComponent(checkBoxB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(checkBoxC)
@@ -344,8 +417,8 @@ public class PropertyBrowsingFilters extends javax.swing.JPanel implements Filte
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(monthlyMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(monthlyMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(monthlyMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addGap(31, 31, 31)
                 .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -370,24 +443,42 @@ public class PropertyBrowsingFilters extends javax.swing.JPanel implements Filte
                     .addComponent(jLabel15)
                     .addComponent(jLabel16)
                     .addComponent(annualMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addComponent(ActionBtn)
+                .addGap(22, 22, 22))
         );
 
         jScrollPane1.setViewportView(jPanel1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
+        TopLabel.setBackground(new java.awt.Color(0, 0, 0));
+        TopLabel.setFont(new java.awt.Font("Verdana", 1, 24)); // NOI18N
+        TopLabel.setForeground(new java.awt.Color(255, 255, 255));
+        TopLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        TopLabel.setText("FILTERS");
+        TopLabel.setOpaque(true);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
+            .addComponent(TopLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(TopLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
+
+        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton ActionBtn;
+    private javax.swing.JLabel TopLabel;
     private javax.swing.JTextField annualMax;
     private javax.swing.JTextField annualMin;
     private javax.swing.JTextField biAnnualMax;
