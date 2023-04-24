@@ -1,5 +1,6 @@
 package General;
 
+import DataEntryInterface.DataEntryUserInterface;
 import DataEntryInterface.ModificationForm;
 import DataEntryInterface.InsertForm;
 import DatabaseManagement.Attribute;
@@ -11,10 +12,12 @@ import DatabaseManagement.Filters;
 import DatabaseManagement.QueryResult;
 import DatabaseManagement.Table;
 import LeasingAgentInterface.AppointmentSlotForm;
+import LeasingAgentInterface.LeasingAgentUserInterface;
 import Notifications.Notification;
 import Notifications.NotificationsManager;
 import TableViewer.TableViewer;
 import TenantInterface.PropertyBrowser;
+import TenantInterface.TenantUserInterface;
 import java.awt.Color;
 import java.sql.Timestamp;
 import java.sql.SQLException;
@@ -27,13 +30,52 @@ import javax.swing.UIManager;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFrame;
 
 public class Controller {
 
-    //Just testing a feature
     private static LoginUser loggedInUser;
+    private static HashMap<String, JFrame> role_to_interface;
+
+    public Controller() {
+        if (role_to_interface != null) {
+            return;
+        }
+
+        role_to_interface = new HashMap<>();
+        role_to_interface.put("DE", new DataEntryUserInterface());
+        role_to_interface.put("LA", new LeasingAgentUserInterface());
+        role_to_interface.put("CT", new TenantUserInterface());
+        role_to_interface.put("PT", new TenantUserInterface());
+//        role_to_interface.put("IT",);
+    }
 
     private DatabaseManager DB = DatabaseManager.getInstance();
+
+    public void login(JFrame loginForm, String username, String password) {
+        try {
+            password = PasswordManager.encrypt(password);
+            Filters filters = new Filters();
+            filters.addEqual(new Attribute(Name.USER_ID, username, Table.CREDENTIALS));
+            filters.addEqual(new Attribute(Name.PASSWORD, password, Table.CREDENTIALS));
+            QueryResult result = DB.retrieve(Table.CREDENTIALS, filters);
+
+            if (result.getResult().next()) {
+                loggedInUser = LoginUser.retrieve(username);
+                displayWindow();
+                loginForm.dispose();
+            } else {
+                displayErrors("Invalid login information");
+            }
+        } catch (DBManagementException ex) {
+            displayErrors("Something went wrong while logging in");
+        } catch (SQLException ex) {
+            displaySQLError(ex);
+        }
+    }
 
     public void setLoggedInUser(LoginUser user) {
         loggedInUser = user;
@@ -75,6 +117,7 @@ public class Controller {
         JDialog dialog = pane.createDialog("ERROR");
         dialog.setAlwaysOnTop(true); // make the dialog always on top
         dialog.setVisible(true);
+
     }
 
     /**
@@ -738,5 +781,10 @@ public class Controller {
     public String formatTimeStamp(Timestamp stamp) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yy hh:mm:ss.SSSSSSSSS a");
         return formatter.format(stamp);
+    }
+
+    private void displayWindow() {
+        String role = loggedInUser.getRoleID();
+        role_to_interface.get(role).setVisible(true);
     }
 }

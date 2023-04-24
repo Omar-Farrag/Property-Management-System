@@ -24,17 +24,10 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        try {
-            DatabaseManager.getInstance();
-            ConstraintChecker.getInstance();
-            Controller controller = new Controller();
-            controller.setLoggedInUser(LoginUser.retrieve("A1"));
-//        (new LogInScreen()).setVisible(true);
-//        (new GeneralUserInterface()).setVisible(true);
-            new LeasingAgentUserInterface().setVisible(true);
-        } catch (SQLException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        DatabaseManager.getInstance();
+        ConstraintChecker.getInstance();
+        Controller controller = new Controller();
+        (new LogInScreen()).setVisible(true);
 
     }
 
