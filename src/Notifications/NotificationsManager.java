@@ -30,12 +30,13 @@ public class NotificationsManager implements NotificationManagement {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy hh:mm:ss a");
         String formattedDate = notification.getDateSent().format(formatter);
 
+        formattedDate = controller.getTimestamp(formattedDate);
         collection.add(new Attribute(Name.SENDER_ID, notification.getSenderID(), Table.NOTIFICATIONS));
         collection.add(new Attribute(Name.RECEIVER_ID, receiverID, Table.NOTIFICATIONS));
         collection.add(new Attribute(Name.DATE_SENT, formattedDate, Table.NOTIFICATIONS));
         collection.add(new Attribute(Name.MESSAGE, notification.getMessage(), Table.NOTIFICATIONS));
 
-        QueryResult result = controller.insert(Table.NOTIFICATIONS, collection);
+        QueryResult result = controller.insert(Table.NOTIFICATIONS, collection, true);
         return result.getRowsAffected();
     }
 
@@ -78,7 +79,7 @@ public class NotificationsManager implements NotificationManagement {
         String date = notification.getDateSent().format(DateTimeFormatter.ofPattern("dd-MMM-yyyy hh:mm:ss a"));
         filters.addEqual(new Attribute(Name.SENDER_ID, notification.getSenderID(), Table.NOTIFICATIONS));
         filters.addEqual(new Attribute(Name.DATE_SENT, date, Table.NOTIFICATIONS));
-        QueryResult result = controller.delete(Table.NOTIFICATIONS, filters);
+        QueryResult result = controller.delete(Table.NOTIFICATIONS, filters, false);
         return result.getRowsAffected();
     }
 

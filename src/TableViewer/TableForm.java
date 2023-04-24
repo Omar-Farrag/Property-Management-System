@@ -5,8 +5,6 @@
 package TableViewer;
 
 import DatabaseManagement.Table;
-import FormManipulationStrategies.FormInitializationStrategy;
-import FormManipulationStrategies.InsertForm;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;

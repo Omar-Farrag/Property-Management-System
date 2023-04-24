@@ -1,5 +1,7 @@
 package General;
 
+import DataEntryInterface.ModificationForm;
+import DataEntryInterface.InsertForm;
 import DatabaseManagement.Attribute;
 import DatabaseManagement.Attribute.Name;
 import DatabaseManagement.AttributeCollection;
@@ -8,13 +10,15 @@ import DatabaseManagement.Exceptions.DBManagementException;
 import DatabaseManagement.Filters;
 import DatabaseManagement.QueryResult;
 import DatabaseManagement.Table;
-import Leases.Lease;
-import LeasingAgentInterface.AppointmentSlot;
-import Properties.Mall;
-import Properties.Store;
+import TableViewer.ModifyForm;
+import LeasingAgentInterface.AppointmentSlotForm;
+import Notifications.Notification;
+import Notifications.NotificationsManager;
 import TableViewer.TableViewer;
 import TenantInterface.PropertyBrowser;
 import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Timestamp;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,17 +29,18 @@ import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Controller {
 
     //Just testing a feature
-    private static User loggedInUser;
+    private static LoginUser loggedInUser;
 
     private DatabaseManager DB = DatabaseManager.getInstance();
 
-    public void setLoggedInUser(User user) {
+    public void setLoggedInUser(LoginUser user) {
         loggedInUser = user;
     }
 
@@ -104,6 +109,48 @@ public class Controller {
         JDialog dialog = pane.createDialog("ERROR");
         dialog.setAlwaysOnTop(true); // make the dialog always on top
         dialog.setVisible(true);
+    }
+
+    public void bookAppointment(TableViewer viewer) throws SQLException, DBManagementException {
+
+        AttributeCollection storeInformation = viewer.getSelectedRow();
+
+        TableViewer agentAvailability = new AgentAvailability().getAgentAvailability();
+
+        agentAvailability.overrideClickListener(() -> {
+
+            try {
+                boolean confirmed = confirmAppointment();
+                if (!confirmed) {
+                    return;
+                }
+                AttributeCollection selectedTimeSlot = agentAvailability.getSelectedRow();
+
+                Appointment appointment = Appointment.create(loggedInUser, storeInformation, selectedTimeSlot);
+
+                if (appointment != null) {
+                    displaySuccessMessage("Appointment Created Successfully...SUUUIIIIIII");
+                    Notification notification = new Notification(getUserID(), LocalDateTime.now(), Notification.NotifTopic.APPOINTMENT_CREATED, "Below are the appointment details:\n" + appointment.toString());
+                    new NotificationsManager().notifyUser(getUserID(), notification);
+                } else {
+                    displayErrors("Something went wrong wile creating appointment...Try again later");
+                }
+            } catch (SQLException ex) {
+                displaySQLError(ex);
+            } catch (DBManagementException ex) {
+                displayErrors("Something went wrong wile creating appointment...Try again later");
+            }
+
+        });
+    }
+
+    private boolean confirmAppointment() {
+        int option = JOptionPane.showConfirmDialog(null, "Confirm appointment innit?", "Appointment Confirmation", JOptionPane.YES_NO_OPTION);
+        if (option == JOptionPane.NO_OPTION || option == JOptionPane.CLOSED_OPTION || option == JOptionPane.CLOSED_OPTION) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -208,6 +255,16 @@ public class Controller {
             Filters filters = new Filters();
             filters.addEqual(new Attribute(Name.STATUS, "Available", Table.PROPERTIES));
             TableViewer viewer = new TableViewer("Properties", toShow, filters, new PropertyBrowser(), true);
+            viewer.overrideClickListener(() -> {
+                try {
+                    bookAppointment(viewer);
+                } catch (SQLException ex) {
+                    displaySQLError(ex);
+                } catch (DBManagementException ex) {
+                    displayErrors("Something went wrong while booking appointment");
+                }
+
+            });
             viewer.setVisible(true);
 
         } catch (SQLException ex) {
@@ -215,6 +272,35 @@ public class Controller {
         } catch (DBManagementException ex) {
             displayErrors("Something went wrong while browsing properties...Try again later");
         }
+
+    }
+
+    public String findLocationNum(AttributeCollection collection) {
+        try {
+            String mallName = collection.getAttribute(Table.MALLS, Name.NAME).getValue();
+            Mall mall = Mall.retrieve(mallName);
+
+            String mallNum = String.valueOf(mall.getMallNum());
+            String storeNum = collection.getAttribute(Table.LOCS, Name.STORE_NUM).getValue();
+
+            Filters filters = new Filters();
+            filters.addEqual(new Attribute(Name.MALL_NUM, mallNum, Table.LOCS));
+            filters.addEqual(new Attribute(Name.STORE_NUM, storeNum, Table.LOCS));
+
+            QueryResult result = DB.retrieve(Table.LOCS, filters);
+            if (result.noErrors()) {
+                ResultSet store = result.getResult();
+                store.next();
+                return store.getString(Name.LOCATION_NUM.getName());
+            }
+
+        } catch (SQLException ex) {
+            displaySQLError(ex);
+        } catch (DBManagementException ex) {
+            displayErrors("Something went wrong when getting store location number...Try again later");
+        }
+        return "";
+
     }
 
     /**
@@ -368,14 +454,19 @@ public class Controller {
     public void uploadAvailability() {
         try {
             AttributeCollection toShow = DB.getAttributes(Table.APPOINTMENT_SLOTS);
+            toShow.remove(new Attribute(Name.BOOKED, Table.APPOINTMENT_SLOTS));
+            toShow.remove(new Attribute(Name.AGENT_ID, Table.APPOINTMENT_SLOTS));
+
             Filters filters = new Filters();
-            filters.addEqual(new Attribute(Name.AGENT_ID, "A1", Table.APPOINTMENT_SLOTS));
-            TableViewer viewer = new TableViewer("APPOINTMENT SLOTS", toShow, filters, new AppointmentSlot(), false);
+            filters.addEqual(new Attribute(Name.AGENT_ID, getUserID(), Table.APPOINTMENT_SLOTS));
+            filters.addEqual(new Attribute(Name.BOOKED, "0", Table.APPOINTMENT_SLOTS));
+            TableViewer viewer = new TableViewer("APPOINTMENT SLOTS", toShow, filters, new AppointmentSlotForm(), false);
             viewer.setVisible(true);
+
         } catch (SQLException ex) {
             displaySQLError(ex);
         } catch (DBManagementException ex) {
-            displayErrors("Something went wrong while viewing leasess...Try again later");
+            displayErrors("Something went wrong while viewing Appointment Slots...Try again later");
         }
     }
 
@@ -395,18 +486,26 @@ public class Controller {
      * @param filters Conditions that a row must satisfy to be updated
      * @param newValues Attribute collection containing the attributes to be
      * modified and their new values
+     * @param quiet Specifies whether a message indicating the success of the
+     * operation should be displayed on the screen or not
      *
      * @return Result of modification operation
      *
      */
-    public QueryResult modify(Table t, AttributeCollection newValues, Filters filters) {
+    public QueryResult modify(Table t, AttributeCollection newValues, Filters filters, boolean quiet) {
         try {
             QueryResult result = DB.modify(t, filters, newValues, true);
-            if (result.noErrors()) {
-                displaySuccessMessage("Entry Modified Successfully!");
-            } else {
+
+            if (!result.noErrors()) {
                 displayErrors(result);
             }
+
+            if (quiet) {
+                return result;
+            }
+
+            displaySuccessMessage("Entry Modified Successfully");
+
             return result;
         } catch (SQLException ex) {
             displaySQLError(ex);
@@ -428,14 +527,20 @@ public class Controller {
      * @param t Table where the tuple will be inserted
      * @return The result of the insertion operation
      */
-    public QueryResult insert(Table t, AttributeCollection newValues) {
+    public QueryResult insert(Table t, AttributeCollection newValues, boolean quiet) {
         try {
             QueryResult result = DB.insert(t, newValues);
-            if (result.noErrors()) {
-                displaySuccessMessage("Entry Inserted Successfully!");
-            } else {
+
+            if (!result.noErrors()) {
                 displayErrors(result);
             }
+
+            if (quiet) {
+                return result;
+            }
+
+            displaySuccessMessage("Entry Inserted Successfully");
+
             return result;
         } catch (SQLException ex) {
             displaySQLError(ex);
@@ -469,6 +574,7 @@ public class Controller {
         } catch (SQLException ex) {
             displaySQLError(ex);
         } catch (DBManagementException ex) {
+            ex.printStackTrace();
             displayErrors("Something went wrong while retrieving data from database");
         }
         return null;
@@ -508,14 +614,19 @@ public class Controller {
      * @param filters Conditions that a row must satisfy to be deleted
      * @return Query result of the delete operation
      */
-    public QueryResult delete(Table t, Filters filters) {
+    public QueryResult delete(Table t, Filters filters, boolean quiet) {
         try {
             QueryResult result = DB.delete(t, filters);
-            if (result.noErrors()) {
-                displaySuccessMessage("Entry Deleted Successfully!");
-            } else {
+
+            if (!result.noErrors()) {
                 displayErrors(result);
             }
+
+            if (quiet) {
+                return result;
+            }
+
+            displaySuccessMessage("Entry Deleted Successfully");
             return result;
         } catch (SQLException ex) {
             displaySQLError(ex);

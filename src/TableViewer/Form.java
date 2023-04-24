@@ -7,7 +7,6 @@ package TableViewer;
 import DatabaseManagement.AttributeCollection;
 import DatabaseManagement.Filters;
 import DatabaseManagement.Table;
-import FormManipulationStrategies.FormInitializationStrategy;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 

@@ -156,11 +156,13 @@ public class Attribute {
         MESSAGE("MESSAGE", Type.STRING),
         SENDER_ID("SENDER_ID", Type.STRING),
         RECEIVER_ID("RECEIVER_ID", Type.STRING),
-        DATE_SENT("DATE_SENT", Type.DATE),
+        DATE_SENT("DATE_SENT", Type.TIMESTAMP),
         NUM_FLOORS("NUM_FLOORS", Type.NUMBER),
         RATE("RATE", Type.NUMBER),
         DAY("DAY", Type.STRING),
-        SLOT_NUM("SLOT_NUM", Type.NUMBER);
+        SLOT_NUM("SLOT_NUM", Type.NUMBER),
+        APPOINTMENT_SLOT("APPOINTMENT_SLOT", Type.NUMBER),
+        BOOKED("BOOKED", Type.STRING);
 
         private final String name;
         private final Type type;

@@ -9,7 +9,7 @@ import DatabaseManagement.AttributeCollection;
 import DatabaseManagement.Filters;
 import DatabaseManagement.Table;
 import General.Controller;
-import Properties.Mall;
+import General.Mall;
 import TableViewer.TableForm;
 import java.util.ArrayList;
 

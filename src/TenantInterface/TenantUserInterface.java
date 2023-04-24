@@ -47,6 +47,7 @@ public class TenantUserInterface extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         browsePropertiesBtn = new javax.swing.JButton();
         viewLeasesBtn = new javax.swing.JButton();
+        browsePropertiesBtn1 = new javax.swing.JButton();
 
         javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
         jDesktopPane1.setLayout(jDesktopPane1Layout);
@@ -181,16 +182,31 @@ public class TenantUserInterface extends javax.swing.JFrame {
             }
         });
 
+        browsePropertiesBtn1.setBackground(new java.awt.Color(102, 102, 102));
+        browsePropertiesBtn1.setFont(new java.awt.Font("Verdana", 1, 18)); // NOI18N
+        browsePropertiesBtn1.setForeground(new java.awt.Color(230, 230, 254));
+        browsePropertiesBtn1.setText("Book Appointment");
+        browsePropertiesBtn1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                browsePropertiesBtn1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(50, 50, 50)
-                .addComponent(browsePropertiesBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(viewLeasesBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(browsePropertiesBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(viewLeasesBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(50, 50, 50))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(browsePropertiesBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(518, 518, 518))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -199,7 +215,9 @@ public class TenantUserInterface extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(browsePropertiesBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(viewLeasesBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(87, Short.MAX_VALUE))
+                .addGap(76, 76, 76)
+                .addComponent(browsePropertiesBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -237,8 +255,13 @@ public class TenantUserInterface extends javax.swing.JFrame {
         controller.viewLeases();
     }//GEN-LAST:event_viewLeasesBtnActionPerformed
 
+    private void browsePropertiesBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browsePropertiesBtn1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_browsePropertiesBtn1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browsePropertiesBtn;
+    private javax.swing.JButton browsePropertiesBtn1;
     private javax.swing.JLabel dateLabel;
     private javax.swing.JPanel infoPanel;
     private javax.swing.JDesktopPane jDesktopPane1;

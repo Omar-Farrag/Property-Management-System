@@ -10,6 +10,9 @@ import DatabaseManagement.ConstraintsHandling.MetaDataExtractor;
 import DatabaseManagement.DatabaseManager;
 import LeasingAgentInterface.LeasingAgentUserInterface;
 import TenantInterface.TenantUserInterface;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -21,11 +24,17 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        DatabaseManager.getInstance();
-        ConstraintChecker.getInstance();
+        try {
+            DatabaseManager.getInstance();
+            ConstraintChecker.getInstance();
+            Controller controller = new Controller();
+            controller.setLoggedInUser(LoginUser.retrieve("A1"));
 //        (new LogInScreen()).setVisible(true);
 //        (new GeneralUserInterface()).setVisible(true);
-        new LeasingAgentUserInterface().setVisible(true);
+            new TenantUserInterface().setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 

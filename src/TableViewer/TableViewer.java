@@ -7,10 +7,8 @@ import DatabaseManagement.Exceptions.DBManagementException;
 import DatabaseManagement.Filters;
 import DatabaseManagement.QueryResult;
 import DatabaseManagement.Table;
-import FormManipulationStrategies.FilterForm;
-import FormManipulationStrategies.InsertForm;
-import FormManipulationStrategies.ModifyForm;
 import General.Controller;
+import General.Function;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -37,6 +36,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.sql.Timestamp;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TableViewer extends JFrame {
 
@@ -52,6 +53,8 @@ public class TableViewer extends JFrame {
     private Form form;
     private boolean readOnly;
     private Filters originalFilters;
+
+    private Function handleMouseClicks = null;
 
     TableRowSorter<DefaultTableModel> sorter;
 
@@ -115,10 +118,12 @@ public class TableViewer extends JFrame {
 
     /**
      *
-     * @return An array of all selected row numbers
+     * @return An attribute collection for the selected row in the viewer
      */
-    public int[] getSelectedRows() {
-        return table.getSelectedRows();
+    public AttributeCollection getSelectedRow() {
+
+        int row = table.getSelectedRow();
+        return getRow(row);
     }
 
     public void applyBrowsingFilters() throws SQLException {
@@ -155,13 +160,20 @@ public class TableViewer extends JFrame {
         for (Table t : tables) {
             Filters filtsForT = filters.filter(t);
             AttributeCollection valsForT = newValues.filter(t);
-            controller.modify(t, valsForT, filtsForT);
+            controller.modify(t, valsForT, filtsForT, false);
 
         }
 
 //        if (!result.noErrors()) {
 //            return;
 //        }
+    }
+
+    /**
+     * Refreshes the viewer to display the current, up-to-date records in a the
+     * shown table
+     */
+    public void refresh() throws SQLException {
         initModel(controller.retrieve(toShow, originalFilters).getResult());
 
         initTable();
@@ -171,7 +183,6 @@ public class TableViewer extends JFrame {
 
         scrollPane.setViewportView(table);
         form.getFrame().dispose();
-
     }
 
     public void applyInsertion() throws SQLException {
@@ -182,20 +193,13 @@ public class TableViewer extends JFrame {
 
         for (Table t : tables) {
             AttributeCollection valsForT = newValues.filter(t);
-            controller.insert(t, valsForT);
+            controller.insert(t, valsForT, false);
 
         }
 //        if (!result.noErrors()) {
 //            return;
 //        }
-        initModel(controller.retrieve(toShow, originalFilters).getResult());
-
-        sorter = new TableRowSorter<>(model);
-        table.setRowSorter(sorter);
-
-        initTable();
-        scrollPane.setViewportView(table);
-        form.getFrame().dispose();
+        refresh();
     }
 
     public void applyDeletion() throws SQLException {
@@ -209,7 +213,7 @@ public class TableViewer extends JFrame {
 
             for (Table t : tables) {
                 Filters filtsForT = filters.filter(t);
-                controller.delete(t, filtsForT);
+                controller.delete(t, filtsForT, false);
 
             }
 //            if (!result.noErrors()) {
@@ -217,13 +221,7 @@ public class TableViewer extends JFrame {
 //            }
         }
 
-        initModel(controller.retrieve(toShow, originalFilters).getResult());
-        initTable();
-        sorter = new TableRowSorter<>(model);
-        table.setRowSorter(sorter);
-
-        scrollPane.setViewportView(table);
-        form.getFrame().dispose();
+        refresh();
 
     }
 
@@ -299,10 +297,18 @@ public class TableViewer extends JFrame {
         table.setFillsViewportHeight(true);
         table.getTableHeader().setBackground(violet);
 
-        if (!readOnly && form != null) {
-            table.addMouseListener(new MouseAdapter() {
-                public void mouseClicked(MouseEvent e) {
-                    if (e.getClickCount() == 2) {
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    if (handleMouseClicks != null) {
+                        try {
+                            handleMouseClicks.execute();
+                            refresh();
+                        } catch (SQLException ex) {
+                            controller.displaySQLError(ex);
+                        }
+                    } else if (!readOnly && form != null) {
                         int row = table.getSelectedRow();
                         AttributeCollection collection = getRow(row);
                         form.setInitStrategy(new ModifyForm(collection));
@@ -311,8 +317,13 @@ public class TableViewer extends JFrame {
                     }
                 }
             }
-            );
         }
+        );
+
+    }
+
+    public void overrideClickListener(Function newListener) {
+        handleMouseClicks = newListener;
     }
 
     private void initInnerPanels() {

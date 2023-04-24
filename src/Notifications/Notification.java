@@ -14,14 +14,14 @@ import java.util.ArrayList;
  * An encapsulation of all of the notification's relevant information.
  * Represents notifications that are shared between users on the application for
  * events such as late payments, application status updates, etc.
- * 
+ *
  * @Attributes senderID - ID of individual who sent the notification
- *             <li>dateSent - Exact date the notificaiton was sent</li>
- *             <li>topic - Overall description of what the notification is
- *             about</li>
- *             <li>message - Detailed message for the notification</li>
+ * <li>dateSent - Exact date the notificaiton was sent</li>
+ * <li>topic - Overall description of what the notification is about</li>
+ * <li>message - Detailed message for the notification</li>
  */
 public class Notification {
+
     private final String senderID;
     private String senderName;
     private final LocalDateTime dateSent;
@@ -29,15 +29,15 @@ public class Notification {
 
     public Notification(String senderID, LocalDateTime dateSent, NotifTopic topic, String message) {
         this.senderID = senderID;
-        this.senderName=  "";
+        this.senderName = "";
         this.dateSent = dateSent;
-        this.message = topic.getTopic() + ": " + message.replace("'","''") ;
+        this.message = topic.getTopic() + ": " + message.replace("'", "''");
     }
 
-    public Notification(String senderID, LocalDateTime dateSent, String message,String senderName) {
+    public Notification(String senderID, LocalDateTime dateSent, String message, String senderName) {
         this.senderID = senderID;
         this.dateSent = dateSent;
-        this.message =  message ;
+        this.message = message;
         this.senderName = senderName;
     }
 
@@ -61,16 +61,16 @@ public class Notification {
     }
 
     /**
-     * The NotifTopic enum class contains a list of standard notification topics to
-     * be used when sending notifications to other users. Each NotifTopic instance
-     * represents a specific matching string that will be used when crafting
-     * notification messages. This ensures that all message topics are uniformly
-     * throughout the application
+     * The NotifTopic enum class contains a list of standard notification topics
+     * to be used when sending notifications to other users. Each NotifTopic
+     * instance represents a specific matching string that will be used when
+     * crafting notification messages. This ensures that all message topics are
+     * uniformly throughout the application
      */
     public enum NotifTopic {
 
         // An example
-        STATUS_UPDATE("STATUS UPDATE");
+        APPOINTMENT_CREATED("APPOINTMENT CREATED");
 
         private String topic;
 
@@ -83,6 +83,5 @@ public class Notification {
         }
 
     }
-
 
 }
