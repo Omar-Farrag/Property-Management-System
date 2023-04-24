@@ -5,7 +5,10 @@
 package LeasingAgentInterface;
 
 import General.Controller;
+import General.LoginUser;
 import java.awt.Frame;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -21,6 +24,14 @@ public class LeasingAgentUserInterface extends javax.swing.JFrame {
     public LeasingAgentUserInterface() {
         initComponents();
         controller = new Controller();
+        LoginUser loggedInUser = controller.getLoginUser();
+        usernameField.setText(loggedInUser.getFirstName() + " " + loggedInUser.getLastName());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, MMMM dd, yyyy");
+        dateField.setText(LocalDateTime.now().format(formatter));
+        roleField.setText(loggedInUser.getRole());
+        usernameField.setEnabled(false);
+        dateField.setEnabled(false);
+        roleField.setEnabled(false);
     }
 
     /**
@@ -38,6 +49,9 @@ public class LeasingAgentUserInterface extends javax.swing.JFrame {
         usernameLabel = new javax.swing.JLabel();
         dateLabel = new javax.swing.JLabel();
         roleLabel = new javax.swing.JLabel();
+        dateField = new javax.swing.JTextField();
+        usernameField = new javax.swing.JTextField();
+        roleField = new javax.swing.JTextField();
         welcomePanel = new javax.swing.JPanel();
         welcomeLabel1 = new javax.swing.JLabel();
         notificationsButton = new javax.swing.JButton();
@@ -83,6 +97,12 @@ public class LeasingAgentUserInterface extends javax.swing.JFrame {
         roleLabel.setForeground(new java.awt.Color(102, 102, 102));
         roleLabel.setText("Role: ");
 
+        dateField.setText("jTextField1");
+
+        usernameField.setText("jTextField1");
+
+        roleField.setText("jTextField1");
+
         javax.swing.GroupLayout infoPanelLayout = new javax.swing.GroupLayout(infoPanel);
         infoPanel.setLayout(infoPanelLayout);
         infoPanelLayout.setHorizontalGroup(
@@ -90,21 +110,34 @@ public class LeasingAgentUserInterface extends javax.swing.JFrame {
             .addGroup(infoPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(usernameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(roleLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
-                        .addComponent(dateLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(167, Short.MAX_VALUE))
+                    .addComponent(usernameLabel)
+                    .addComponent(dateLabel)
+                    .addComponent(roleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(roleField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dateField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(usernameField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(278, Short.MAX_VALUE))
         );
         infoPanelLayout.setVerticalGroup(
             infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(infoPanelLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(usernameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(roleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(infoPanelLayout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(usernameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(roleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(infoPanelLayout.createSequentialGroup()
+                        .addGap(52, 52, 52)
+                        .addComponent(dateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(roleField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
@@ -137,7 +170,7 @@ public class LeasingAgentUserInterface extends javax.swing.JFrame {
                 .addGroup(welcomePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(welcomePanelLayout.createSequentialGroup()
                         .addComponent(welcomeLabel2)
-                        .addGap(0, 9, Short.MAX_VALUE))
+                        .addGap(0, 139, Short.MAX_VALUE))
                     .addGroup(welcomePanelLayout.createSequentialGroup()
                         .addComponent(profileButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -236,6 +269,7 @@ public class LeasingAgentUserInterface extends javax.swing.JFrame {
     }//GEN-LAST:event_viewAppointmentsBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField dateField;
     private javax.swing.JLabel dateLabel;
     private javax.swing.JPanel infoPanel;
     private javax.swing.JDesktopPane jDesktopPane1;
@@ -243,8 +277,10 @@ public class LeasingAgentUserInterface extends javax.swing.JFrame {
     private javax.swing.JScrollBar jScrollBar1;
     private javax.swing.JButton notificationsButton;
     private javax.swing.JButton profileButton;
+    private javax.swing.JTextField roleField;
     private javax.swing.JLabel roleLabel;
     private javax.swing.JButton uploadAvailabilityBtn;
+    private javax.swing.JTextField usernameField;
     private javax.swing.JLabel usernameLabel;
     private javax.swing.JButton viewAppointmentsBtn;
     private javax.swing.JLabel welcomeLabel1;

@@ -6,7 +6,10 @@ package TenantInterface;
 
 import DataEntryInterface.*;
 import General.Controller;
+import General.LoginUser;
 import java.awt.Frame;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -22,6 +25,14 @@ public class TenantUserInterface extends javax.swing.JFrame {
     public TenantUserInterface() {
         initComponents();
         controller = new Controller();
+        LoginUser loggedInUser = controller.getLoginUser();
+        usernameField.setText(loggedInUser.getFirstName() + " " + loggedInUser.getLastName());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, MMMM dd, yyyy");
+        dateField.setText(LocalDateTime.now().format(formatter));
+        roleField.setText(loggedInUser.getRole());
+        usernameField.setEnabled(false);
+        dateField.setEnabled(false);
+        roleField.setEnabled(false);
     }
 
     /**
@@ -39,6 +50,9 @@ public class TenantUserInterface extends javax.swing.JFrame {
         usernameLabel = new javax.swing.JLabel();
         dateLabel = new javax.swing.JLabel();
         roleLabel = new javax.swing.JLabel();
+        usernameField = new javax.swing.JTextField();
+        dateField = new javax.swing.JTextField();
+        roleField = new javax.swing.JTextField();
         welcomePanel = new javax.swing.JPanel();
         welcomeLabel1 = new javax.swing.JLabel();
         notificationsButton = new javax.swing.JButton();
@@ -84,6 +98,12 @@ public class TenantUserInterface extends javax.swing.JFrame {
         roleLabel.setForeground(new java.awt.Color(102, 102, 102));
         roleLabel.setText("Role: ");
 
+        usernameField.setText("jTextField1");
+
+        dateField.setText("jTextField1");
+
+        roleField.setText("jTextField1");
+
         javax.swing.GroupLayout infoPanelLayout = new javax.swing.GroupLayout(infoPanel);
         infoPanel.setLayout(infoPanelLayout);
         infoPanelLayout.setHorizontalGroup(
@@ -91,11 +111,18 @@ public class TenantUserInterface extends javax.swing.JFrame {
             .addGroup(infoPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(usernameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(roleLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
-                        .addComponent(dateLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(167, Short.MAX_VALUE))
+                    .addComponent(usernameLabel)
+                    .addComponent(dateLabel)
+                    .addComponent(roleLabel))
+                .addContainerGap(360, Short.MAX_VALUE))
+            .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(infoPanelLayout.createSequentialGroup()
+                    .addGap(130, 130, 130)
+                    .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(roleField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(dateField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(usernameField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap(130, Short.MAX_VALUE)))
         );
         infoPanelLayout.setVerticalGroup(
             infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -107,6 +134,17 @@ public class TenantUserInterface extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(roleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(24, Short.MAX_VALUE))
+            .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(infoPanelLayout.createSequentialGroup()
+                    .addGap(23, 23, 23)
+                    .addGroup(infoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(usernameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(infoPanelLayout.createSequentialGroup()
+                            .addGap(33, 33, 33)
+                            .addComponent(dateField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(roleField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addContainerGap(24, Short.MAX_VALUE)))
         );
 
         welcomePanel.setBackground(new java.awt.Color(230, 230, 254));
@@ -239,6 +277,7 @@ public class TenantUserInterface extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browsePropertiesBtn;
+    private javax.swing.JTextField dateField;
     private javax.swing.JLabel dateLabel;
     private javax.swing.JPanel infoPanel;
     private javax.swing.JDesktopPane jDesktopPane1;
@@ -246,7 +285,9 @@ public class TenantUserInterface extends javax.swing.JFrame {
     private javax.swing.JScrollBar jScrollBar1;
     private javax.swing.JButton notificationsButton;
     private javax.swing.JButton profileButton;
+    private javax.swing.JTextField roleField;
     private javax.swing.JLabel roleLabel;
+    private javax.swing.JTextField usernameField;
     private javax.swing.JLabel usernameLabel;
     private javax.swing.JButton viewLeasesBtn;
     private javax.swing.JLabel welcomeLabel1;

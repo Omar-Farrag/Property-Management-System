@@ -41,16 +41,7 @@ public class Controller {
     private static HashMap<String, JFrame> role_to_interface;
 
     public Controller() {
-        if (role_to_interface != null) {
-            return;
-        }
 
-        role_to_interface = new HashMap<>();
-        role_to_interface.put("DE", new DataEntryUserInterface());
-        role_to_interface.put("LA", new LeasingAgentUserInterface());
-        role_to_interface.put("CT", new TenantUserInterface());
-        role_to_interface.put("PT", new TenantUserInterface());
-//        role_to_interface.put("IT",);
     }
 
     private DatabaseManager DB = DatabaseManager.getInstance();
@@ -83,6 +74,10 @@ public class Controller {
 
     public String getUserID() {
         return loggedInUser.getUserID();
+    }
+
+    public LoginUser getLoginUser() {
+        return loggedInUser;
     }
 
     /**
@@ -784,7 +779,20 @@ public class Controller {
     }
 
     private void displayWindow() {
+        if (role_to_interface == null) {
+            role_to_interface = new HashMap<>();
+            role_to_interface.put("DE", new DataEntryUserInterface());
+            role_to_interface.put("LA", new LeasingAgentUserInterface());
+            role_to_interface.put("CT", new TenantUserInterface());
+            role_to_interface.put("PT", new TenantUserInterface());
+//        role_to_interface.put("IT",);
+        }
+
         String role = loggedInUser.getRoleID();
         role_to_interface.get(role).setVisible(true);
+    }
+
+    AttributeCollection getAttributes(Table table) {
+        return DB.getAttributes(table);
     }
 }
