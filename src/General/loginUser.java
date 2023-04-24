@@ -15,7 +15,7 @@ import java.sql.SQLException;
 
 public class LoginUser {
 
-    private String userID = "A1";
+    private String userID;
     private String firstName;
     private String lastName;
     private String phoneNumber;

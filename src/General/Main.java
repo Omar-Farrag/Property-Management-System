@@ -31,7 +31,7 @@ public class Main {
             controller.setLoggedInUser(LoginUser.retrieve("A1"));
 //        (new LogInScreen()).setVisible(true);
 //        (new GeneralUserInterface()).setVisible(true);
-            new TenantUserInterface().setVisible(true);
+            new LeasingAgentUserInterface().setVisible(true);
         } catch (SQLException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }

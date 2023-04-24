@@ -10,15 +10,12 @@ import DatabaseManagement.Exceptions.DBManagementException;
 import DatabaseManagement.Filters;
 import DatabaseManagement.QueryResult;
 import DatabaseManagement.Table;
-import TableViewer.ModifyForm;
 import LeasingAgentInterface.AppointmentSlotForm;
 import Notifications.Notification;
 import Notifications.NotificationsManager;
 import TableViewer.TableViewer;
 import TenantInterface.PropertyBrowser;
 import java.awt.Color;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.sql.Timestamp;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,8 +27,6 @@ import javax.swing.UIManager;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Controller {
 
@@ -471,6 +466,25 @@ public class Controller {
     }
 
     public void viewAgentAppointments() {
+        try {
+
+            ResultSet result = DB.executeStatement("Select H.SLOT_NUM , H.DAY , H.START_DATE , H.END_DATE,\n"
+                    + "  M.FNAME AS TENANT_NAME , M.PHONE_NUMBER , M.EMAIL_ADDRESS, J.NAME AS STORE_NAME, L.NAME AS MALL_NAME \n"
+                    + " from  USERS M \n"
+                    + " join APPOINTMENT_SLOTS H on M.USER_ID = H.AGENT_ID\n"
+                    + " join LEASES F on M.USER_ID = F.LEASER_ID\n"
+                    + " join LOCS K on F.LOCATION_NUM = K.LOCATION_NUM \n"
+                    + " join PROPERTIES J on K.LOCATION_NUM = J.LOCATION_NUM \n"
+                    + " join MALLS L on K.MALL_NUM = L.MALL_NUM \n"
+                    + " join APPOINTMENTS I on M.USER_ID = I.POTENTIAL_TENANT_ID AND I.APPOINTMENT_SLOT = H.SLOT_NUM\n"
+                    + " where H.AGENT_ID = '" + getUserID()
+                    + "'");
+            TableViewer viewer = new TableViewer("APPOINTMENTS", result);
+            viewer.setVisible(true);
+
+        } catch (SQLException ex) {
+            displaySQLError(ex);
+        }
 
     }
 

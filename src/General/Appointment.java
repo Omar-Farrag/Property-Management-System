@@ -73,4 +73,22 @@ public class Appointment {
         }
     }
 
+    public static AttributeCollection getVisibleAttributes() {
+        AttributeCollection toShow = new AttributeCollection();
+
+        toShow.add(new Attribute(Name.SLOT_NUM, Table.APPOINTMENT_SLOTS));
+        toShow.add(new Attribute(Name.DAY, Table.APPOINTMENT_SLOTS));
+        toShow.add(new Attribute(Name.START_DATE, Table.APPOINTMENT_SLOTS));
+        toShow.add(new Attribute(Name.END_DATE, Table.APPOINTMENT_SLOTS));
+        toShow.add(new Attribute(Name.POTENTIAL_TENANT_ID, Table.APPOINTMENTS));
+        toShow.add(new Attribute(Name.FNAME, Table.USERS));
+        toShow.add(new Attribute(Name.PHONE_NUMBER, Table.USERS));
+        toShow.add(new Attribute(Name.EMAIL_ADDRESS, Table.USERS));
+        toShow.add(new Attribute(Name.NAME, Table.PROPERTIES));
+        toShow.add(new Attribute(Name.NAME, Table.MALLS));
+
+        return toShow;
+
+    }
+
 }

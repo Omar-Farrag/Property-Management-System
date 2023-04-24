@@ -18,10 +18,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Vector;
 import javax.swing.JButton;
 
@@ -36,8 +34,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.sql.Timestamp;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class TableViewer extends JFrame {
 
@@ -78,6 +74,11 @@ public class TableViewer extends JFrame {
         this.readOnly = readOnly;
         this.originalFilters = originalFilters;
         init(title, controller.retrieve(toShow, originalFilters).getResult(), form);
+    }
+
+    public TableViewer(String title, ResultSet toDisplay) throws SQLException {
+        this.readOnly = true;
+        init(title, toDisplay, form);
     }
 
     /**
