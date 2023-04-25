@@ -36,17 +36,15 @@ public class Appointment {
     private Appointment() {
     }
 
-    public static Appointment create(LoginUser tenant, AttributeCollection storeInformation, AttributeCollection appointmentInfo) throws SQLException, DBManagementException {
+    public static Appointment create(LoginUser tenant, Store store, LoginUser agent, AttributeCollection appointmentInfo) throws SQLException, DBManagementException {
 
         Appointment appointment = new Appointment();
-        appointment.slotNumber = appointmentInfo.getValue(new Attribute(Name.SLOT_NUM, Table.APPOINTMENT_SLOTS));
+
         appointment.tenant = tenant;
+        appointment.agent = agent;
+        appointment.store = store;
 
-        String agentID = appointmentInfo.getValue(new Attribute(Name.AGENT_ID, Table.APPOINTMENT_SLOTS));
-        appointment.agent = LoginUser.retrieve(agentID);
-
-        String locationNum = controller.findLocationNum(storeInformation);
-        appointment.store = Store.retrieve(locationNum);
+        appointment.slotNumber = appointmentInfo.getValue(new Attribute(Name.SLOT_NUM, Table.APPOINTMENT_SLOTS));
 
         appointment.startDate = appointmentInfo.getValue(new Attribute(Name.START_DATE, Table.APPOINTMENT_SLOTS));
         appointment.endDate = appointmentInfo.getValue(new Attribute(Name.END_DATE, Table.APPOINTMENT_SLOTS));

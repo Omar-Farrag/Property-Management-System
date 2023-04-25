@@ -46,6 +46,20 @@ public class Controller {
 
     private DatabaseManager DB = DatabaseManager.getInstance();
 
+    /**
+     *******************************************************************************************************************
+     *******************************************************LOGIN*******************************************************
+     * *****************************************************************************************************************
+     */
+    /**
+     * Tries to log in to the system using the given credentials. If the
+     * credentials match a user, the GUI for that user type will be displayed to
+     * the screen, else an error message
+     *
+     * @param loginForm The form displaying the login fields
+     * @param username Input username
+     * @param password Input password
+     */
     public void login(JFrame loginForm, String username, String password) {
         try {
             password = PasswordManager.encrypt(password);
@@ -68,18 +82,36 @@ public class Controller {
         }
     }
 
+    /**
+     * Sets the current logged in user to the given user
+     *
+     * @param user
+     */
     public void setLoggedInUser(LoginUser user) {
         loggedInUser = user;
     }
 
+    /**
+     *
+     * @return Current logged in user's id
+     */
     public String getUserID() {
         return loggedInUser.getUserID();
     }
 
+    /**
+     *
+     * @return Current logged in user
+     */
     public LoginUser getLoginUser() {
         return loggedInUser;
     }
 
+    /**
+     *******************************************************************************************************************
+     ***********************************************ERROR/SUCCESS_MESSAGES**********************************************
+     * *****************************************************************************************************************
+     */
     /**
      * Displays all errors in a database operation in a separate dialog window
      *
@@ -144,9 +176,26 @@ public class Controller {
         dialog.setVisible(true);
     }
 
+    /**
+     *******************************************************************************************************************
+     ***********************************************APPOINTMENT_BOOKING**********************************************
+     * *****************************************************************************************************************
+     */
+    /**
+     * Allows the user to book an appointment after selecting a store from the
+     * given viewer. A new window will appear prompting the user to choose the
+     * appointment slot. Upon selecting the slot, the user will be asked for
+     * confirmation and confirmed, the appointment will be created
+     *
+     * @param viewer TableViewer that contains
+     * @throws SQLException
+     * @throws DBManagementException
+     */
     public void bookAppointment(TableViewer viewer) throws SQLException, DBManagementException {
 
         AttributeCollection storeInformation = viewer.getSelectedRow();
+        String locationNum = findLocationNum(storeInformation);
+        Store selectedStore = Store.retrieve(locationNum);
 
         TableViewer agentAvailability = new AgentAvailability().getAgentAvailability();
 
@@ -159,7 +208,10 @@ public class Controller {
                 }
                 AttributeCollection selectedTimeSlot = agentAvailability.getSelectedRow();
 
-                Appointment appointment = Appointment.create(loggedInUser, storeInformation, selectedTimeSlot);
+                String agentID = selectedTimeSlot.getValue(new Attribute(Name.AGENT_ID, Table.APPOINTMENT_SLOTS));
+                LoginUser agent = LoginUser.retrieve(agentID);
+
+                Appointment appointment = Appointment.create(loggedInUser, selectedStore, agent, selectedTimeSlot);
 
                 if (appointment != null) {
                     displaySuccessMessage("Appointment Created Successfully...SUUUIIIIIII");
@@ -177,6 +229,12 @@ public class Controller {
         });
     }
 
+    /**
+     * Displays a small pop up window prompting the user to confirm the
+     * appointment
+     *
+     * @return True if the user confirmed, false otherwise
+     */
     private boolean confirmAppointment() {
         int option = JOptionPane.showConfirmDialog(null, "Confirm appointment innit?", "Appointment Confirmation", JOptionPane.YES_NO_OPTION);
         if (option == JOptionPane.NO_OPTION || option == JOptionPane.CLOSED_OPTION || option == JOptionPane.CLOSED_OPTION) {
@@ -184,6 +242,53 @@ public class Controller {
         } else {
             return true;
         }
+    }
+
+    /**
+     * Displays a new form where a leasing agent can manage his/her
+     * availability. The agent can insert, modify, delete, and filter
+     * appointment slots using the form.
+     */
+    public void uploadAvailability() {
+        try {
+            AttributeCollection toShow = DB.getAttributes(Table.APPOINTMENT_SLOTS);
+            toShow.remove(new Attribute(Name.BOOKED, Table.APPOINTMENT_SLOTS));
+            toShow.remove(new Attribute(Name.AGENT_ID, Table.APPOINTMENT_SLOTS));
+
+            Filters filters = new Filters();
+            filters.addEqual(new Attribute(Name.AGENT_ID, getUserID(), Table.APPOINTMENT_SLOTS));
+            filters.addEqual(new Attribute(Name.BOOKED, "0", Table.APPOINTMENT_SLOTS));
+            TableViewer viewer = new TableViewer("APPOINTMENT SLOTS", toShow, filters, new AppointmentSlotForm(), false);
+            viewer.setVisible(true);
+
+        } catch (SQLException ex) {
+            displaySQLError(ex);
+        } catch (DBManagementException ex) {
+            displayErrors("Something went wrong while viewing Appointment Slots...Try again later");
+        }
+    }
+
+    public void viewAgentAppointments() {
+        try {
+
+            ResultSet result = DB.executeStatement("Select H.SLOT_NUM , H.DAY , H.START_DATE , H.END_DATE,\n"
+                    + "  M.FNAME AS TENANT_NAME , M.PHONE_NUMBER , M.EMAIL_ADDRESS, J.NAME AS STORE_NAME, L.NAME AS MALL_NAME \n"
+                    + " from  USERS M \n"
+                    + " join APPOINTMENT_SLOTS H on M.USER_ID = H.AGENT_ID\n"
+                    + " join LEASES F on M.USER_ID = F.LEASER_ID\n"
+                    + " join LOCS K on F.LOCATION_NUM = K.LOCATION_NUM \n"
+                    + " join PROPERTIES J on K.LOCATION_NUM = J.LOCATION_NUM \n"
+                    + " join MALLS L on K.MALL_NUM = L.MALL_NUM \n"
+                    + " join APPOINTMENTS I on M.USER_ID = I.POTENTIAL_TENANT_ID AND I.APPOINTMENT_SLOT = H.SLOT_NUM\n"
+                    + " where H.AGENT_ID = '" + getUserID()
+                    + "'");
+            TableViewer viewer = new TableViewer("APPOINTMENTS", result);
+            viewer.setVisible(true);
+
+        } catch (SQLException ex) {
+            displaySQLError(ex);
+        }
+
     }
 
     /**
@@ -308,6 +413,13 @@ public class Controller {
 
     }
 
+    /**
+     * Extracts a store's location number from the given attribute collection.
+     *
+     * @param collection Collection containing the mallName, mallNumber, and
+     * storeNumber
+     * @return
+     */
     public String findLocationNum(AttributeCollection collection) {
         try {
             String mallName = collection.getAttribute(Table.MALLS, Name.NAME).getValue();
@@ -477,53 +589,6 @@ public class Controller {
         } catch (DBManagementException ex) {
             displayErrors("Something went wrong while viewing leasess...Try again later");
         }
-    }
-
-    /**
-     ********************************************************************************************************************
-     ****************************************************LEASING_AGENT*************************************************
-     * ******************************************************************************************************************
-     */
-    public void uploadAvailability() {
-        try {
-            AttributeCollection toShow = DB.getAttributes(Table.APPOINTMENT_SLOTS);
-            toShow.remove(new Attribute(Name.BOOKED, Table.APPOINTMENT_SLOTS));
-            toShow.remove(new Attribute(Name.AGENT_ID, Table.APPOINTMENT_SLOTS));
-
-            Filters filters = new Filters();
-            filters.addEqual(new Attribute(Name.AGENT_ID, getUserID(), Table.APPOINTMENT_SLOTS));
-            filters.addEqual(new Attribute(Name.BOOKED, "0", Table.APPOINTMENT_SLOTS));
-            TableViewer viewer = new TableViewer("APPOINTMENT SLOTS", toShow, filters, new AppointmentSlotForm(), false);
-            viewer.setVisible(true);
-
-        } catch (SQLException ex) {
-            displaySQLError(ex);
-        } catch (DBManagementException ex) {
-            displayErrors("Something went wrong while viewing Appointment Slots...Try again later");
-        }
-    }
-
-    public void viewAgentAppointments() {
-        try {
-
-            ResultSet result = DB.executeStatement("Select H.SLOT_NUM , H.DAY , H.START_DATE , H.END_DATE,\n"
-                    + "  M.FNAME AS TENANT_NAME , M.PHONE_NUMBER , M.EMAIL_ADDRESS, J.NAME AS STORE_NAME, L.NAME AS MALL_NAME \n"
-                    + " from  USERS M \n"
-                    + " join APPOINTMENT_SLOTS H on M.USER_ID = H.AGENT_ID\n"
-                    + " join LEASES F on M.USER_ID = F.LEASER_ID\n"
-                    + " join LOCS K on F.LOCATION_NUM = K.LOCATION_NUM \n"
-                    + " join PROPERTIES J on K.LOCATION_NUM = J.LOCATION_NUM \n"
-                    + " join MALLS L on K.MALL_NUM = L.MALL_NUM \n"
-                    + " join APPOINTMENTS I on M.USER_ID = I.POTENTIAL_TENANT_ID AND I.APPOINTMENT_SLOT = H.SLOT_NUM\n"
-                    + " where H.AGENT_ID = '" + getUserID()
-                    + "'");
-            TableViewer viewer = new TableViewer("APPOINTMENTS", result);
-            viewer.setVisible(true);
-
-        } catch (SQLException ex) {
-            displaySQLError(ex);
-        }
-
     }
 
     /**
