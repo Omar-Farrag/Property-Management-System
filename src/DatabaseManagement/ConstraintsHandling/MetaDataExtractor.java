@@ -7,10 +7,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.w3c.dom.Attr;
 
 import java.io.*;
-import java.sql.Array;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,7 +20,7 @@ public class MetaDataExtractor {
     private final ArrayList<String> currentApplicationTables;
     private ResultSet constraintsTable;
     private ResultSet tableDataTypes;
-    private final HashMap<String, JSONObject> table_to_object;
+    private final HashMap<Table, JSONObject> table_to_object;
     private final ReferentialResolver resolver;
     private static MetaDataExtractor instance;
 
@@ -45,7 +43,7 @@ public class MetaDataExtractor {
     }
 
     public JSONObject getTableAttributes(Table t) {
-        return (JSONObject) table_to_object.get(t.getTableName()).get("Attributes");
+        return (JSONObject) table_to_object.get(t).get("Attributes");
     }
 
     private void readMetaDataFromFile() {
@@ -69,7 +67,7 @@ public class MetaDataExtractor {
                 JSONObject tableJSONObject = (JSONObject) table;
                 String tableName = tableJSONObject.get("TableName").toString();
 
-                table_to_object.put(tableName, tableJSONObject);
+                table_to_object.put(Table.valueOf(tableName), tableJSONObject);
                 JSONObject attributes = (JSONObject) tableJSONObject.get("Attributes");
                 for (Object attribute : attributes.keySet()) {
                     JSONArray constraints = (JSONArray) attributes.get(attribute);
@@ -84,28 +82,44 @@ public class MetaDataExtractor {
                         } else if (constraintName.startsWith("U")) {
                             resolver.insertUnique(t, attName, constraintName.substring(2));
                         } else if (constraintName.startsWith("R")) {
-                            resolver.insertForeign(t, attName, constraintName.substring(2));
+                            int leftParenIndex = constraintName.indexOf('(');
+                            int rightParenIndex = constraintName.indexOf(')');
+                            String deleteRule = constraintName.substring(leftParenIndex + 1, rightParenIndex).trim();
+                            constraintName = constraintName.substring(2, leftParenIndex);
+                            resolver.insertForeign(t, attName, constraintName, deleteRule);
                         }
                     }
                 }
             }
             bin.close();
+            System.out.println("Done writing the metadata file...You're good to go now");
         } catch (IOException
                 | ParseException
                 | EmptyFileException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
+            System.out.println("Hello There...It seems like the metadata file is empty...Just give me a sec and I'll rewrite it for you.");
             initMetaDataFile();
             readMetaDataFromFile();
+        } catch (IllegalArgumentException ex) {
+            ex.printStackTrace();
         }
     }
 
     public JSONObject getTableInfoFromMetaData(Table t) throws TableNotFoundException {
-        if (!table_to_object.containsKey(t.getTableName())) {
+        if (!table_to_object.containsKey(t)) {
             throw new TableNotFoundException();
         } else {
-            return table_to_object.get(t.getTableName());
+            return table_to_object.get(t);
         }
+    }
+
+    public AttributeCollection getAttributeCollection(Table t) {
+        JSONObject attributes = getTableAttributes(t);
+        AttributeCollection collection = new AttributeCollection();
+
+        for (Object jsonAtt : attributes.keySet()) {
+            collection.add(new Attribute(Name.valueOf(jsonAtt.toString()), t));
+        }
+        return collection;
     }
 
     private Boolean initMetaDataFile() {
@@ -120,7 +134,8 @@ public class MetaDataExtractor {
                     + "CONSTRAINT_TYPE,"
                     + " SEARCH_CONDITION,"
                     + " U.CONSTRAINT_NAME,"
-                    + " R_CONSTRAINT_NAME"
+                    + " R_CONSTRAINT_NAME,"
+                    + " DELETE_RULE"
                     + " FROM USER_CONS_COLUMNS U"
                     + " JOIN ALL_CONSTRAINTS A"
                     + " ON ( U.TABLE_NAME = A.TABLE_NAME"
@@ -206,7 +221,7 @@ public class MetaDataExtractor {
                     } else if (dataType.toLowerCase().equals("varchar2") || dataType.toLowerCase().equals("char")) {
                         dataType += extractMaxLength(tableDataTypes);
                     }
-                    return dataType;
+                    return dataType.toUpperCase();
                 }
 
             }
@@ -231,24 +246,30 @@ public class MetaDataExtractor {
         ArrayList<String> constraints = new ArrayList<>();
         constraintsTable.first();
         while (constraintsTable.next()) {
-            if (constraintsTable.getString("TABLE_NAME").equals(tableName)
-                    && constraintsTable.getString("COLUMN_NAME").equals(columnName)) {
+            if (constraintsTable.getString("TABLE_NAME").equalsIgnoreCase(tableName)
+                    && constraintsTable.getString("COLUMN_NAME").equalsIgnoreCase(columnName)) {
 
                 String constraint = constraintsTable.getString("CONSTRAINT_TYPE").toUpperCase();
 
-                if (constraint.equals("C")) {
-                    constraint += "_"
-                            + constraintsTable.getString("SEARCH_CONDITION").replace("\"", "").replace("\n", "")
-                                    .replace("   ", "");
-                } else if (constraint.equals("R")) {
-                    constraint += "_" + constraintsTable.getString("R_CONSTRAINT_NAME");
-                } else if (constraint.equals("P")) {
-                    constraint += "_" + constraintsTable.getString("CONSTRAINT_NAME");
-                } else if (constraint.equals("U")) {
-                    constraint += "_" + constraintsTable.getString("CONSTRAINT_NAME");
+                switch (constraint) {
+                    case "C" ->
+                        constraint += "_"
+                                + constraintsTable.getString("SEARCH_CONDITION").replace("\"", "").replace("\n", "")
+                                        .replace("   ", "");
+                    case "R" -> {
+                        String referencedKey = constraintsTable.getString("R_CONSTRAINT_NAME");
+                        String deleteRule = "(" + constraintsTable.getString("DELETE_RULE") + ")";
+                        constraint += "_" + referencedKey + deleteRule;
+                    }
+                    case "P" ->
+                        constraint += "_" + constraintsTable.getString("CONSTRAINT_NAME");
+                    case "U" ->
+                        constraint += "_" + constraintsTable.getString("CONSTRAINT_NAME");
+                    default -> {
+                    }
                 }
 
-                constraints.add(constraint);
+                constraints.add(constraint.toUpperCase());
             }
         }
         return constraints;
@@ -360,30 +381,5 @@ public class MetaDataExtractor {
             Collections.sort(values);
             return Objects.hash(values);
         }
-    }
-
-    public static void main(String[] args) {
-        Key key = new Key();
-        key.add(new Attribute(Name.USER_ID, "A1", Table.USERS));
-        key.add(new Attribute(Name.USER_ID, "A2", Table.USERS));
-        key.add(new Attribute(Name.USER_ID, "A3", Table.USERS));
-
-        Key key2 = new Key();
-        key2.add(new Attribute(Name.USER_ID, "A3", Table.USERS));
-        key2.add(new Attribute(Name.FNAME, "A1", Table.USERS));
-        key2.add(new Attribute(Name.USER_ID, "A2", Table.USERS));
-
-        Key key3 = new Key();
-        key3.add(new Attribute(Name.USER_ID, "A1", Table.USERS));
-        key3.add(new Attribute(Name.USER_ID, "A3", Table.USERS));
-        key3.add(new Attribute(Name.USER_ID, "A25", Table.USERS));
-
-        HashSet<Key> keys = new HashSet<>();
-
-        keys.add(key);
-        keys.add(key2);
-
-        System.out.println(keys.contains(key3));
-
     }
 }

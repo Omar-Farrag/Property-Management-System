@@ -1,11 +1,13 @@
 package DatabaseManagement;
 
+import DatabaseManagement.Attribute.Type;
 import java.util.*;
+import java.util.Map.Entry;
 
 public class Filters {
 
     private HashMap<Attribute, ArrayList<Filter>> filters;
-    private HashMap<Attribute, String[]> filters_IN_Type;
+    private HashMap<Attribute, ArrayList<String>> filters_IN_Type;
 
     /**
      * Creates a new empty filter collection
@@ -13,6 +15,68 @@ public class Filters {
     public Filters() {
         filters = new HashMap<>();
         filters_IN_Type = new HashMap<>();
+    }
+
+    private Filters(HashMap<Attribute, ArrayList<Filter>> filters, HashMap<Attribute, ArrayList<String>> filters_IN_Type) {
+        this.filters = filters;
+        this.filters_IN_Type = filters_IN_Type;
+    }
+
+    /**
+     * Creates a new filter collection initialized with the attributes in the
+     * given collection
+     *
+     * @param collection collection whose attributes are to be added as filters.
+     * All attribute filters as ' equal filters '
+     */
+    public Filters(AttributeCollection collection) {
+        filters = new HashMap<>();
+        filters_IN_Type = new HashMap<>();
+        for (Attribute attribute : collection.attributes()) {
+            addEqual(attribute);
+        }
+    }
+
+    /**
+     * Filters the filter collection where only the filters in the given table
+     * are kept
+     *
+     * @param t Table which a filter must be in to remain in the collection
+     * @return New filter collection containing only the selected filters. The
+     * original Filters is unaffected
+     */
+    public Filters filter(Table t) {
+        HashMap<Attribute, ArrayList<Filter>> filtersToKeep = new HashMap<>(filters);
+        HashMap<Attribute, ArrayList<String>> inFiltersToKeep = new HashMap<>(filters_IN_Type);
+        for (Attribute attribute : filters.keySet()) {
+            if (attribute.getT() != t) {
+                filtersToKeep.remove(attribute);
+            }
+        }
+        for (Attribute attribute : filters_IN_Type.keySet()) {
+            if (attribute.getT() != t) {
+                inFiltersToKeep.remove(attribute);
+            }
+        }
+        return new Filters(filtersToKeep, inFiltersToKeep);
+    }
+
+    public Filters append(Filters other) {
+        for (Entry<Attribute, ArrayList<Filter>> entry : other.filters.entrySet()) {
+            if (filters.containsKey(entry.getKey())) {
+                filters.get(entry.getKey()).addAll(other.filters.get(entry.getKey()));
+            } else {
+                filters.put(entry.getKey(), entry.getValue());
+            }
+        }
+        for (Entry<Attribute, ArrayList<String>> entry : other.filters_IN_Type.entrySet()) {
+            if (filters_IN_Type.containsKey(entry.getKey())) {
+                filters_IN_Type.get(entry.getKey()).addAll(other.filters_IN_Type.get(entry.getKey()));
+            } else {
+                filters_IN_Type.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return this;
     }
 
     /**
@@ -27,7 +91,7 @@ public class Filters {
         if (!filters.containsKey(attribute)) {
             filters.put(attribute, new ArrayList<Filter>());
         }
-        filters.get(attribute).add(new Filter(attribute.getStringValue(), FilterType.GREATER));
+        filters.get(attribute).add(new Filter(attribute.getType(), attribute.getValue(), FilterType.GREATER));
     }
 
     /**
@@ -42,7 +106,7 @@ public class Filters {
         if (!filters.containsKey(attribute)) {
             filters.put(attribute, new ArrayList<Filter>());
         }
-        filters.get(attribute).add(new Filter(attribute.getStringValue(), FilterType.GREATER_EQUAL));
+        filters.get(attribute).add(new Filter(attribute.getType(), attribute.getValue(), FilterType.GREATER_EQUAL));
     }
 
     /**
@@ -57,7 +121,7 @@ public class Filters {
         if (!filters.containsKey(attribute)) {
             filters.put(attribute, new ArrayList<Filter>());
         }
-        filters.get(attribute).add(new Filter(attribute.getStringValue(), FilterType.EQUAL));
+        filters.get(attribute).add(new Filter(attribute.getType(), attribute.getValue(), FilterType.EQUAL));
     }
 
     /**
@@ -72,7 +136,7 @@ public class Filters {
         if (!filters.containsKey(attribute)) {
             filters.put(attribute, new ArrayList<Filter>());
         }
-        filters.get(attribute).add(new Filter(attribute.getStringValue(), FilterType.LIKE));
+        filters.get(attribute).add(new Filter(attribute.getType(), attribute.getValue(), FilterType.LIKE));
     }
 
     /**
@@ -87,7 +151,7 @@ public class Filters {
         if (!filters.containsKey(attribute)) {
             filters.put(attribute, new ArrayList<Filter>());
         }
-        filters.get(attribute).add(new Filter(attribute.getStringValue(), FilterType.LESS));
+        filters.get(attribute).add(new Filter(attribute.getType(), attribute.getValue(), FilterType.LESS));
     }
 
     /**
@@ -102,7 +166,7 @@ public class Filters {
         if (!filters.containsKey(attribute)) {
             filters.put(attribute, new ArrayList<Filter>());
         }
-        filters.get(attribute).add(new Filter(attribute.getStringValue(), FilterType.LESS_EQUAL));
+        filters.get(attribute).add(new Filter(attribute.getType(), attribute.getValue(), FilterType.LESS_EQUAL));
     }
 
     /**
@@ -117,7 +181,7 @@ public class Filters {
         if (!filters.containsKey(attribute)) {
             filters.put(attribute, new ArrayList<Filter>());
         }
-        filters.get(attribute).add(new Filter(attribute.getStringValue(), FilterType.NOT_EQUAL));
+        filters.get(attribute).add(new Filter(attribute.getType(), attribute.getValue(), FilterType.NOT_EQUAL));
     }
 
     /**
@@ -134,8 +198,8 @@ public class Filters {
         if (!filters.containsKey(attribute)) {
             filters.put(attribute, new ArrayList<Filter>());
         }
-        filters.get(attribute).add(new Filter(minAtt.getStringValue(), FilterType.GREATER_EQUAL));
-        filters.get(attribute).add(new Filter(maxAtt.getStringValue(), FilterType.LESS_EQUAL));
+        filters.get(attribute).add(new Filter(attribute.getType(), minAtt.getValue(), FilterType.GREATER_EQUAL));
+        filters.get(attribute).add(new Filter(attribute.getType(), maxAtt.getValue(), FilterType.LESS_EQUAL));
     }
 
     /**
@@ -148,7 +212,11 @@ public class Filters {
      * attribute
      */
     public void addIn(Attribute attribute, String[] acceptedValues) {
-        filters_IN_Type.put(attribute, acceptedValues);
+        ArrayList<String> toAdd = new ArrayList<>();
+        for (String value : acceptedValues) {
+            toAdd.add(value);
+        }
+        filters_IN_Type.put(attribute, toAdd);
     }
 
     /**
@@ -156,6 +224,22 @@ public class Filters {
      */
     public void clear() {
         filters.clear();
+    }
+
+    public ArrayList<String> getFilterValues(Attribute attribute) {
+        ArrayList<String> values = new ArrayList<>();
+
+        ArrayList<Filter> filtsArray = filters.get(attribute);
+        if (filtsArray != null) {
+            for (Filter filt : filtsArray) {
+                values.add(filt.value);
+            }
+        }
+        ArrayList<String> filtsINArray = filters_IN_Type.get(attribute);
+        if (filtsINArray != null) {
+            values.addAll(filtsINArray);
+        }
+        return values;
     }
 
     public String getFilterClause() {
@@ -168,13 +252,19 @@ public class Filters {
 
         for (Map.Entry<Attribute, ArrayList<Filter>> entry : filters.entrySet()) {
             for (Filter filter : entry.getValue()) {
-                String condition
-                        = entry.getKey().getAliasedStringName() + " " + filter.getOperator() + " " + filter.getStringValue();
+                String attName = entry.getKey().getAliasedStringName();
+                String value = filter.getStringValue();
+                String operator = filter.getOperator();
+
+                if (filter.filterType == FilterType.EQUAL && value.equalsIgnoreCase("null")) {
+                    operator = "IS";
+                }
+                String condition = attName + " " + operator + " " + value;
                 conditions.add(condition);
             }
         }
 
-        for (Map.Entry<Attribute, String[]> entry : filters_IN_Type.entrySet()) {
+        for (Map.Entry<Attribute, ArrayList<String>> entry : filters_IN_Type.entrySet()) {
             String condition = entry.getKey().getAliasedStringName() + " IN ";
             ArrayList<String> acceptedInValues = new ArrayList<>();
 
@@ -183,7 +273,7 @@ public class Filters {
                     acceptedInValues.add("'" + value + "'");
                 }
             } else {
-                Collections.addAll(acceptedInValues, entry.getValue());
+                acceptedInValues.addAll(entry.getValue());
             }
 
             condition += "(" + String.join(" , ", acceptedInValues) + ")";
@@ -199,10 +289,12 @@ public class Filters {
 
     private class Filter {
 
+        private Type type;
         private String value;
         private FilterType filterType;
 
-        private Filter(String value, FilterType filterType) {
+        private Filter(Type type, String value, FilterType filterType) {
+            this.type = type;
             this.value = value;
             this.filterType = filterType;
         }
@@ -212,7 +304,11 @@ public class Filters {
         }
 
         private String getStringValue() {
-            return value;
+            if (!type.equals(Type.NUMBER)) {
+                return "'" + value + "'";
+            } else {
+                return value;
+            }
         }
 
     }

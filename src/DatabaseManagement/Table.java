@@ -38,8 +38,9 @@ public enum Table {
 
     public static ArrayList<String> getApplicationTables() {
         ArrayList<String> currentApplicationTables = new ArrayList<>();
-        for (Table t : Table.values())
+        for (Table t : Table.values()) {
             currentApplicationTables.add(t.getTableName().toUpperCase());
+        }
         return currentApplicationTables;
     }
 

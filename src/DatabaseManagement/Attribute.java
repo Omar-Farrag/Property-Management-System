@@ -35,7 +35,7 @@ public class Attribute {
     public Attribute(Name attribute, Table t) {
         this.attributeName = attribute;
         this.attributeValue = "";
-        this.type = Type.STRING;
+        this.type = attribute.type;
         this.t = t;
 
     }
@@ -57,7 +57,7 @@ public class Attribute {
     }
 
     public String getStringValue() {
-        if (type.equals(Type.STRING) || type.equals((Type.DATE))) {
+        if (!type.equals(Type.NUMBER)) {
             return "'" + attributeValue + "'";
         } else if (attributeValue == null) {
             return "NULL";
@@ -125,8 +125,8 @@ public class Attribute {
         LEASE_PERCENTAGE("LEASE_PERCENTAGE", Type.NUMBER),
         DISCOUNT_NUM("DISCOUNT_NUM", Type.STRING),
         LOCATION_NUM("LOCATION_NUM", Type.NUMBER),
-        END_DATE("END_DATE", Type.DATE),
-        START_DATE("START_DATE", Type.DATE),
+        END_DATE("END_DATE", Type.TIMESTAMP),
+        START_DATE("START_DATE", Type.TIMESTAMP),
         PAYMENT_OPTION("PAYMENT_OPTION", Type.STRING),
         LEASER_ID("LEASER_ID", Type.STRING),
         APPLICANT_ID("APPLICANT_ID", Type.STRING),
@@ -156,13 +156,19 @@ public class Attribute {
         MESSAGE("MESSAGE", Type.STRING),
         SENDER_ID("SENDER_ID", Type.STRING),
         RECEIVER_ID("RECEIVER_ID", Type.STRING),
-        DATE_SENT("DATE_SENT", Type.DATE),
-        NUM_FLOORS("NUM_FLOORS", Type.NUMBER);
+        DATE_SENT("DATE_SENT", Type.TIMESTAMP),
+        NUM_FLOORS("NUM_FLOORS", Type.NUMBER),
+        RATE("RATE", Type.NUMBER),
+        DAY("DAY", Type.STRING),
+        SLOT_NUM("SLOT_NUM", Type.NUMBER),
+        APPOINTMENT_SLOT("APPOINTMENT_SLOT", Type.NUMBER),
+        BOOKED("BOOKED", Type.STRING);
 
         private final String name;
         private final Type type;
 
-        Name(String name, Type type) {
+        Name(String name, Type type
+        ) {
             this.name = name;
             this.type = type;
         }
@@ -173,7 +179,7 @@ public class Attribute {
     }
 
     public enum Type {
-        NUMBER, STRING, DATE;
+        NUMBER, STRING, DATE, TIMESTAMP;
     }
 
     public static void main(String[] args) {

@@ -11,9 +11,8 @@ import DatabaseManagement.Filters;
 import DatabaseManagement.Table;
 import General.Controller;
 import java.util.ArrayList;
-import General.ModificationForm;
-import Properties.Mall;
-import Properties.Store;
+import General.Mall;
+import General.Store;
 import java.awt.Color;
 import javax.swing.JOptionPane;
 

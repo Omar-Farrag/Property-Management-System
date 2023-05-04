@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 import DatabaseManagement.*;
+import DatabaseManagement.Attribute.Type;
 
 import DatabaseManagement.ConstraintsHandling.ValidationParameters.OperationType;
 import DatabaseManagement.Exceptions.*;
@@ -50,14 +51,15 @@ public class ConstraintChecker {
         checkAttributeExistence(toGet);
         AttributeCollection filterCollection = new AttributeCollection(filters);
         checkAttributeExistence(filterCollection);
-        return new Errors();
+        return checkTypeValidity(filters);
 
     }
 
     public Errors checkRetrieval(Table t, Filters filters) throws DBManagementException {
         AttributeCollection filterCollection = new AttributeCollection(filters);
         checkAttributeExistence(t, filterCollection);
-        return new Errors();
+        return checkTypeValidity(filters);
+
     }
 
     public Errors checkRetrieval(AttributeCollection toGet) throws DBManagementException {
@@ -69,13 +71,14 @@ public class ConstraintChecker {
     public Errors checkRetrieval(Filters filter) throws DBManagementException {
 
         checkAttributeExistence(new AttributeCollection(filter));
-        return new Errors();
+        return checkTypeValidity(filter);
+
     }
 
     public Errors checkDeletion(Table t, Filters filters) throws SQLException, DBManagementException {
         AttributeCollection filterCollection = new AttributeCollection(filters);
         checkAttributeExistence(t, filterCollection);
-        return checkReferencingTables(t, filters);
+        return checkReferencingTables(t, filters).append(checkTypeValidity(filters));
     }
 
     public Errors checkUpdate(Table t, Filters filters, AttributeCollection newValues, boolean cascade)
@@ -83,12 +86,14 @@ public class ConstraintChecker {
 
         checkAttributeExistence(t, new AttributeCollection(filters));
         checkAttributeExistence(t, newValues);
-        Errors constraintErrorsNew = checkConstraints(t, newValues, OperationType.UPDATE, filters);
+        Errors constraintErrorsNew = checkConstraints(t, newValues, OperationType.UPDATE, filters).append(checkTypeValidity(filters));
 //        Errors constraintErrorsFilters = checkConstraints(t, new AttributeCollection(filters),OperationType.UPDATE,
 //                filters);
         if (cascade) {
             if (!constraintErrorsNew.noErrors()) {
                 return constraintErrorsNew;
+            } else {
+                return new Errors();
             }
 //            if (!constraintErrorsNew.noErrors() || !constraintErrorsFilters.noErrors())
 //                return constraintErrorsNew.append(constraintErrorsFilters);
@@ -97,7 +102,21 @@ public class ConstraintChecker {
 //            return constraintErrorsNew.append(constraintErrorsFilters).append(referentialErrors);
             return constraintErrorsNew.append(referentialErrors);
         }
-        return new Errors();
+    }
+
+    private Errors checkTypeValidity(Filters filters) {
+        Errors errors = new Errors();
+        Validator validator = new Validator();
+        for (Attribute attribute : filters.getAttributes()) {
+            ArrayList<String> errorMessages = validator.validateType(attribute, filters.getFilterValues(attribute));
+
+            for (String errorMessage : errorMessages) {
+                if (!errorMessage.isBlank()) {
+                    errors.add(attribute, errorMessage);
+                }
+            }
+        }
+        return errors;
     }
 
     private Errors checkReferencingTables(Table t, Filters f) throws TableNotFoundException, AttributeNotFoundException, SQLException, IncompatibleFilterException, ConstraintNotFoundException {
@@ -226,8 +245,8 @@ public class ConstraintChecker {
             }
         }
 
-        public ArrayList<String> getAllErrors() {
-            ArrayList<String> allErrors = new ArrayList<>();
+        public HashSet getAllErrors() {
+            HashSet<String> allErrors = new HashSet<>();
             for (Map.Entry<Attribute, ArrayList<String>> entry : attribute_to_errors.entrySet()) {
                 allErrors.addAll(entry.getValue());
             }

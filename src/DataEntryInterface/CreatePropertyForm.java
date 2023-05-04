@@ -9,9 +9,8 @@ import DatabaseManagement.Attribute.Name;
 import DatabaseManagement.AttributeCollection;
 import DatabaseManagement.Table;
 import General.Controller;
-import General.InsertForm;
 import java.util.ArrayList;
-import Properties.Mall;
+import General.Mall;
 
 /**
  *

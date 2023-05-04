@@ -5,6 +5,7 @@ import DatabaseManagement.Exceptions.DBManagementException;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class QueryResult {
 
@@ -55,7 +56,7 @@ public class QueryResult {
      * @return The list of all validation errors on all attributes involved in
      * an insertion/modification
      */
-    public ArrayList<String> getAllErrors() {
+    public HashSet<String> getAllErrors() {
         return errors.getAllErrors();
     }
 }

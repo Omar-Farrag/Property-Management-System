@@ -9,6 +9,7 @@ import DatabaseManagement.Table;
 import java.util.*;
 
 public class Graph {
+
     private HashMap<Node, Set<Link>> graph;
     private ReferentialResolver resolver;
 
@@ -20,15 +21,17 @@ public class Graph {
 
     public Set<Node> getNeighbors(Node current) {
         Set<Node> nodes = new HashSet<>();
-        for (Link link : graph.get(current))
+        for (Link link : graph.get(current)) {
             nodes.add(link.tail);
+        }
         return nodes;
     }
 
     private void initGraph() {
 
-        for (Table t : Table.values())
+        for (Table t : Table.values()) {
             graph.put(new Node(t), new HashSet<>());
+        }
 
         for (Table t : Table.values()) {
 
@@ -40,8 +43,8 @@ public class Graph {
 
                 for (var referencing : referencingAttributes.entrySet()) {
                     Node tail = new Node(referencing.getKey());
-                    Attribute referencingAtt =
-                            referencing.getValue().getAttributes().iterator().next();
+                    Attribute referencingAtt
+                            = referencing.getValue().getAttributes().iterator().next();
                     graph.get(head).add(new Link(head, tail, referenced, referencingAtt));
                     graph.get(tail).add(new Link(tail, head, referencingAtt, referenced));
                 }
@@ -51,18 +54,21 @@ public class Graph {
 
     public Link getLinkTo(Node current, Node tail) {
         for (Link link : graph.get(current)) {
-            if (link.tail.equals(tail)) return link;
+            if (link.tail.equals(tail)) {
+                return link;
+            }
         }
         return null;
     }
 
     public void unVisitNodes() {
-        for (Node node : graph.keySet())
+        for (Node node : graph.keySet()) {
             node.unVisit();
+        }
     }
 
-
     public static class Node {
+
         private Table table;
         private Node parent;
         private boolean visited;
@@ -75,8 +81,12 @@ public class Graph {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
             Node node = (Node) o;
             return table == node.table;
         }
@@ -93,7 +103,6 @@ public class Graph {
         public String getAliasedName() {
             return table.getAliasedName();
         }
-
 
         public Node getParent() {
             return parent;
@@ -114,6 +123,7 @@ public class Graph {
     }
 
     public static class Link {
+
         private Node head;
         private Node tail;
         private Attribute headAttribute;
@@ -128,8 +138,12 @@ public class Graph {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
             Link link = (Link) o;
             return (head.equals(link.head) && tail.equals(link.tail)) || (head.equals(link.tail) && tail.equals(link.head));
         }
@@ -152,9 +166,4 @@ public class Graph {
         }
     }
 
-    public static void main(String[] args) {
-        HashMap<Table, Integer> test = new HashMap<>();
-        test.put(Table.USERS, 5);
-
-    }
 }

@@ -72,6 +72,15 @@ public class AttributeCollection {
     }
 
     /**
+     * Removes the given attribute from the attribute collection if present
+     *
+     * @param attribute Attribute to be removed
+     */
+    public void remove(Attribute attribute) {
+        attributes.remove(attribute);
+    }
+
+    /**
      * @return Set of attributes added to the collection so far
      */
     public Set<Attribute> attributes() {
