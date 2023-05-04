@@ -247,7 +247,7 @@ public class Filters {
             return "";
         }
 
-        String clause = "where ";
+        String clause = "";
         ArrayList<String> conditions = new ArrayList<>();
 
         for (Map.Entry<Attribute, ArrayList<Filter>> entry : filters.entrySet()) {

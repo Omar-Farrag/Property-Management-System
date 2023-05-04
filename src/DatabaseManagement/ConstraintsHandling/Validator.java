@@ -74,7 +74,7 @@ public class Validator {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
         return "";
@@ -95,7 +95,7 @@ public class Validator {
             Attribute valuedAttribute = new Attribute(name, value, t);
             filters.addEqual(valuedAttribute);
         }
-        String query = "Select * from " + toValidate.getT().getAliasedName() + " "
+        String query = "Select * from " + toValidate.getT().getAliasedName() + " WHERE "
                 + filters.getFilterClause();
 
         ResultSet result = DatabaseManager.getInstance().executeStatement(query);
@@ -126,7 +126,7 @@ public class Validator {
             keys.add(key);
         }
 
-        query = "Select * from " + toValidate.getT().getAliasedName() + " " + filters.getFilterClause();
+        query = "Select * from " + toValidate.getT().getAliasedName() + " WHERE " + filters.getFilterClause();
         result = DatabaseManager.getInstance().executeStatement(query);
 
         while (result.next()) {
@@ -198,7 +198,7 @@ public class Validator {
                 Attribute valuedAttribute = new Attribute(name, value, t);
                 filters.addEqual(valuedAttribute);
             }
-            String query = "Select * from " + toValidate.getT().getAliasedName() + " "
+            String query = "Select * from " + toValidate.getT().getAliasedName() + " WHERE "
                     + filters.getFilterClause();
 
             ResultSet result = DatabaseManager.getInstance().executeStatement(query);
@@ -240,7 +240,7 @@ public class Validator {
             }
         }
 
-        query = "Select * from " + toValidate.getT().getAliasedName() + " " + filters.getFilterClause();
+        query = "Select * from " + toValidate.getT().getAliasedName() + " WHERE " + filters.getFilterClause();
         result = DatabaseManager.getInstance().executeStatement(query);
 
         while (result.next()) {

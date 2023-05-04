@@ -6,6 +6,7 @@ import DataEntryInterface.InsertForm;
 import DatabaseManagement.Attribute;
 import DatabaseManagement.Attribute.Name;
 import DatabaseManagement.AttributeCollection;
+import DatabaseManagement.DBParameters;
 import DatabaseManagement.DatabaseManager;
 import DatabaseManagement.Exceptions.DBManagementException;
 import DatabaseManagement.Filters;
@@ -193,23 +194,22 @@ public class Controller {
      */
     public void bookAppointment(TableViewer viewer) throws SQLException, DBManagementException {
 
-        AttributeCollection storeInformation = viewer.getSelectedRow();
-        String locationNum = findLocationNum(storeInformation);
-        Store selectedStore = Store.retrieve(locationNum);
+        Store selectedStore = getSelectedStore(viewer);
 
-        TableViewer agentAvailability = new AgentAvailability().getAgentAvailability();
+        DBParameters agentAvailability = new AgentAvailability().getAgentAvailability();
 
-        agentAvailability.overrideClickListener(() -> {
+        TableViewer availabilityViewer = displayAgentAvailability(agentAvailability);
+
+        availabilityViewer.overrideClickListener(() -> {
 
             try {
                 boolean confirmed = confirmAppointment();
                 if (!confirmed) {
                     return;
                 }
-                AttributeCollection selectedTimeSlot = agentAvailability.getSelectedRow();
 
-                String agentID = selectedTimeSlot.getValue(new Attribute(Name.AGENT_ID, Table.APPOINTMENT_SLOTS));
-                LoginUser agent = LoginUser.retrieve(agentID);
+                AttributeCollection selectedTimeSlot = availabilityViewer.getSelectedRow();
+                LoginUser agent = getSelectedAgent(selectedTimeSlot);
 
                 Appointment appointment = Appointment.create(loggedInUser, selectedStore, agent, selectedTimeSlot);
 
@@ -217,6 +217,7 @@ public class Controller {
                     displaySuccessMessage("Appointment Created Successfully...SUUUIIIIIII");
                     Notification notification = new Notification(getUserID(), LocalDateTime.now(), Notification.NotifTopic.APPOINTMENT_CREATED, "Below are the appointment details:\n" + appointment.toString());
                     new NotificationsManager().notifyUser(getUserID(), notification);
+
                 } else {
                     displayErrors("Something went wrong wile creating appointment...Try again later");
                 }
@@ -227,6 +228,25 @@ public class Controller {
             }
 
         });
+    }
+
+    private LoginUser getSelectedAgent(AttributeCollection selectedTimeSlot) throws SQLException {
+        String agentID = selectedTimeSlot.getValue(new Attribute(Name.AGENT_ID, Table.APPOINTMENT_SLOTS));
+        return LoginUser.retrieve(agentID);
+    }
+
+    private Store getSelectedStore(TableViewer viewer) throws SQLException, DBManagementException {
+        AttributeCollection storeInformation = viewer.getSelectedRow();
+        String locationNum = findLocationNum(storeInformation);
+        return Store.retrieve(locationNum);
+    }
+
+    private TableViewer displayAgentAvailability(DBParameters parameters) throws SQLException, DBManagementException {
+
+        Filters filters = parameters.getFilters();
+        AttributeCollection toShow = parameters.getCollection();
+
+        return new TableViewer("Available Timings", toShow, filters, new AppointmentSlotForm(), true);
     }
 
     /**
@@ -268,20 +288,20 @@ public class Controller {
         }
     }
 
-    public void viewAgentAppointments() {
+    public void viewAgentAppointments() throws DBManagementException {
         try {
 
-            ResultSet result = DB.executeStatement("Select H.SLOT_NUM , H.DAY , H.START_DATE , H.END_DATE,\n"
-                    + "  M.FNAME AS TENANT_NAME , M.PHONE_NUMBER , M.EMAIL_ADDRESS, J.NAME AS STORE_NAME, L.NAME AS MALL_NAME \n"
-                    + " from  USERS M \n"
-                    + " join APPOINTMENT_SLOTS H on M.USER_ID = H.AGENT_ID\n"
-                    + " join LEASES F on M.USER_ID = F.LEASER_ID\n"
-                    + " join LOCS K on F.LOCATION_NUM = K.LOCATION_NUM \n"
-                    + " join PROPERTIES J on K.LOCATION_NUM = J.LOCATION_NUM \n"
-                    + " join MALLS L on K.MALL_NUM = L.MALL_NUM \n"
-                    + " join APPOINTMENTS I on M.USER_ID = I.POTENTIAL_TENANT_ID AND I.APPOINTMENT_SLOT = H.SLOT_NUM\n"
-                    + " where H.AGENT_ID = '" + getUserID()
-                    + "'");
+            ResultSet result = DB.executeStatement("""
+                                                    SELECT H.SLOT_NUM , H.DAY , H.START_DATE , H.END_DATE,
+                                                    T.FNAME AS TENANT_NAME , T.PHONE_NUMBER ,T.EMAIL_ADDRESS, J.NAME AS STORE_NAME, L.NAME AS MALL_NAME  FROM APPOINTMENTS P
+                                                    JOIN APPOINTMENT_SLOTS H ON APPOINTMENT_SLOT = SLOT_NUM
+                                                    JOIN USERS T ON POTENTIAL_TENANT_ID = T.USER_ID
+                                                    JOIN USERS A ON AGENT_ID = A.USER_ID
+                                                    JOIN LOCS K on P.LOCATION_NUM = K.LOCATION_NUM
+                                                    JOIN PROPERTIES J on K.LOCATION_NUM = J.LOCATION_NUM
+                                                    JOIN MALLS L on K.MALL_NUM = L.MALL_NUM where AGENT_ID = '""" + getUserID()
+                    + "'"
+            );
             TableViewer viewer = new TableViewer("APPOINTMENTS", result);
             viewer.setVisible(true);
 
@@ -812,28 +832,6 @@ public class Controller {
             displaySQLError(ex);
         }
         return null;
-    }
-
-    /**
-     * Converts a given date to SQL Developer timestamp format
-     *
-     * @param date Date in format "DD-MMM-YYYY HH:MM:SS a"
-     * @return timestamp format of the date;
-     */
-    public String getTimestamp(String date) {
-        String formatted = "";
-        try {
-            String statement = "SELECT TO_TIMESTAMP(?, 'DD-MON-YY HH:MI:SS.FF9 AM') FROM DUAL";
-            statement = statement.replaceFirst("\\?", "'" + date + "'");
-            ResultSet rs = DatabaseManager.getInstance().executeStatement(statement);
-            rs.next();
-            Timestamp stamp = rs.getTimestamp(1);
-            formatted = formatTimeStamp(stamp);
-            System.out.println(stamp.toString());
-        } catch (SQLException ex) {
-//            displaySQLError(ex);
-        }
-        return formatted;
     }
 
     public String formatTimeStamp(Timestamp stamp) {

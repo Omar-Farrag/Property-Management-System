@@ -30,7 +30,6 @@ public class NotificationsManager implements NotificationManagement {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy hh:mm:ss a");
         String formattedDate = notification.getDateSent().format(formatter);
 
-        formattedDate = controller.getTimestamp(formattedDate);
         collection.add(new Attribute(Name.SENDER_ID, notification.getSenderID(), Table.NOTIFICATIONS));
         collection.add(new Attribute(Name.RECEIVER_ID, receiverID, Table.NOTIFICATIONS));
         collection.add(new Attribute(Name.DATE_SENT, formattedDate, Table.NOTIFICATIONS));

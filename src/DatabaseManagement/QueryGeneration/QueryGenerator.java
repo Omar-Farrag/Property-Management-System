@@ -46,7 +46,7 @@ public class QueryGenerator {
         init_tables_to_join();
         Iterator<Node> nodeIterator = tables_to_join.iterator();
         if (tables_to_join.size() == 1) {
-            return "SELECT " + toGet.getAliasedFormattedAtt() + " FROM " + nodeIterator.next().getAliasedName() + " " + toFilter.getFilterClause();
+            return "SELECT " + toGet.getAliasedFormattedAtt() + " FROM " + nodeIterator.next().getAliasedName() + " WHERE " + toFilter.getFilterClause();
         }
 
         Set<Node> foundNodes = new HashSet<>();

@@ -7,6 +7,7 @@ package General;
 import DatabaseManagement.Attribute;
 import DatabaseManagement.Attribute.Name;
 import DatabaseManagement.AttributeCollection;
+import DatabaseManagement.DBParameters;
 import DatabaseManagement.Exceptions.DBManagementException;
 import DatabaseManagement.Filters;
 import DatabaseManagement.Table;
@@ -20,7 +21,7 @@ import java.sql.SQLException;
  */
 public class AgentAvailability {
 
-    public TableViewer getAgentAvailability() throws SQLException, DBManagementException {
+    public DBParameters getAgentAvailability() throws SQLException, DBManagementException {
         AttributeCollection toShow = new AttributeCollection();
 
         toShow.add(new Attribute(Name.SLOT_NUM, Table.APPOINTMENT_SLOTS));
@@ -36,6 +37,6 @@ public class AgentAvailability {
 
         filters.addEqual(new Attribute(Name.BOOKED, "0", Table.APPOINTMENT_SLOTS));
 
-        return new TableViewer("Available Timings", toShow, filters, new AppointmentSlotForm(), true);
+        return new DBParameters(toShow, filters);
     }
 }
