@@ -76,17 +76,23 @@ public class MetaDataExtractor {
                         Table t = Table.valueOf(tableName);
                         Name attName = Name.valueOf(attribute.toString());
                         String constraintName = constraints.get(i).toString();
+                        String position = constraintName.substring(2, 3);
 
                         if (constraintName.startsWith("P")) {
-                            resolver.insertPrimary(t, attName, constraintName.substring(2));
+                            resolver.insertPrimary(t, attName, constraintName.substring(4), position);
                         } else if (constraintName.startsWith("U")) {
-                            resolver.insertUnique(t, attName, constraintName.substring(2));
+                            resolver.insertUnique(t, attName, constraintName.substring(4), position);
                         } else if (constraintName.startsWith("R")) {
                             int leftParenIndex = constraintName.indexOf('(');
                             int rightParenIndex = constraintName.indexOf(')');
                             String deleteRule = constraintName.substring(leftParenIndex + 1, rightParenIndex).trim();
-                            constraintName = constraintName.substring(2, leftParenIndex);
-                            resolver.insertForeign(t, attName, constraintName, deleteRule);
+
+                            int leftBracIndex = constraintName.indexOf("[");
+                            int rightBracIndex = constraintName.indexOf("]");
+                            String FKName = constraintName.substring(leftBracIndex, rightBracIndex);
+
+                            constraintName = constraintName.substring(4, leftParenIndex);
+                            resolver.insertForeign(t, attName, constraintName, deleteRule, position, FKName);
                         }
                     }
                 }
@@ -135,6 +141,7 @@ public class MetaDataExtractor {
                     + " SEARCH_CONDITION,"
                     + " U.CONSTRAINT_NAME,"
                     + " R_CONSTRAINT_NAME,"
+                    + " U.POSITION,"
                     + " DELETE_RULE"
                     + " FROM USER_CONS_COLUMNS U"
                     + " JOIN ALL_CONSTRAINTS A"
@@ -259,12 +266,18 @@ public class MetaDataExtractor {
                     case "R" -> {
                         String referencedKey = constraintsTable.getString("R_CONSTRAINT_NAME");
                         String deleteRule = "(" + constraintsTable.getString("DELETE_RULE") + ")";
-                        constraint += "_" + referencedKey + deleteRule;
+                        String position = constraintsTable.getString("POSITION");
+                        String referencingKey = "[" + constraintsTable.getString("CONSTRAINT_NAME") + "]";
+                        constraint += "_" + position + "_" + referencedKey + deleteRule + referencingKey;
                     }
-                    case "P" ->
-                        constraint += "_" + constraintsTable.getString("CONSTRAINT_NAME");
-                    case "U" ->
-                        constraint += "_" + constraintsTable.getString("CONSTRAINT_NAME");
+                    case "P" -> {
+                        String position = constraintsTable.getString("POSITION");
+                        constraint += "_" + position + "_" + constraintsTable.getString("CONSTRAINT_NAME");
+                    }
+                    case "U" -> {
+                        String position = constraintsTable.getString("POSITION");
+                        constraint += "_" + position + "_" + constraintsTable.getString("CONSTRAINT_NAME");
+                    }
                     default -> {
                     }
                 }

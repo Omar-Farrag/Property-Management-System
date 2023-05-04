@@ -2,9 +2,9 @@ package DatabaseManagement.ConstraintsHandling;
 
 public enum ConstraintEnum {
     // Names of constraints come here.
-    PRIMARY("^P_\\w+"),
-    UNIQUE("^U_\\w+"),
-    FOREIGN("^R_\\w+\\(\\w+\\s*\\w+\\)$"),
+    PRIMARY("^P_\\d+_\\w+"),
+    UNIQUE("^U_\\d+_\\w+"),
+    FOREIGN("^R_\\d+_\\w+\\(\\w+\\s*\\w+\\)\\[\\w+\\]$"),
     LESS_THAN("^C_\\s*\\w+\\s*<\\s*\\w+"),
     GREATER_THAN("^C_\\s*\\w+\\s*>\\s*\\w+"),
     EQUAL("^C_\\s*\\w+\\s*=\\s*\\w+"),

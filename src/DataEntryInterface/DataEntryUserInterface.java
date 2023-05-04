@@ -27,7 +27,7 @@ public class DataEntryUserInterface extends javax.swing.JFrame {
         usernameField.setText(loggedInUser.getFirstName() + " " + loggedInUser.getLastName());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, MMMM dd, yyyy");
         dateField.setText(LocalDateTime.now().format(formatter));
-        roleField.setText(loggedInUser.getRole());
+        roleField.setText("Data Entry");
         usernameField.setEnabled(false);
         dateField.setEnabled(false);
         roleField.setEnabled(false);

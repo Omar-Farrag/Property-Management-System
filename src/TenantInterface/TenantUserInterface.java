@@ -29,7 +29,7 @@ public class TenantUserInterface extends javax.swing.JFrame {
         usernameField.setText(loggedInUser.getFirstName() + " " + loggedInUser.getLastName());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, MMMM dd, yyyy");
         dateField.setText(LocalDateTime.now().format(formatter));
-        roleField.setText(loggedInUser.getRole());
+        roleField.setText("Tenant");
         usernameField.setEnabled(false);
         dateField.setEnabled(false);
         roleField.setEnabled(false);

@@ -613,15 +613,14 @@ public class Controller {
         try {
             QueryResult result = DB.modify(t, filters, newValues, true);
 
-            if (!result.noErrors()) {
-                displayErrors(result);
-            }
-
             if (quiet) {
                 return result;
             }
-
-            displaySuccessMessage("Entry Modified Successfully");
+            if (!result.noErrors()) {
+                displayErrors(result);
+            } else {
+                displaySuccessMessage("Entry Modified Successfully");
+            }
 
             return result;
         } catch (SQLException ex) {
@@ -648,15 +647,14 @@ public class Controller {
         try {
             QueryResult result = DB.insert(t, newValues);
 
-            if (!result.noErrors()) {
-                displayErrors(result);
-            }
-
             if (quiet) {
                 return result;
             }
-
-            displaySuccessMessage("Entry Inserted Successfully");
+            if (!result.noErrors()) {
+                displayErrors(result);
+            } else {
+                displaySuccessMessage("Entry Inserted Successfully");
+            }
 
             return result;
         } catch (SQLException ex) {
@@ -735,15 +733,15 @@ public class Controller {
         try {
             QueryResult result = DB.delete(t, filters);
 
-            if (!result.noErrors()) {
-                displayErrors(result);
-            }
-
             if (quiet) {
                 return result;
             }
+            if (!result.noErrors()) {
+                displayErrors(result);
+            } else {
+                displaySuccessMessage("Entry Deleted Successfully");
+            }
 
-            displaySuccessMessage("Entry Deleted Successfully");
             return result;
         } catch (SQLException ex) {
             displaySQLError(ex);
@@ -839,7 +837,7 @@ public class Controller {
     }
 
     public String formatTimeStamp(Timestamp stamp) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yy hh:mm:ss.SSSSSSSSS a");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss a");
         return formatter.format(stamp);
     }
 

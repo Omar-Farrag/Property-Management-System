@@ -41,12 +41,12 @@ public class QueryGenerator {
         links = new HashSet<>();
     }
 
-    public String getFromClause() throws InvalidJoinException {
+    public String generateQuery() throws InvalidJoinException {
         //identify which tables to join;
         init_tables_to_join();
         Iterator<Node> nodeIterator = tables_to_join.iterator();
         if (tables_to_join.size() == 1) {
-            return nodeIterator.next().getAliasedName();
+            return "SELECT " + toGet.getAliasedFormattedAtt() + " FROM " + nodeIterator.next().getAliasedName() + " " + toFilter.getFilterClause();
         }
 
         Set<Node> foundNodes = new HashSet<>();
@@ -72,13 +72,13 @@ public class QueryGenerator {
                     tables_to_join.remove(current);
 
                     for (Node node = current; node.getParent() != null; node = node.getParent()) {
-                        links.add(graph.getLinkTo(node.getParent(), node));
+                        links.addAll(graph.getLinksTo(node.getParent(), node));
                     }
                     if (current.getParent() == null) {
-                        links.add(graph.getLinkTo(current, current));
+                        links.addAll(graph.getLinksTo(current, current));
                     }
                     if (tables_to_join.size() == 0) {
-                        return generatedFromClause();
+                        return generatedQuery();
                     }
                 }
                 for (Node neighbor : graph.getNeighbors(current)) {
@@ -104,21 +104,25 @@ public class QueryGenerator {
 
     }
 
-    private String generatedFromClause() {
-        Iterator<Link> linksIterator = links.iterator();
+    private String generatedQuery() {
 
-        String clause = "";
+        ArrayList<String> conditions = new ArrayList<>();
+        Set<String> tableNames = new HashSet<>();
 
-        Link link = linksIterator.next();
-        clause += link.getAliasedHead() + " join " + link.getAliasedTail() + " on " + link.getAliasedCondition();
-
-        while (linksIterator.hasNext()) {
-            link = linksIterator.next();
-            clause += " join " + (clause.contains(link.getAliasedTail()) ? link.getAliasedHead()
-                    : link.getAliasedTail())
-                    + " on " + link.getAliasedCondition();
+        for (Link link : links) {
+            conditions.add(link.getAliasedCondition());
+            tableNames.add(link.getAliasedHead());
+            tableNames.add(link.getAliasedTail());
         }
-        return clause;
+        if (!toFilter.getFilterClause().isEmpty()) {
+            conditions.add(toFilter.getFilterClause());
+        }
+
+        String query = "SELECT " + toGet.getAliasedFormattedAtt();
+        query += " FROM " + String.join(", ", tableNames);
+        query += " WHERE " + String.join(" AND ", conditions);
+
+        return query;
     }
 
     private void init_tables_to_join() {
@@ -130,22 +134,4 @@ public class QueryGenerator {
             tables_to_join.add(new Node(attribute.getT()));
         }
     }
-
-//    public static void main(String[] args) {
-//        AttributeCollection toGet = new AttributeCollection();
-//        toGet.add(new Attribute(Attribute.Name.LEASE_NUM, Table.LEASES));
-////        toGet.add(new Attribute(Attribute.Name.USER_ID, Table.USERS));
-//        toGet.add(new Attribute(Attribute.Name.LOCATION_NUM, Table.LOCS));
-//        toGet.add(new Attribute(Attribute.Name.UTILITY_ID, Table.BILLS));
-//        toGet.add(new Attribute(Attribute.Name.BILL_NUM, Table.DISCOUNTS));
-//        toGet.add(new Attribute(Attribute.Name.BILL_NUM, Table.BILLS));
-//
-//        QueryGenerator qg = new QueryGenerator(toGet, new Filters());
-//        try {
-//
-//            System.out.println(qg.getFromClause());
-//        } catch (InvalidJoinException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 }

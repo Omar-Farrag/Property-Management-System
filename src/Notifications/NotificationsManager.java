@@ -83,33 +83,4 @@ public class NotificationsManager implements NotificationManagement {
         return result.getRowsAffected();
     }
 
-    public static void main(String[] args) {
-//        Notification notif = new Notification("A1", LocalDateTime.now(), Notification.NotifTopic.STATUS_UPDATE,
-//                "FOURTH'S A CHARM");
-        NotificationsManager manager = new NotificationsManager();
-        //        int result = manager.notifyUser("A2",notif);
-        //        System.out.println(result);
-        ;
-
-        try {
-            ArrayList<Notification> notifications = manager.retrieveNotifications("A2");
-            Notification notif = null;
-            for (Notification notification : notifications) {
-                if (notification.getMessage().equals("STATUS UPDATE: FOURTH'S A CHARM")) {
-                    notif = notification;
-                }
-                System.out.println(notification.toString());
-                System.out.println();
-            }
-            System.out.println();
-
-            int result = manager.dismissNotification(notif);
-
-            System.out.println(result);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (DBManagementException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

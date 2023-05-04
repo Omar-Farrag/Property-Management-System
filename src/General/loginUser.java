@@ -20,6 +20,27 @@ public class LoginUser {
     private String lastName;
     private String phoneNumber;
     private String emailAddress;
+    private String roleID;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public String getRoleID() {
+        return roleID;
+    }
 
     private static Controller controller = new Controller();
 
@@ -46,6 +67,7 @@ public class LoginUser {
         user.lastName = result.getString(Name.LNAME.getName());
         user.phoneNumber = result.getString(Name.PHONE_NUMBER.getName());
         user.emailAddress = result.getString(Name.EMAIL_ADDRESS.getName());
+        user.roleID = result.getString(Name.ROLE_ID.getName());
 
         return user;
 

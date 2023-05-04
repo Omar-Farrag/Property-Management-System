@@ -20,8 +20,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -273,30 +276,131 @@ public class Validator {
 
     public String validateFOREIGN(ValidationParameters parameters) {
 
+        if (parameters.getOperationType() == OperationType.INSERT) {
+            return validateRInsert(parameters);
+        } else {
+            return validateRUpdate(parameters);
+        }
+    }
+
+    private String validateRInsert(ValidationParameters parameters) {
+        ReferentialResolver resolver = ReferentialResolver.getInstance();
+
         String constraint = parameters.getConstraint();
         Attribute toValidate = parameters.getToValidate();
+        AttributeCollection allAttributes = parameters.getAllAttributes();
 
         int leftParenIndex = constraint.indexOf('(');
-        constraint = constraint.substring(2, leftParenIndex).trim();
+        constraint = constraint.substring(4, leftParenIndex).trim();
 
-        DetailedKey referenced = ReferentialResolver.getInstance().getReferencedTable(constraint);
+        //Get a hashmap mapping between the foreign key in this table and the primary key given in the constraint name.
+        Collection<HashMap<Attribute, Attribute>> referencer_to_referenced
+                = resolver.get_referencer_to_referenced(constraint, toValidate.getT());
 
-        String query
-                = "Select * from " + referenced.t.getTableName() + " where " + referenced.column.getName() + " = " + toValidate.getStringValue();
-        ResultSet result = null;
+        Table referencedTable = resolver.getReferencedTable(constraint).t;
+
+        if (toValidate.getStringValue().isBlank()) {
+            return "";
+        }
+
+        for (HashMap<Attribute, Attribute> group : referencer_to_referenced) {
+            String query = "Select * From " + referencedTable + " where ";
+
+            for (Entry<Attribute, Attribute> entry : group.entrySet()) {
+                query += entry.getValue().getStringName() + " = " + allAttributes.getStringValue(entry.getKey()) + " AND ";
+            }
+            query = query.substring(0, query.length() - 5);
+
+            ResultSet result = null;
+
+            try {
+                result = DatabaseManager.getInstance().executeStatement(query);
+                if (!result.next()) {
+                    String atts = "";
+                    for (Attribute attribute : group.keySet()) {
+                        atts += "," + attribute.getStringName();
+                    }
+                    atts = atts.substring(1);
+                    return "No entry in table " + referencedTable.getTableName() + " has a matching combination of values as the given " + atts;
+                }
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+                return "Something went wrong";
+            }
+        }
+        return "";
+    }
+
+    private String validateRUpdate(ValidationParameters parameters) {
         try {
-            result = DatabaseManager.getInstance().executeStatement(query);
-            if (!result.next()) {
-                String givenValue = "' " + toValidate.getStringValue() + " '";
-                return toValidate.getStringName() + " = " + givenValue + ": No " + toValidate.getStringName() + " with the value " + givenValue + " exists";
-            } else {
+            ReferentialResolver resolver = ReferentialResolver.getInstance();
+
+            String constraint = parameters.getConstraint();
+            Attribute toValidate = parameters.getToValidate();
+            AttributeCollection allAttributes = parameters.getAllAttributes();
+            Filters filters = parameters.getFilters();
+
+            int leftParenIndex = constraint.indexOf('(');
+            constraint = constraint.substring(4, leftParenIndex).trim();
+
+            Collection<HashMap<Attribute, Attribute>> referencer_to_referenced
+                    = resolver.get_referencer_to_referenced(constraint, toValidate.getT());
+
+            Table referencedTable = resolver.getReferencedTable(constraint).t;
+
+            if (toValidate.getStringValue().isBlank()) {
                 return "";
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-            return "Something went wrong";
+            ResultSet toBeModified = DatabaseManager.getInstance().retrieve(toValidate.getT(), filters).getResult();
+            while (toBeModified.next()) {
+
+                for (HashMap<Attribute, Attribute> group : referencer_to_referenced) {
+                    String query = "Select * From " + referencedTable + " where ";
+
+                    for (Entry<Attribute, Attribute> entry : group.entrySet()) {
+                        Name name = entry.getValue().getAttributeName();
+                        Table t = entry.getValue().getT();
+                        Attribute valuedAttribute;
+                        if (entry.getKey().equals(toValidate)) {
+                            valuedAttribute = new Attribute(name, toValidate.getValue(), t);
+                        } else {
+                            String value = toBeModified.getString(entry.getKey().getStringName());
+                            valuedAttribute = new Attribute(name, value, t);
+                        }
+
+                        query += valuedAttribute.getStringName() + " = " + valuedAttribute.getStringValue() + " AND ";
+                    }
+                    query = query.substring(0, query.length() - 5);
+
+                    ResultSet result = null;
+
+                    try {
+                        result = DatabaseManager.getInstance().executeStatement(query);
+                        if (!result.next()) {
+                            String atts = "";
+                            for (Attribute attribute : group.keySet()) {
+                                atts += "," + attribute.getStringName();
+                            }
+                            atts = atts.substring(1);
+                            return "No entry in table " + referencedTable.getTableName() + " has a matching combination of values as the given " + atts;
+                        }
+                    } catch (SQLException e) {
+                        System.out.println(e.getMessage());
+                        e.printStackTrace();
+                        return "Something went wrong";
+                    }
+                }
+
+                return "";
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (DBManagementException ex) {
+            ex.printStackTrace();
         }
+        return "";
     }
 
     public String validateLESS_THAN(ValidationParameters parameters) {
@@ -669,7 +773,7 @@ public class Validator {
 
         String inputDate = parameters.getToValidate().getValue();
 
-        String regex = "\\d{2}-\\w{3}-\\d{2} \\d{2}.\\d{2}.\\d{2}\\.\\d{9} (am|pm|AM|PM)";
+        String regex = "\\d{2}-\\w{3}-\\d{4} \\d{2}.\\d{2}.\\d{2} (am|pm|AM|PM)";
 
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(inputDate);
@@ -798,16 +902,4 @@ public class Validator {
         }
     }
 
-    public static void main(String[] args) {
-        String inputDate = "05-Jun-28 04.02.00.000000000 PM";
-
-        // Regular expression to match timestamp in the format of "DD-Mon-YY HH:MI:SS.FF9 AM"
-        String regex = "\\d{2}-\\w{3}-\\d{2} \\d{2}.\\d{2}.\\d{2}\\.\\d{9} (am|pm)";
-
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(inputDate);
-
-        System.out.println(matcher.matches());
-
-    }
 }

@@ -12,11 +12,13 @@ public class QueryResult {
     private ResultSet result;
     private int rows;
     private Errors errors;
+    private String query;
 
-    public QueryResult(ResultSet result, int rows, Errors errors) {
+    public QueryResult(ResultSet result, int rows, Errors errors, String query) {
         this.result = result;
         this.rows = rows;
         this.errors = errors;
+        this.query = query;
     }
 
     /**
@@ -25,6 +27,14 @@ public class QueryResult {
      */
     public ResultSet getResult() {
         return result;
+    }
+
+    /**
+     *
+     * @return The SQL Statement that was executed to generate this query result
+     */
+    public String getQuery() {
+        return query;
     }
 
     /**

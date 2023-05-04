@@ -194,4 +194,13 @@ public class AttributeCollection {
         return "";
     }
 
+    public String getStringValue(Attribute attribute) {
+        for (Attribute att : attributes) {
+            if (att.equals(attribute)) {
+                return att.getStringValue();
+            }
+        }
+        return "";
+    }
+
 }

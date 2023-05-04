@@ -13,6 +13,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import static java.awt.Frame.ICONIFIED;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -165,9 +166,7 @@ public class TableViewer extends JFrame {
 
         }
 
-//        if (!result.noErrors()) {
-//            return;
-//        }
+        refresh();
     }
 
     /**
@@ -197,9 +196,6 @@ public class TableViewer extends JFrame {
             controller.insert(t, valsForT, false);
 
         }
-//        if (!result.noErrors()) {
-//            return;
-//        }
         refresh();
     }
 
@@ -217,9 +213,7 @@ public class TableViewer extends JFrame {
                 controller.delete(t, filtsForT, false);
 
             }
-//            if (!result.noErrors()) {
-//                break;
-//            }
+
         }
 
         refresh();
@@ -251,6 +245,7 @@ public class TableViewer extends JFrame {
         sorter = new TableRowSorter<>(model);
         table.setRowSorter(sorter);
         setVisible(true);
+        setLocationRelativeTo(null);
     }
 
     private void initModel(ResultSet resultSet) throws SQLException {
@@ -305,6 +300,7 @@ public class TableViewer extends JFrame {
                     if (handleMouseClicks != null) {
                         try {
                             handleMouseClicks.execute();
+                            setState(ICONIFIED);
                             refresh();
                         } catch (SQLException ex) {
                             controller.displaySQLError(ex);
@@ -315,6 +311,7 @@ public class TableViewer extends JFrame {
                         form.setInitStrategy(new ModifyForm(collection));
                         form.applyInitStrategy();
                         form.getFrame().setVisible(true);
+                        setState(ICONIFIED);
                     }
                 }
             }

@@ -3,14 +3,20 @@ package DatabaseManagement.QueryGeneration;
 import DatabaseManagement.ConstraintsHandling.ReferentialResolver;
 import DatabaseManagement.Attribute;
 import DatabaseManagement.AttributeCollection;
+import DatabaseManagement.ConstraintsHandling.ConstraintChecker;
+import DatabaseManagement.DatabaseManager;
+import DatabaseManagement.Exceptions.DBManagementException;
 import DatabaseManagement.Filters;
 import DatabaseManagement.Table;
+import java.sql.SQLException;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Graph {
 
-    private HashMap<Node, Set<Link>> graph;
+    private HashMap<Node, ArrayList<Link>> graph;
     private ReferentialResolver resolver;
 
     public Graph() {
@@ -30,7 +36,7 @@ public class Graph {
     private void initGraph() {
 
         for (Table t : Table.values()) {
-            graph.put(new Node(t), new HashSet<>());
+            graph.put(new Node(t), new ArrayList<>());
         }
 
         for (Table t : Table.values()) {
@@ -38,7 +44,7 @@ public class Graph {
             AttributeCollection referencedAttributes = resolver.getReferencedAttributes(t);
 
             for (Attribute referenced : referencedAttributes.attributes()) {
-                HashMap<Table, Filters> referencingAttributes = resolver.getReferencingAttributes(t, referenced);
+                HashMap<Table, Filters> referencingAttributes = resolver.getLenientReferencingAttributes(t, referenced);
                 Node head = new Node(referenced.getT());
 
                 for (var referencing : referencingAttributes.entrySet()) {
@@ -52,13 +58,14 @@ public class Graph {
         }
     }
 
-    public Link getLinkTo(Node current, Node tail) {
+    public ArrayList<Link> getLinksTo(Node current, Node tail) {
+        ArrayList<Link> links = new ArrayList<>();
         for (Link link : graph.get(current)) {
             if (link.tail.equals(tail)) {
-                return link;
+                links.add(link);
             }
         }
-        return null;
+        return links;
     }
 
     public void unVisitNodes() {
@@ -77,6 +84,10 @@ public class Graph {
             this.table = table;
             visited = false;
 
+        }
+
+        public Table getTable() {
+            return table;
         }
 
         @Override
@@ -145,12 +156,13 @@ public class Graph {
                 return false;
             }
             Link link = (Link) o;
-            return (head.equals(link.head) && tail.equals(link.tail)) || (head.equals(link.tail) && tail.equals(link.head));
+            return (head.equals(link.head) && tail.equals(link.tail)) || (head.equals(link.tail) && tail.equals(link.head))
+                    && (headAttribute.equals(link.headAttribute) && tailAttribute.equals(link.tailAttribute)) || (headAttribute.equals(link.tailAttribute) && tailAttribute.equals(link.headAttribute));
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(tail);
+            return Objects.hash(head, tail, headAttribute, tailAttribute);
         }
 
         public String getAliasedCondition() {

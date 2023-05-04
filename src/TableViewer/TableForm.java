@@ -21,6 +21,11 @@ public abstract class TableForm extends JFrame implements Form {
     protected FormInitializationStrategy initStrategy;
     private TableViewer viewer;
 
+    public TableForm() {
+//        setAlwaysOnTop(true);
+        setLocationRelativeTo(null);
+    }
+
     protected void initBaseComponents(Table[] tables, JLabel TopLabel, JButton ActionBtn) {
         this.tables = tables;
         this.TopLabel = TopLabel;

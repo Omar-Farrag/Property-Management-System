@@ -106,9 +106,8 @@ public class AppointmentSlotForm extends TableForm {
         String startDate = currentDay + "-" + mm_to_MMM.get(currentMonth) + "-" + currentYear + " " + currentStartHour + ":" + currentStartMinute + ":00 " + currentStartPeriod;
         String endDate = currentDay + "-" + mm_to_MMM.get(currentMonth) + "-" + currentYear + " " + currentEndHour + ":" + currentEndMinute + ":00 " + currentEndPeriod;
 
-        startDate = controller.getTimestamp(startDate);
-        endDate = controller.getTimestamp(endDate);
-
+//        startDate = controller.getTimestamp(startDate);
+//        endDate = controller.getTimestamp(endDate);
         collection.add(new Attribute(Name.BOOKED, "0", Table.APPOINTMENT_SLOTS));
         collection.add(new Attribute(Name.AGENT_ID, controller.getUserID(), Table.APPOINTMENT_SLOTS));
         collection.add(new Attribute(Name.DAY, currentWeekDay, Table.APPOINTMENT_SLOTS));
@@ -183,7 +182,7 @@ public class AppointmentSlotForm extends TableForm {
         String start = toPopulateWith.getValue(new Attribute(Name.START_DATE, Table.APPOINTMENT_SLOTS));
         String end = toPopulateWith.getValue(new Attribute(Name.END_DATE, Table.APPOINTMENT_SLOTS));
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yy hh:mm:ss.SSSSSSSSS a");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy hh:mm:ss a");
         LocalDateTime startDate = LocalDateTime.parse(start, formatter);
         LocalDateTime endDate = LocalDateTime.parse(end, formatter);
 
