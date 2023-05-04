@@ -46,7 +46,12 @@ public class QueryGenerator {
         init_tables_to_join();
         Iterator<Node> nodeIterator = tables_to_join.iterator();
         if (tables_to_join.size() == 1) {
-            return "SELECT " + toGet.getAliasedFormattedAtt() + " FROM " + nodeIterator.next().getAliasedName() + " WHERE " + toFilter.getFilterClause();
+            String query = "SELECT " + toGet.getAliasedFormattedAtt() + " FROM " + nodeIterator.next().getAliasedName();
+
+            if (!toFilter.getFilterClause().isEmpty()) {
+                query += " WHERE " + toFilter.getFilterClause();
+            }
+            return query;
         }
 
         Set<Node> foundNodes = new HashSet<>();
@@ -120,7 +125,11 @@ public class QueryGenerator {
 
         String query = "SELECT " + toGet.getAliasedFormattedAtt();
         query += " FROM " + String.join(", ", tableNames);
-        query += " WHERE " + String.join(" AND ", conditions);
+
+        String allConditions = String.join(" AND ", conditions);
+        if (!allConditions.isEmpty()) {
+            query += " WHERE " + allConditions;
+        }
 
         return query;
     }

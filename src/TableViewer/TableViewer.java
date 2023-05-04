@@ -70,7 +70,7 @@ public class TableViewer extends JFrame {
      *
      * @throws SQLException
      */
-    public TableViewer(String title, AttributeCollection toShow, Filters originalFilters, Form form, boolean readOnly) throws SQLException, DBManagementException {
+    public TableViewer(String title, AttributeCollection toShow, Filters originalFilters, Form form, boolean readOnly) throws SQLException {
         this.toShow = toShow;
         this.readOnly = readOnly;
         this.originalFilters = originalFilters;
@@ -82,40 +82,8 @@ public class TableViewer extends JFrame {
         init(title, toDisplay, form);
     }
 
-    /**
-     * Displays a context menu when any row is right clicked;
-     *
-     * @param contextMenu Menu displayed upon right-clicking a row in the table.
-     * If the menu items need to perform certain actions, appropriate event
-     * listeners must be added to them before passing the popup menu to the
-     * table viewer.
-     */
-    public void setContextMenu(JPopupMenu contextMenu) {
-        this.contextMenu = contextMenu;
-    }
-
-    /**
-     * Gets the values at the given row number
-     *
-     * @param rowNum number of row to be retrieved
-     * @return Table entry for row [rowNum]
-     */
-    public AttributeCollection getRow(int rowNum) {
-        AttributeCollection collection = new AttributeCollection();
-        int col = 0;
-        for (Attribute attribute : toShow.attributes()) {
-            Name columnName = attribute.getAttributeName();
-
-            Object value = table.getValueAt(rowNum, col++);
-            if (value == null) {
-                value = "";
-            }
-            if (attribute.getType() == Attribute.Type.TIMESTAMP) {
-                value = controller.formatTimeStamp(Timestamp.valueOf(value.toString()));
-            }
-            collection.add(new Attribute(columnName, value.toString().trim(), attribute.getT()));
-        }
-        return collection;
+    public JTable getTable() {
+        return table;
     }
 
     /**
@@ -128,7 +96,11 @@ public class TableViewer extends JFrame {
         return getRow(row);
     }
 
-    public void applyBrowsingFilters() throws SQLException {
+    public void overrideClickListener(Function newListener) {
+        handleMouseClicks = newListener;
+    }
+
+    void applyBrowsingFilters() throws SQLException {
         Controller controller = new Controller();
         Filters filters = form.getBrowsingFilters();
         filters.append(originalFilters);
@@ -151,7 +123,7 @@ public class TableViewer extends JFrame {
 
     //For each table filter the filterCollection such that filters belong to one table only
     //Do same thing for other apply functions
-    public void applyModification() throws SQLException {
+    void applyModification() throws SQLException {
         Controller controller = new Controller();
         Filters filters = form.getPKFilter();
         filters.append(originalFilters);
@@ -173,7 +145,7 @@ public class TableViewer extends JFrame {
      * Refreshes the viewer to display the current, up-to-date records in a the
      * shown table
      */
-    public void refresh() throws SQLException {
+    void refresh() throws SQLException {
         initModel(controller.retrieve(toShow, originalFilters).getResult());
 
         initTable();
@@ -182,10 +154,12 @@ public class TableViewer extends JFrame {
         table.setRowSorter(sorter);
 
         scrollPane.setViewportView(table);
-        form.getFrame().dispose();
+        if (form != null) {
+            form.getFrame().dispose();
+        }
     }
 
-    public void applyInsertion() throws SQLException {
+    void applyInsertion() throws SQLException {
         Controller controller = new Controller();
 
         AttributeCollection newValues = form.getAllAttributes();
@@ -199,7 +173,7 @@ public class TableViewer extends JFrame {
         refresh();
     }
 
-    public void applyDeletion() throws SQLException {
+    void applyDeletion() throws SQLException {
         Controller controller = new Controller();
         Table[] tables = form.getTables();
 
@@ -218,6 +192,30 @@ public class TableViewer extends JFrame {
 
         refresh();
 
+    }
+
+    /**
+     * Gets the values at the given row number
+     *
+     * @param rowNum number of row to be retrieved
+     * @return Table entry for row [rowNum]
+     */
+    private AttributeCollection getRow(int rowNum) {
+        AttributeCollection collection = new AttributeCollection();
+        int col = 0;
+        for (Attribute attribute : toShow.attributes()) {
+            Name columnName = attribute.getAttributeName();
+
+            Object value = table.getValueAt(rowNum, col++);
+            if (value == null) {
+                value = "";
+            }
+            if (attribute.getType() == Attribute.Type.TIMESTAMP) {
+                value = controller.formatTimeStamp(Timestamp.valueOf(value.toString()));
+            }
+            collection.add(new Attribute(columnName, value.toString().trim(), attribute.getT()));
+        }
+        return collection;
     }
 
     private void init(String title, ResultSet resultSet, Form form) throws SQLException {
@@ -318,10 +316,6 @@ public class TableViewer extends JFrame {
         }
         );
 
-    }
-
-    public void overrideClickListener(Function newListener) {
-        handleMouseClicks = newListener;
     }
 
     private void initInnerPanels() {

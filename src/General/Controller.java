@@ -1,5 +1,7 @@
 package General;
 
+import LeasingAgentInterface.AgentAvailability;
+import LeasingAgentInterface.Appointment;
 import DataEntryInterface.DataEntryUserInterface;
 import DataEntryInterface.ModificationForm;
 import DataEntryInterface.InsertForm;
@@ -203,24 +205,7 @@ public class Controller {
         availabilityViewer.overrideClickListener(() -> {
 
             try {
-                boolean confirmed = confirmAppointment();
-                if (!confirmed) {
-                    return;
-                }
-
-                AttributeCollection selectedTimeSlot = availabilityViewer.getSelectedRow();
-                LoginUser agent = getSelectedAgent(selectedTimeSlot);
-
-                Appointment appointment = Appointment.create(loggedInUser, selectedStore, agent, selectedTimeSlot);
-
-                if (appointment != null) {
-                    displaySuccessMessage("Appointment Created Successfully...SUUUIIIIIII");
-                    Notification notification = new Notification(getUserID(), LocalDateTime.now(), Notification.NotifTopic.APPOINTMENT_CREATED, "Below are the appointment details:\n" + appointment.toString());
-                    new NotificationsManager().notifyUser(getUserID(), notification);
-
-                } else {
-                    displayErrors("Something went wrong wile creating appointment...Try again later");
-                }
+                handleAppointmentBooking(availabilityViewer, selectedStore);
             } catch (SQLException ex) {
                 displaySQLError(ex);
             } catch (DBManagementException ex) {
@@ -228,6 +213,28 @@ public class Controller {
             }
 
         });
+    }
+
+    private boolean handleAppointmentBooking(TableViewer availabilityViewer, Store selectedStore) throws SQLException, DBManagementException {
+        boolean confirmed = confirmAppointment();
+        if (!confirmed) {
+            return false;
+        }
+
+        AttributeCollection selectedTimeSlot = availabilityViewer.getSelectedRow();
+        LoginUser agent = getSelectedAgent(selectedTimeSlot);
+
+        Appointment appointment = Appointment.create(loggedInUser, selectedStore, agent, selectedTimeSlot);
+
+        if (appointment != null) {
+            displaySuccessMessage("Appointment Created Successfully...SUUUIIIIIII");
+            Notification notification = new Notification(getUserID(), LocalDateTime.now(), Notification.NotifTopic.APPOINTMENT_CREATED, "Below are the appointment details:\n" + appointment.toString());
+            new NotificationsManager().notifyUser(getUserID(), notification);
+            return true;
+        } else {
+            displayErrors("Something went wrong wile creating appointment...Try again later");
+            return false;
+        }
     }
 
     private LoginUser getSelectedAgent(AttributeCollection selectedTimeSlot) throws SQLException {
@@ -283,12 +290,10 @@ public class Controller {
 
         } catch (SQLException ex) {
             displaySQLError(ex);
-        } catch (DBManagementException ex) {
-            displayErrors("Something went wrong while viewing Appointment Slots...Try again later");
         }
     }
 
-    public void viewAgentAppointments() throws DBManagementException {
+    public void viewAgentAppointments() {
         try {
 
             ResultSet result = DB.executeStatement("""
@@ -423,12 +428,9 @@ public class Controller {
                 }
 
             });
-            viewer.setVisible(true);
 
         } catch (SQLException ex) {
             displaySQLError(ex);
-        } catch (DBManagementException ex) {
-            displayErrors("Something went wrong while browsing properties...Try again later");
         }
 
     }
@@ -606,8 +608,6 @@ public class Controller {
             viewer.setVisible(true);
         } catch (SQLException ex) {
             displaySQLError(ex);
-        } catch (DBManagementException ex) {
-            displayErrors("Something went wrong while viewing leasess...Try again later");
         }
     }
 

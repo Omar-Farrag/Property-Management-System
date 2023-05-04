@@ -94,7 +94,10 @@ public class DatabaseManager {
         } catch (DBManagementException e) {
             throw new RuntimeException(e);
         }
-        String query = "Delete From " + t.getAliasedName() + " WHERE " + filters.getFilterClause();
+        String query = "Delete From " + t.getAliasedName();
+        if (!filters.getFilterClause().isEmpty()) {
+            query += " WHERE " + filters.getFilterClause();
+        }
 
         return handleDBOperation(error, query, true);
     }
@@ -129,7 +132,11 @@ public class DatabaseManager {
             throw new RuntimeException(e);
         }
         String query
-                = "Update " + t.getAliasedName() + " " + QueryGenerator.getSetClause(toModify) + " WHERE " + filters.getFilterClause();
+                = "Update " + t.getAliasedName() + " " + QueryGenerator.getSetClause(toModify);
+
+        if (!filters.getFilterClause().isEmpty()) {
+            query += " WHERE " + filters.getFilterClause();
+        }
 
         return handleDBOperation(error, query, true);
 
@@ -171,7 +178,10 @@ public class DatabaseManager {
         } catch (DBManagementException e) {
             throw new RuntimeException(e);
         }
-        String query = "Select * from " + t.getAliasedName() + " WHERE " + filters.getFilterClause();
+        String query = "Select * from " + t.getAliasedName();
+        if (!filters.getFilterClause().isEmpty()) {
+            query += " WHERE " + filters.getFilterClause();
+        }
         return handleDBOperation(error, query, false);
     }
 

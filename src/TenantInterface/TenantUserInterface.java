@@ -273,6 +273,8 @@ public class TenantUserInterface extends javax.swing.JFrame {
 
     private void viewLeasesBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewLeasesBtnActionPerformed
         controller.viewLeases();
+        this.setState(Frame.ICONIFIED);
+
     }//GEN-LAST:event_viewLeasesBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
