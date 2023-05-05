@@ -10,7 +10,6 @@ import DatabaseManagement.AttributeCollection;
 import DatabaseManagement.Table;
 import General.Controller;
 import java.util.ArrayList;
-import General.Mall;
 
 /**
  *

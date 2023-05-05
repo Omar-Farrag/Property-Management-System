@@ -11,7 +11,7 @@ import DatabaseManagement.AttributeCollection;
 import DatabaseManagement.Filters;
 import DatabaseManagement.QueryResult;
 import DatabaseManagement.Table;
-import TableViewer.TableViewer;
+import GUI.TableViewer;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;

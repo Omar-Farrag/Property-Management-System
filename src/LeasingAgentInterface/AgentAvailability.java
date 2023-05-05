@@ -12,7 +12,7 @@ import DatabaseManagement.Exceptions.DBManagementException;
 import DatabaseManagement.Filters;
 import DatabaseManagement.Table;
 import LeasingAgentInterface.AppointmentSlotForm;
-import TableViewer.TableViewer;
+import GUI.TableViewer;
 import java.sql.SQLException;
 
 /**

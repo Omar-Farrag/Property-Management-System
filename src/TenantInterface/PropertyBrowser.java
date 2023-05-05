@@ -9,8 +9,8 @@ import DatabaseManagement.AttributeCollection;
 import DatabaseManagement.Filters;
 import DatabaseManagement.Table;
 import General.Controller;
-import General.Mall;
-import TableViewer.TableForm;
+import DataEntryInterface.Mall;
+import GUI.TableForm;
 import java.util.ArrayList;
 
 /**

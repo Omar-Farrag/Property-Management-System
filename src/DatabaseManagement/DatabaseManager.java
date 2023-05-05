@@ -7,8 +7,10 @@ import DatabaseManagement.ConstraintsHandling.ConstraintChecker;
 import DatabaseManagement.ConstraintsHandling.ConstraintChecker.Errors;
 import DatabaseManagement.ConstraintsHandling.MetaDataExtractor;
 import DatabaseManagement.Exceptions.*;
-import DatabaseManagement.QueryGeneration.QueryGenerator;
+import DatabaseManagement.QueryGeneration.*;
+import DatabaseManagement.QueryGeneration.Graph.Node;
 import General.LoginUser;
+import java.util.Set;
 
 public class DatabaseManager {
 
@@ -320,7 +322,7 @@ public class DatabaseManager {
      * @throws SQLException If an error occurs while executing SQL Prepared
      * Statement in the DBMS.
      */
-    public int executePreparedStatement(String sqlPreparedStatement) throws SQLException {
+    private int executePreparedStatement(String sqlPreparedStatement) throws SQLException {
         System.out.println(sqlPreparedStatement);
         PreparedStatement prep = conn.prepareStatement(sqlPreparedStatement);
         return prep.executeUpdate();

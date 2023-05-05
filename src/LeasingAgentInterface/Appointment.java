@@ -13,7 +13,7 @@ import DatabaseManagement.QueryResult;
 import DatabaseManagement.Table;
 import General.Controller;
 import General.LoginUser;
-import General.Store;
+import DataEntryInterface.Store;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

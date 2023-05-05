@@ -4,6 +4,7 @@
  */
 package General;
 
+import GUI.LogInScreen;
 import DataEntryInterface.DataEntryUserInterface;
 import DatabaseManagement.ConstraintsHandling.ConstraintChecker;
 import DatabaseManagement.ConstraintsHandling.MetaDataExtractor;

@@ -1,5 +1,7 @@
 package General;
 
+import DataEntryInterface.Mall;
+import DataEntryInterface.Store;
 import LeasingAgentInterface.AgentAvailability;
 import LeasingAgentInterface.Appointment;
 import DataEntryInterface.DataEntryUserInterface;
@@ -18,7 +20,7 @@ import LeasingAgentInterface.AppointmentSlotForm;
 import LeasingAgentInterface.LeasingAgentUserInterface;
 import Notifications.Notification;
 import Notifications.NotificationsManager;
-import TableViewer.TableViewer;
+import GUI.TableViewer;
 import TenantInterface.PropertyBrowser;
 import TenantInterface.TenantUserInterface;
 import java.awt.Color;

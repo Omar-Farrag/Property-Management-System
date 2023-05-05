@@ -4,6 +4,7 @@
  */
 package TableViewer;
 
+import GUI.TableViewer;
 import DatabaseManagement.Attribute;
 import DatabaseManagement.Attribute.Name;
 import DatabaseManagement.AttributeCollection;
