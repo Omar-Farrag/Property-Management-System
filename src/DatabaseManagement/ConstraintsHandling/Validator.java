@@ -3,6 +3,9 @@ package DatabaseManagement.ConstraintsHandling;
 import DatabaseManagement.*;
 import DatabaseManagement.Attribute.Name;
 import DatabaseManagement.Attribute.Type;
+import static DatabaseManagement.Attribute.Type.DATE;
+import static DatabaseManagement.Attribute.Type.NUMBER;
+import static DatabaseManagement.Attribute.Type.TIMESTAMP;
 import DatabaseManagement.ConstraintsHandling.MetaDataExtractor.Key;
 import DatabaseManagement.ConstraintsHandling.ValidationParameters.OperationType;
 import DatabaseManagement.Exceptions.ConstraintNotFoundException;
@@ -95,6 +98,9 @@ public class Validator {
             Attribute valuedAttribute = new Attribute(name, value, t);
             filters.addEqual(valuedAttribute);
         }
+        if (!validateType(filters).isEmpty()) {
+            return false;
+        }
         String query = "Select * from " + toValidate.getT().getAliasedName() + " WHERE "
                 + filters.getFilterClause();
 
@@ -109,6 +115,9 @@ public class Validator {
         Key primaryKeys = MetaDataExtractor.getInstance().getPrimaryKeys(toValidate.getT());
 
         HashSet<Key> keys = new HashSet<>();
+        if (!validateType(toValidate).isEmpty()) {
+            return false;
+        }
         String query = "Select * from " + toValidate.getT().getAliasedName()
                 + " where " + toValidate.getStringName() + " = " + toValidate.getStringValue();
         ResultSet result = DatabaseManager.getInstance().executeStatement(query);
@@ -125,7 +134,9 @@ public class Validator {
 
             keys.add(key);
         }
-
+        if (!validateType(filters).isEmpty()) {
+            return false;
+        }
         query = "Select * from " + toValidate.getT().getAliasedName() + " WHERE " + filters.getFilterClause();
         result = DatabaseManager.getInstance().executeStatement(query);
 
@@ -198,6 +209,9 @@ public class Validator {
                 Attribute valuedAttribute = new Attribute(name, value, t);
                 filters.addEqual(valuedAttribute);
             }
+            if (!validateType(filters).isEmpty()) {
+                return false;
+            }
             String query = "Select * from " + toValidate.getT().getAliasedName() + " WHERE "
                     + filters.getFilterClause();
 
@@ -220,6 +234,9 @@ public class Validator {
 //            ResultSet result = DatabaseManager.getInstance().executeStatement(query);
 //            return !result.next();
 //        }
+        if (!validateType(toValidate).isEmpty()) {
+            return false;
+        }
         String query = "Select * from " + toValidate.getT().getAliasedName()
                 + " where " + toValidate.getStringName() + " = " + toValidate.getStringValue();
         ResultSet result = DatabaseManager.getInstance().executeStatement(query);
@@ -239,7 +256,9 @@ public class Validator {
                 keys.add(key);
             }
         }
-
+        if (!validateType(filters).isEmpty()) {
+            return false;
+        }
         query = "Select * from " + toValidate.getT().getAliasedName() + " WHERE " + filters.getFilterClause();
         result = DatabaseManager.getInstance().executeStatement(query);
 
@@ -307,6 +326,11 @@ public class Validator {
             String query = "Select * From " + referencedTable + " where ";
 
             for (Entry<Attribute, Attribute> entry : group.entrySet()) {
+                ArrayList<String> value = new ArrayList<>();
+                value.add(allAttributes.getStringValue(entry.getKey()));
+                if (!validateType(toValidate, value).isEmpty()) {
+                    return "Could not verfiy referential integrity because the given value is of the wrong type";
+                }
                 query += entry.getValue().getStringName() + " = " + allAttributes.getStringValue(entry.getKey()) + " AND ";
             }
             query = query.substring(0, query.length() - 5);
@@ -356,6 +380,7 @@ public class Validator {
             while (toBeModified.next()) {
 
                 for (HashMap<Attribute, Attribute> group : referencer_to_referenced) {
+
                     String query = "Select * From " + referencedTable + " where ";
 
                     for (Entry<Attribute, Attribute> entry : group.entrySet()) {
@@ -367,6 +392,11 @@ public class Validator {
                         } else {
                             String value = toBeModified.getString(entry.getKey().getStringName());
                             valuedAttribute = new Attribute(name, value, t);
+                        }
+                        ArrayList<String> value = new ArrayList<>();
+                        value.add(allAttributes.getStringValue(entry.getKey()));
+                        if (!validateType(toValidate, value).isEmpty()) {
+                            return "Could not verfiy referential integrity because the given value is of the wrong type";
                         }
 
                         query += valuedAttribute.getStringName() + " = " + valuedAttribute.getStringValue() + " AND ";
@@ -815,6 +845,49 @@ public class Validator {
                 }
                 default -> {
                 }
+            }
+        }
+        return messages;
+
+    }
+
+    public String validateType(Attribute attribute) {
+        String value = attribute.getStringValue();
+        if (null != attribute.getType()) {
+            switch (attribute.getType()) {
+                case NUMBER -> {
+                    try {
+                        BigDecimal number = new BigDecimal(value);
+                    } catch (NumberFormatException ex) {
+                        return attribute.getStringName() + ": Value entered is not a number";
+                    }
+                }
+                case DATE -> {
+                    Attribute currAttribute = new Attribute(attribute.getAttributeName(), value, attribute.getT());
+                    ValidationParameters parameters = new ValidationParameters("", currAttribute, new AttributeCollection(), null, new Filters());
+                    return validateDATE(parameters);
+
+                }
+                case TIMESTAMP -> {
+                    Attribute currAttribute = new Attribute(attribute.getAttributeName(), value, attribute.getT());
+                    ValidationParameters parameters = new ValidationParameters("", currAttribute, new AttributeCollection(), null, new Filters());
+                    return validateTIMESTAMP(parameters);
+
+                }
+                default -> {
+                }
+            }
+        }
+        return "";
+
+    }
+
+    public ArrayList<String> validateType(Filters values) {
+        ArrayList<String> messages = new ArrayList<>();
+        for (Attribute attribute : values.getAttributes()) {
+            String result = validateType(attribute);
+            if (!result.isEmpty()) {
+                messages.add(result);
             }
         }
         return messages;

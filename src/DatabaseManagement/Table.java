@@ -26,7 +26,8 @@ public enum Table {
     USERS("USERS", "M"),
     ROLES("ROLES", "N"),
     CREDENTIALS("CREDENTIALS", "O"),
-    NOTIFICATIONS("NOTIFICATIONS", "P");
+    NOTIFICATIONS("NOTIFICATIONS", "P"),
+    MY_ROLES("MY_ROLES", "Q");
 
     private final String tableName;
     private final String alias;
