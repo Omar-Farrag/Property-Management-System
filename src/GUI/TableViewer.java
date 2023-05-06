@@ -96,7 +96,10 @@ public class TableViewer extends JFrame {
         return getRow(row);
     }
 
-    public void overrideClickListener(Function newListener) {
+    public void overrideClickListener(Function newListener) throws IllegalArgumentException {
+        if (newListener == null) {
+            throw new IllegalArgumentException("You cannot set the double cicking behavior to null");
+        }
         handleMouseClicks = newListener;
     }
 

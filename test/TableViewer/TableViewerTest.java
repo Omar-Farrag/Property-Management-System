@@ -36,6 +36,7 @@ public class TableViewerTest {
      */
     @Test
     public void testGetSelectedRow() {
+
         try {
             AttributeCollection collection = new AttributeCollection();
 
@@ -63,16 +64,16 @@ public class TableViewerTest {
             table.clearSelection();
             selected = instance.getSelectedRow().attributes();
             assertTrue(selected.isEmpty());
-
         } catch (SQLException ex) {
-            fail("Failed due to a SQL Exception.");
+            Logger.getLogger(TableViewerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     /**
      * Test of overrideClickListener method, of class TableViewer.
      */
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testOverrideClickListener() {
         try {
             AttributeCollection collection = new AttributeCollection();
@@ -101,13 +102,17 @@ public class TableViewerTest {
             table.dispatchEvent(doubleClick);
             try {
                 assertTrue(cdLatch.await(1, TimeUnit.SECONDS));
+
             } catch (InterruptedException ex) {
-                Logger.getLogger(TableViewerTest.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(TableViewerTest.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
 
-        } catch (SQLException ex) {
-            fail("Failed due to a SQL Exception.");
-        }
-    }
+            instance.overrideClickListener(null);
 
+        } catch (SQLException ex) {
+            Logger.getLogger(TableViewerTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
 }

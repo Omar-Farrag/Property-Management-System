@@ -206,4 +206,17 @@ public class AttributeCollection {
         return "";
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof AttributeCollection)) {
+            return false;
+        }
+        AttributeCollection other = (AttributeCollection) obj;
+
+        return attributes.equals(other.attributes);
+    }
+
 }

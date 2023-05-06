@@ -287,6 +287,20 @@ public class Filters {
         return filters.keySet();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof Filters)) {
+            return false;
+        }
+        Filters other = (Filters) obj;
+
+        return getAttributes().equals(other.getAttributes());
+
+    }
+
     private class Filter {
 
         private Type type;
