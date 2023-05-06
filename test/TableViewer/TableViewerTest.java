@@ -48,7 +48,6 @@ public class TableViewerTest {
             collection.add(booked);
 
             Filters filters = new Filters();
-
             TableViewer instance = new TableViewer("Testing", collection, filters, null, false);
             JTable table = instance.getTable();
 
@@ -61,7 +60,10 @@ public class TableViewerTest {
             assertEquals(selected.contains(startDate), true);
             assertEquals(selected.contains(booked), true);
 
-            // TODO review the generated test code and remove the default call to fail.
+            table.clearSelection();
+            selected = instance.getSelectedRow().attributes();
+            assertTrue(selected.isEmpty());
+
         } catch (SQLException ex) {
             fail("Failed due to a SQL Exception.");
         }

@@ -202,6 +202,9 @@ public class TableViewer extends JFrame {
      */
     private AttributeCollection getRow(int rowNum) {
         AttributeCollection collection = new AttributeCollection();
+        if (rowNum < 0) {
+            return collection;
+        }
         int col = 0;
         for (Attribute attribute : toShow.attributes()) {
             Name columnName = attribute.getAttributeName();

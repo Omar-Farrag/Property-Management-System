@@ -525,19 +525,7 @@ public class DatabaseManagerTest {
         } catch (Exception e) {
             assertTrue(true);
         }
-        // CASE 5B
-        try {
-            Table t = Table.MY_ROLES;
-            AttributeCollection toInsert = new AttributeCollection();
-            toInsert.add(new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A5", t));
-            toInsert.add(new Attribute(Attribute.Name.LOCATION_NUM, "5", t));
-            toInsert.add(new Attribute(Attribute.Name.APPOINTMENT_SLOT, "6", t));
 
-            QueryResult result = DatabaseManager.getInstance().insert(t, toInsert);
-
-        } catch (Exception e) {
-            assertTrue(true);
-        }
         // CASE 6A
         try {
             Table t = Table.APPOINTMENTS;
