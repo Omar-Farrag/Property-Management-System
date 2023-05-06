@@ -66,7 +66,10 @@ public class AttributeCollection {
      * @return The current attribute collection with the new attribute added.
      * Useful for cascading the adds;
      */
-    public AttributeCollection add(Attribute attribute) {
+    public AttributeCollection add(Attribute attribute) throws IllegalArgumentException {
+        if (attribute == null) {
+            throw new IllegalArgumentException("Cannot add null to this collection");
+        }
         attributes.add(attribute);
         return this;
     }

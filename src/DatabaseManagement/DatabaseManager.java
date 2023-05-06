@@ -64,7 +64,10 @@ public class DatabaseManager {
      * @throws DBManagementException If the attributes in toInsert do not match
      * the attributes in table T
      */
-    public QueryResult insert(Table t, AttributeCollection toInsert) throws SQLException, DBManagementException {
+    public QueryResult insert(Table t, AttributeCollection toInsert) throws SQLException, DBManagementException, IllegalArgumentException {
+        if (t == null || toInsert == null) {
+            throw new IllegalArgumentException("Neither table nor collection to insert can be null");
+        }
         Errors error = null;
         try {
             error = ConstraintChecker.getInstance().checkInsertion(t, toInsert);

@@ -16,7 +16,10 @@ public class Attribute {
      * @param value Value of the attribute as a string
      * @param t The table that the attribute belongs to
      */
-    public Attribute(Name attributeName, String value, Table t) {
+    public Attribute(Name attributeName, String value, Table t) throws IllegalArgumentException {
+        if (attributeName == null || t == null) {
+            throw new IllegalArgumentException("Neither attribute name nor table can be null");
+        }
         this.attributeName = attributeName;
         this.attributeValue = value.replace("'", "''");
         this.type = attributeName.type;
@@ -33,6 +36,9 @@ public class Attribute {
      * @param t The table that the attribute belongs to
      */
     public Attribute(Name attribute, Table t) {
+        if (attribute == null || t == null) {
+            throw new IllegalArgumentException("Neither attribute name nor table can be null");
+        }
         this.attributeName = attribute;
         this.attributeValue = "";
         this.type = attribute.type;
