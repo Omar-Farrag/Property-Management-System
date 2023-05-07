@@ -236,15 +236,15 @@ public class Validator {
 
     private boolean validUKUpdate(ValidationParameters parameters) throws SQLException {
         Attribute toValidate = parameters.getToValidate();
-        Table table = toValidate.getT();
         Filters filters = parameters.getFilters();
-        Key primaryKeys = MetaDataExtractor.getInstance().getPrimaryKeys(toValidate.getT());
+        ArrayList<Key> uniqueKeys = MetaDataExtractor.getInstance().getUniqueKeys(toValidate.getT());
 
-        HashMap<Table, Filters> referencerMap = ReferentialResolver.getInstance().getLenientReferencingAttributes(table, toValidate);
-//        if (!referencerMap.isEmpty()) {
-//            return false;
+//        if (uniqueKeys.getKeyAttributes().size() <= 1) {
+//            String query = "Select * from " + toValidate.getT().getAliasedName()
+//                    + " where " + toValidate.getStringName() + " = " + toValidate.getStringValue();
+//            ResultSet result = DatabaseManager.getInstance().executeStatement(query);
+//            return !result.next();
 //        }
-        HashSet<Key> keys = new HashSet<>();
         if (!validateType(toValidate).isEmpty()) {
             return false;
         }
@@ -252,17 +252,20 @@ public class Validator {
                 + " where " + toValidate.getStringName() + " = " + toValidate.getStringValue();
         ResultSet result = DatabaseManager.getInstance().executeStatement(query);
 
-        while (result.next()) {
-            Key key = new Key();
-            for (Attribute attribute : primaryKeys.getKeyAttributes()) {
-                Name name = attribute.getAttributeName();
-                String originalValue = result.getString(name.getName());
-                Table t = attribute.getT();
-                Attribute valuedAttribute = new Attribute(name, originalValue, t);
-                key.add(valuedAttribute);
-            }
+        HashSet<Key> keys = new HashSet<>();
 
-            keys.add(key);
+        while (result.next()) {
+            for (Key uniqueKey : uniqueKeys) {
+                Key key = new Key();
+                for (Attribute attribute : uniqueKey.getKeyAttributes()) {
+                    Name name = attribute.getAttributeName();
+                    String originalValue = result.getString(name.getName());
+                    Table t = attribute.getT();
+                    Attribute valuedAttribute = new Attribute(name, originalValue, t);
+                    key.add(valuedAttribute);
+                }
+                keys.add(key);
+            }
         }
         if (!validateType(filters).isEmpty()) {
             return false;
@@ -271,26 +274,30 @@ public class Validator {
         result = DatabaseManager.getInstance().executeStatement(query);
 
         while (result.next()) {
-            Key originalKey = new Key();
-            Key potentialKey = new Key();
-            for (Attribute attribute : primaryKeys.getKeyAttributes()) {
-                Name name = attribute.getAttributeName();
-                String originalValue = result.getString(name.getName());
-                String potentialValue = originalValue;
-                Table t = attribute.getT();
 
-                if (attribute.equals(toValidate)) {
-                    potentialValue = toValidate.getValue();
+            for (Key uniqueKey : uniqueKeys) {
+                Key originalKey = new Key();
+                Key potentialKey = new Key();
+
+                for (Attribute attribute : uniqueKey.getKeyAttributes()) {
+                    Name name = attribute.getAttributeName();
+                    String originalValue = result.getString(name.getName());
+                    String potentialValue = originalValue;
+                    Table t = attribute.getT();
+
+                    if (attribute.equals(toValidate)) {
+                        potentialValue = toValidate.getValue();
+                    }
+                    Attribute valuedOriginalAttribute = new Attribute(name, originalValue, t);
+                    Attribute valuedPotentialAttribute = new Attribute(name, potentialValue, t);
+
+                    originalKey.add(valuedOriginalAttribute);
+                    potentialKey.add(valuedPotentialAttribute);
                 }
-                Attribute valuedOriginalAttribute = new Attribute(name, originalValue, t);
-                Attribute valuedPotentialAttribute = new Attribute(name, potentialValue, t);
-
-                originalKey.add(valuedOriginalAttribute);
-                potentialKey.add(valuedPotentialAttribute);
-            }
-            if (!originalKey.equals(potentialKey)) {
-                if (keys.contains(potentialKey)) {
-                    return false;
+                if (!originalKey.equals(potentialKey)) {
+                    if (keys.contains(potentialKey)) {
+                        return false;
+                    }
                 }
             }
         }
@@ -362,67 +369,79 @@ public class Validator {
 
     private String validateRUpdate(ValidationParameters parameters) {
         try {
+            ReferentialResolver resolver = ReferentialResolver.getInstance();
+
+            String constraint = parameters.getConstraint();
             Attribute toValidate = parameters.getToValidate();
-            Table table = toValidate.getT();
+            AttributeCollection allAttributes = parameters.getAllAttributes();
             Filters filters = parameters.getFilters();
-            Key primaryKeys = MetaDataExtractor.getInstance().getPrimaryKeys(toValidate.getT());
 
-            HashMap<Table, Filters> referencerMap = ReferentialResolver.getInstance().getLenientReferencingAttributes(table, toValidate);
-//        if (!referencerMap.isEmpty()) {
-//            return false;
-//        }
-            HashSet<Key> keys = new HashSet<>();
-            if (!validateType(toValidate).isEmpty()) {
-                return false;
+            int leftParenIndex = constraint.indexOf('(');
+            constraint = constraint.substring(4, leftParenIndex).trim();
+
+            Collection<HashMap<Attribute, Attribute>> referencer_to_referenced
+                    = resolver.get_referencer_to_referenced(constraint, toValidate.getT());
+
+            Table referencedTable = resolver.getReferencedTable(constraint).t;
+
+            if (toValidate.getStringValue().isBlank()) {
+                return "";
             }
-            String query = "Select * from " + toValidate.getT().getAliasedName()
-                    + " where " + toValidate.getStringName() + " = " + toValidate.getStringValue();
-            ResultSet result = DatabaseManager.getInstance().executeStatement(query);
+            ResultSet toBeModified = DatabaseManager.getInstance().retrieve(toValidate.getT(), filters).getResult();
+            while (toBeModified.next()) {
 
-            while (result.next()) {
-                Key key = new Key();
-                for (Attribute attribute : primaryKeys.getKeyAttributes()) {
-                    Name name = attribute.getAttributeName();
-                    String originalValue = result.getString(name.getName());
-                    Table t = attribute.getT();
-                    Attribute valuedAttribute = new Attribute(name, originalValue, t);
-                    key.add(valuedAttribute);
-                }
+                for (HashMap<Attribute, Attribute> group : referencer_to_referenced) {
 
-                keys.add(key);
-            }
-            if (!validateType(filters).isEmpty()) {
-                return false;
-            }
-            query = "Select * from " + toValidate.getT().getAliasedName() + " WHERE " + filters.getFilterClause();
-            result = DatabaseManager.getInstance().executeStatement(query);
+                    String query = "Select * From " + referencedTable + " where ";
 
-            while (result.next()) {
-                Key originalKey = new Key();
-                Key potentialKey = new Key();
-                for (Attribute attribute : primaryKeys.getKeyAttributes()) {
-                    Name name = attribute.getAttributeName();
-                    String originalValue = result.getString(name.getName());
-                    String potentialValue = originalValue;
-                    Table t = attribute.getT();
+                    for (Entry<Attribute, Attribute> entry : group.entrySet()) {
+                        Name name = entry.getValue().getAttributeName();
+                        Table t = entry.getValue().getT();
+                        Attribute valuedAttribute;
+                        if (entry.getKey().equals(toValidate)) {
+                            valuedAttribute = new Attribute(name, toValidate.getValue(), t);
+                        } else {
+                            String value = toBeModified.getString(entry.getKey().getStringName());
+                            valuedAttribute = new Attribute(name, value, t);
+                        }
+                        ArrayList<String> value = new ArrayList<>();
+                        value.add(allAttributes.getStringValue(entry.getKey()));
+                        if (!validateType(toValidate, value).isEmpty()) {
+                            return "Could not verfiy referential integrity because the given value is of the wrong type";
+                        }
 
-                    if (attribute.equals(toValidate)) {
-                        potentialValue = toValidate.getValue();
+                        query += valuedAttribute.getStringName() + " = " + valuedAttribute.getStringValue() + " AND ";
                     }
-                    Attribute valuedOriginalAttribute = new Attribute(name, originalValue, t);
-                    Attribute valuedPotentialAttribute = new Attribute(name, potentialValue, t);
+                    query = query.substring(0, query.length() - 5);
 
-                    originalKey.add(valuedOriginalAttribute);
-                    potentialKey.add(valuedPotentialAttribute);
-                }
-                if (!originalKey.equals(potentialKey)) {
-                    if (keys.contains(potentialKey)) {
-                        return false;
+                    ResultSet result = null;
+
+                    try {
+                        result = DatabaseManager.getInstance().executeStatement(query);
+                        if (!result.next()) {
+                            String atts = "";
+                            for (Attribute attribute : group.keySet()) {
+                                atts += "," + attribute.getStringName();
+                            }
+                            atts = atts.substring(1);
+                            return "No entry in table " + referencedTable.getTableName() + " has a matching combination of values as the given " + atts;
+                        }
+                    } catch (SQLException e) {
+                        System.out.println(e.getMessage());
+                        e.printStackTrace();
+                        return "Something went wrong";
                     }
                 }
+
+                return "";
             }
-            return true;
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (DBManagementException ex) {
+            ex.printStackTrace();
         }
+        return "";
     }
 
     public String validateLESS_THAN(ValidationParameters parameters) {
