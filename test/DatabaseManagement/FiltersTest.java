@@ -44,7 +44,7 @@ public class FiltersTest {
      * Test of addEqual method, of class Filters.
      */
     @Test
-    public void testAddEqual() {
+    public void testaddEqual() {
         //Case 1A
         Filters instance = new Filters();
         assertThrows(IllegalArgumentException.class, () -> {
@@ -104,34 +104,121 @@ public class FiltersTest {
         Table t = Table.APPOINTMENTS;
         // Case 1A
         {
-            Filters collection1 = new Filters();
+            Filters filters1 = new Filters();
 
-            Attribute att11 = new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A5", t);
-            Attribute att12 = new Attribute(Attribute.Name.LOCATION_NUM, "5", t);
-            Attribute att13 = new Attribute(Attribute.Name.APPOINTMENT_SLOT, "SDF", t);
+            Filters filters2 = new Filters();
 
-            collection1.addEqual(att11);
-            collection1.addEqual(att12);
-            collection1.addEqual(att13);
+            assertTrue(filters1.equals(filters2));
+        }
+        // CASE 1B
+        {
+            Filters filters1 = new Filters();
 
-            Filters collection2 = new Filters();
+            Filters filters2 = new Filters();
 
             Attribute att21 = new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A5", t);
             Attribute att22 = new Attribute(Attribute.Name.LOCATION_NUM, "5", t);
             Attribute att23 = new Attribute(Attribute.Name.APPOINTMENT_SLOT, "SDF", t);
 
-            collection2.addEqual(att21);
-            collection2.addEqual(att22);
-            collection2.addEqual(att23);
+            filters2.addEqual(att21);
+            filters2.addEqual(att22);
+            filters2.addEqual(att23);
 
-            assertTrue(collection1.equals(collection2));
+            assertTrue(!filters1.equals(filters2));
         }
+        // CASE 1C
         {
+            Filters filters1 = new Filters();
+            Filters filters2 = null;
+            assertTrue(!filters1.equals(filters2));
+        }
 
-            Filters collection1 = new Filters();
-            Filters collection2 = new Filters();
+        // Case 2A
+        {
+            Filters filters1 = new Filters();
+            Attribute att11 = new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A5", t);
+            Attribute att12 = new Attribute(Attribute.Name.LOCATION_NUM, "5", t);
+            Attribute att13 = new Attribute(Attribute.Name.APPOINTMENT_SLOT, "SDF", t);
 
-            assertTrue(collection1.equals(collection2));
+            filters1.addEqual(att11);
+            filters1.addEqual(att12);
+            filters1.addEqual(att13);
+            Filters filters2 = new Filters();
+
+            Attribute att21 = new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A5", t);
+            Attribute att22 = new Attribute(Attribute.Name.LOCATION_NUM, "5", t);
+            Attribute att23 = new Attribute(Attribute.Name.APPOINTMENT_SLOT, "SDF", t);
+
+            filters2.addEqual(att21);
+            filters2.addEqual(att22);
+            filters2.addEqual(att23);
+
+            assertTrue(filters1.equals(filters2));
+        }
+        // CASE 2B
+        {
+            Filters filters1 = new Filters();
+
+            Attribute att11 = new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A5", t);
+            Attribute att12 = new Attribute(Attribute.Name.LOCATION_NUM, "5", t);
+            Attribute att13 = new Attribute(Attribute.Name.APPOINTMENT_SLOT, "SDF", t);
+
+            filters1.addEqual(att11);
+            filters1.addEqual(att12);
+            filters1.addEqual(att13);
+
+            Filters filters2 = new Filters();
+
+            Attribute att22 = new Attribute(Attribute.Name.LOCATION_NUM, "5", t);
+            Attribute att23 = new Attribute(Attribute.Name.APPOINTMENT_SLOT, "SDF", t);
+
+            filters2.addEqual(att22);
+            filters2.addEqual(att23);
+
+            assertTrue(!filters1.equals(filters2));
+        }
+        // CASE 2C
+        {
+            Filters filters1 = new Filters();
+            Attribute att11 = new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A5", t);
+            Attribute att12 = new Attribute(Attribute.Name.LOCATION_NUM, "5", t);
+            Attribute att13 = new Attribute(Attribute.Name.APPOINTMENT_SLOT, "SDF", t);
+
+            filters1.addEqual(att11);
+            filters1.addEqual(att12);
+            filters1.addEqual(att13);
+
+            Filters filters2 = null;
+
+            assertTrue(!filters1.equals(filters2));
+        }
+        // CASE 2D
+        {
+            Filters filters1 = new Filters();
+            Attribute att11 = new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A5", t);
+            Attribute att12 = new Attribute(Attribute.Name.LOCATION_NUM, "5", t);
+            Attribute att13 = new Attribute(Attribute.Name.APPOINTMENT_SLOT, "SDF", t);
+
+            filters1.addEqual(att11);
+            filters1.addEqual(att12);
+            filters1.addEqual(att13);
+
+            Filters filters2 = new Filters();
+
+            assertTrue(!filters1.equals(filters2));
+        }
+        // CASE 3A
+        {
+            Filters filters1 = new Filters();
+            Attribute att11 = new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A5", t);
+            Attribute att12 = new Attribute(Attribute.Name.LOCATION_NUM, "5", t);
+            Attribute att13 = new Attribute(Attribute.Name.APPOINTMENT_SLOT, "SDF", t);
+
+            filters1.addEqual(att11);
+            filters1.addEqual(att12);
+            filters1.addEqual(att13);
+
+            assertTrue(!filters1.equals(5));
         }
     }
 
