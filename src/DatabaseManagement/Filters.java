@@ -117,7 +117,10 @@ public class Filters {
      * attribute to place the condition on and attribute's value is the value
      * that the attribute must be equal to
      */
-    public void addEqual(Attribute attribute) {
+    public void addEqual(Attribute attribute) throws IllegalArgumentException {
+        if (attribute == null) {
+            throw new IllegalArgumentException("Cannot add null to filters");
+        }
         if (!filters.containsKey(attribute)) {
             filters.put(attribute, new ArrayList<Filter>());
         }
