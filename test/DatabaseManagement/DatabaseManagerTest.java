@@ -52,147 +52,13 @@ public class DatabaseManagerTest {
     @Test
     public void testInsert() {
         //CASE 1A
-        try {
+        {
             Table t = Table.APPOINTMENTS;
             AttributeCollection toInsert = null;
-            DatabaseManager.getInstance().insert(t, toInsert);
-            fail("PASSED WHEN IT SHOULD HAVE THROWN ILLEGAL ARGUMENT EXCEPTION");
+            assertThrows(IllegalArgumentException.class, () -> {
+                DatabaseManager.getInstance().insert(t, toInsert);
+            });
 
-        } catch (SQLException e) {
-            fail("SQL Exception Thrown");
-        } catch (DBManagementException e) {
-            fail("DB Management Exception Thrown");
-        } catch (IllegalArgumentException e) {
-            assertTrue(true);
-        }
-
-        //CASE 1B
-        try {
-            Table t = Table.APPOINTMENTS;
-            AttributeCollection toInsert = new AttributeCollection();
-            toInsert.add(null);
-            toInsert.add(new Attribute(Attribute.Name.LOCATION_NUM, "5", t));
-            toInsert.add(new Attribute(Attribute.Name.APPOINTMENT_SLOT, "6", t));
-
-            DatabaseManager.getInstance().insert(t, toInsert);
-            fail("PASSED WHEN IT SHOULD HAVE THROWN ILLEGAL ARGUMENT EXCEPTION");
-
-        } catch (SQLException e) {
-            fail("SQL Exception Thrown");
-        } catch (DBManagementException e) {
-            fail("DB Management Exception Thrown");
-        } catch (IllegalArgumentException e) {
-            assertTrue(true);
-        }
-
-        //CASE 1E
-        try {
-            Table t = Table.APPOINTMENTS;
-            AttributeCollection toInsert = new AttributeCollection();
-            toInsert.add(new Attribute(null, "A5", t));
-            toInsert.add(new Attribute(Attribute.Name.LOCATION_NUM, "5", t));
-            toInsert.add(new Attribute(Attribute.Name.APPOINTMENT_SLOT, "6", t));
-
-            DatabaseManager.getInstance().insert(t, toInsert);
-            fail("PASSED WHEN IT SHOULD HAVE THROWN ILLEGAL ARGUMENT EXCEPTION");
-
-        } catch (SQLException e) {
-            fail("SQL Exception Thrown");
-        } catch (DBManagementException e) {
-            fail("DB Management Exception Thrown");
-        } catch (IllegalArgumentException e) {
-            assertTrue(true);
-        }
-
-        //CASE 1G
-        try {
-            Table t = Table.APPOINTMENTS;
-            AttributeCollection toInsert = new AttributeCollection();
-            toInsert.add(new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A5", null));
-            toInsert.add(new Attribute(Attribute.Name.LOCATION_NUM, "5", t));
-            toInsert.add(new Attribute(Attribute.Name.APPOINTMENT_SLOT, "6", t));
-
-            DatabaseManager.getInstance().insert(t, toInsert);
-            fail("PASSED WHEN IT SHOULD HAVE THROWN ILLEGAL ARGUMENT EXCEPTION");
-
-        } catch (SQLException e) {
-            fail("SQL Exception Thrown");
-        } catch (DBManagementException e) {
-            fail("DB Management Exception Thrown");
-        } catch (IllegalArgumentException e) {
-            assertTrue(true);
-        }
-        //CASE 1H
-        try {
-            Table t = Table.APPOINTMENTS;
-            AttributeCollection toInsert = new AttributeCollection();
-            toInsert.add(new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, null, null));
-            toInsert.add(new Attribute(Attribute.Name.LOCATION_NUM, "5", t));
-            toInsert.add(new Attribute(Attribute.Name.APPOINTMENT_SLOT, "6", t));
-
-            DatabaseManager.getInstance().insert(t, toInsert);
-            fail("PASSED WHEN IT SHOULD HAVE THROWN ILLEGAL ARGUMENT EXCEPTION");
-
-        } catch (SQLException e) {
-            fail("SQL Exception Thrown");
-        } catch (DBManagementException e) {
-            fail("DB Management Exception Thrown");
-        } catch (IllegalArgumentException e) {
-            assertTrue(true);
-        }
-        //CASE 1I
-        try {
-            Table t = Table.APPOINTMENTS;
-            AttributeCollection toInsert = new AttributeCollection();
-            toInsert.add(new Attribute(null, "A5", null));
-            toInsert.add(new Attribute(Attribute.Name.LOCATION_NUM, "5", t));
-            toInsert.add(new Attribute(Attribute.Name.APPOINTMENT_SLOT, "6", t));
-
-            DatabaseManager.getInstance().insert(t, toInsert);
-            fail("PASSED WHEN IT SHOULD HAVE THROWN ILLEGAL ARGUMENT EXCEPTION");
-
-        } catch (SQLException e) {
-            fail("SQL Exception Thrown");
-        } catch (DBManagementException e) {
-            fail("DB Management Exception Thrown");
-        } catch (IllegalArgumentException e) {
-            assertTrue(true);
-        }
-        //CASE 1J
-        try {
-            Table t = Table.APPOINTMENTS;
-            AttributeCollection toInsert = new AttributeCollection();
-            toInsert.add(new Attribute(null, null, t));
-            toInsert.add(new Attribute(Attribute.Name.LOCATION_NUM, "5", t));
-            toInsert.add(new Attribute(Attribute.Name.APPOINTMENT_SLOT, "6", t));
-
-            DatabaseManager.getInstance().insert(t, toInsert);
-            fail("PASSED WHEN IT SHOULD HAVE THROWN ILLEGAL ARGUMENT EXCEPTION");
-
-        } catch (SQLException e) {
-            fail("SQL Exception Thrown");
-        } catch (DBManagementException e) {
-            fail("DB Management Exception Thrown");
-        } catch (IllegalArgumentException e) {
-            assertTrue(true);
-        }
-        //CASE 1K
-        try {
-            Table t = Table.APPOINTMENTS;
-            AttributeCollection toInsert = new AttributeCollection();
-            toInsert.add(new Attribute(null, null, null));
-            toInsert.add(new Attribute(Attribute.Name.LOCATION_NUM, "5", t));
-            toInsert.add(new Attribute(Attribute.Name.APPOINTMENT_SLOT, "6", t));
-
-            DatabaseManager.getInstance().insert(t, toInsert);
-            fail("PASSED WHEN IT SHOULD HAVE THROWN ILLEGAL ARGUMENT EXCEPTION");
-
-        } catch (SQLException e) {
-            fail("SQL Exception Thrown");
-        } catch (DBManagementException e) {
-            fail("DB Management Exception Thrown");
-        } catch (IllegalArgumentException e) {
-            assertTrue(true);
         }
 
         // CASE 2B
@@ -434,98 +300,97 @@ public class DatabaseManagerTest {
             fail("IllegalArgumentExceotion Thrown");
         }
         // CASE 4A
-        try {
+        {
             Table t = Table.APPOINTMENTS;
             AttributeCollection toInsert = new AttributeCollection();
             toInsert.add(new Attribute(Attribute.Name.LOCATION_NUM, "5", t));
             toInsert.add(new Attribute(Attribute.Name.APPOINTMENT_SLOT, "6", t));
 
-            QueryResult result = DatabaseManager.getInstance().insert(t, toInsert);
+            assertThrows(InsufficientAttributesException.class, () -> {
+                DatabaseManager.getInstance().insert(t, toInsert);
+            });
 
-        } catch (Exception e) {
-            assertTrue(true);
         }
         // CASE 4B
-        try {
+        {
             Table t = Table.APPOINTMENTS;
             AttributeCollection toInsert = new AttributeCollection();
             toInsert.add(new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A5", t));
             toInsert.add(new Attribute(Attribute.Name.APPOINTMENT_SLOT, "6", t));
 
-            QueryResult result = DatabaseManager.getInstance().insert(t, toInsert);
+            assertThrows(InsufficientAttributesException.class, () -> {
+                DatabaseManager.getInstance().insert(t, toInsert);
+            });
 
-        } catch (Exception e) {
-            assertTrue(true);
         }
         // CASE 4C
-        try {
+        {
             Table t = Table.APPOINTMENTS;
             AttributeCollection toInsert = new AttributeCollection();
             toInsert.add(new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A5", t));
             toInsert.add(new Attribute(Attribute.Name.LOCATION_NUM, "5", t));
 
-            QueryResult result = DatabaseManager.getInstance().insert(t, toInsert);
+            assertThrows(InsufficientAttributesException.class, () -> {
+                DatabaseManager.getInstance().insert(t, toInsert);
+            });
 
-        } catch (Exception e) {
-            assertTrue(true);
         }
         // CASE 4D
-        try {
+        {
             Table t = Table.APPOINTMENTS;
             AttributeCollection toInsert = new AttributeCollection();
             toInsert.add(new Attribute(Attribute.Name.APPOINTMENT_SLOT, "6", t));
 
-            QueryResult result = DatabaseManager.getInstance().insert(t, toInsert);
+            assertThrows(InsufficientAttributesException.class, () -> {
+                DatabaseManager.getInstance().insert(t, toInsert);
+            });
 
-        } catch (Exception e) {
-            assertTrue(true);
         }
         // CASE 4E
-        try {
+        {
             Table t = Table.APPOINTMENTS;
             AttributeCollection toInsert = new AttributeCollection();
             toInsert.add(new Attribute(Attribute.Name.LOCATION_NUM, "5", t));
 
-            QueryResult result = DatabaseManager.getInstance().insert(t, toInsert);
+            assertThrows(InsufficientAttributesException.class, () -> {
+                DatabaseManager.getInstance().insert(t, toInsert);
+            });
 
-        } catch (Exception e) {
-            assertTrue(true);
         }
         // CASE 4F
-        try {
+        {
             Table t = Table.APPOINTMENTS;
             AttributeCollection toInsert = new AttributeCollection();
             toInsert.add(new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A5", t));
 
-            QueryResult result = DatabaseManager.getInstance().insert(t, toInsert);
+            assertThrows(InsufficientAttributesException.class, () -> {
+                DatabaseManager.getInstance().insert(t, toInsert);
+            });
 
-        } catch (Exception e) {
-            assertTrue(true);
         }
         // CASE 4G
-        try {
+        {
             Table t = Table.APPOINTMENTS;
             AttributeCollection toInsert = new AttributeCollection();
 
-            QueryResult result = DatabaseManager.getInstance().insert(t, toInsert);
+            assertThrows(InsufficientAttributesException.class, () -> {
+                DatabaseManager.getInstance().insert(t, toInsert);
+            });
 
-        } catch (Exception e) {
-            assertTrue(true);
         }
         // CASE 5A
-        try {
+        {
             Table t = Table.APPOINTMENTS;
             AttributeCollection toInsert = new AttributeCollection();
             toInsert.add(new Attribute(Attribute.Name.PASSWORD, "A5", t));
             toInsert.add(new Attribute(Attribute.Name.LOCATION_NUM, "5", t));
             toInsert.add(new Attribute(Attribute.Name.APPOINTMENT_SLOT, "6", t));
 
-            QueryResult result = DatabaseManager.getInstance().insert(t, toInsert);
+            assertThrows(AttributeNotFoundException.class, () -> {
+                DatabaseManager.getInstance().insert(t, toInsert);
+            });
 
-        } catch (Exception e) {
-            assertTrue(true);
         }
-
         // CASE 6A
         try {
             Table t = Table.APPOINTMENTS;
@@ -538,8 +403,12 @@ public class DatabaseManagerTest {
             assertTrue(result.noErrors());
             assertTrue(result.getRowsAffected() == 1);
 
-        } catch (Exception e) {
-            fail("Threw an exception when it shouldn't");
+        } catch (SQLException e) {
+            fail("SQL Exception Thrown");
+        } catch (DBManagementException e) {
+            fail("DB Management Exception Thrown");
+        } catch (IllegalArgumentException e) {
+            fail("IllegalArgumentExceotion Thrown");
         }
 
     }
