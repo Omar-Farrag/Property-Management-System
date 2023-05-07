@@ -282,7 +282,7 @@ public class MetaDataExtractor {
                     }
                 }
 
-                constraints.add(constraint.toUpperCase());
+                constraints.add(constraint);
             }
         }
         return constraints;

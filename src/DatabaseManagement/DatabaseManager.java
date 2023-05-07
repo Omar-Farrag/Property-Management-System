@@ -332,7 +332,7 @@ public class DatabaseManager {
      * @throws SQLException If an error occurs while executing SQL Prepared
      * Statement in the DBMS.
      */
-    private int executePreparedStatement(String sqlPreparedStatement) throws SQLException, NullPointerException {
+    public int executePreparedStatement(String sqlPreparedStatement) throws SQLException, NullPointerException {
         System.out.println(sqlPreparedStatement);
         if (conn == null) {
             throw new NullPointerException("Cant perform any database operations database because the connection was not established");

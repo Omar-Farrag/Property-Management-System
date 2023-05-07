@@ -836,9 +836,17 @@ public class Controller {
         return null;
     }
 
+    public ResultSet executeStatement(String sqlStatement) throws SQLException, NullPointerException {
+        return DB.executeStatement(sqlStatement);
+    }
+
     public String formatTimeStamp(Timestamp stamp) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss a");
         return formatter.format(stamp);
+    }
+
+    public int executePreparedStatement(String sqlPreparedStatement) throws SQLException, NullPointerException {
+        return DB.executePreparedStatement(sqlPreparedStatement);
     }
 
     private void displayWindow() {
