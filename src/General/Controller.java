@@ -13,6 +13,7 @@ import DatabaseManagement.AttributeCollection;
 import DatabaseManagement.DBParameters;
 import DatabaseManagement.DatabaseManager;
 import DatabaseManagement.Exceptions.DBManagementException;
+import DatabaseManagement.Exceptions.MissingAttributeException;
 import DatabaseManagement.Filters;
 import DatabaseManagement.QueryResult;
 import DatabaseManagement.Table;
@@ -193,11 +194,15 @@ public class Controller {
      * confirmation and confirmed, the appointment will be created
      *
      * @param viewer TableViewer that contains
+     * @return Available time slots TableViewer
      * @throws SQLException
      * @throws DBManagementException
      */
-    public void bookAppointment(TableViewer viewer) throws SQLException, DBManagementException {
+    public TableViewer bookAppointment(TableViewer viewer) throws SQLException, DBManagementException, IllegalArgumentException {
 
+        if (viewer == null) {
+            throw new IllegalArgumentException("The book appointment should not be called from a null viewer");
+        }
         Store selectedStore = getSelectedStore(viewer);
 
         DBParameters agentAvailability = new AgentAvailability().getAgentAvailability();
@@ -212,12 +217,15 @@ public class Controller {
                 displaySQLError(ex);
             } catch (DBManagementException ex) {
                 displayErrors("Something went wrong wile creating appointment...Try again later");
+            } catch (MissingAttributeException ex) {
+                displayErrors(ex.getMessage());
             }
 
         });
+        return availabilityViewer;
     }
 
-    private boolean handleAppointmentBooking(TableViewer availabilityViewer, Store selectedStore) throws SQLException, DBManagementException {
+    private boolean handleAppointmentBooking(TableViewer availabilityViewer, Store selectedStore) throws SQLException, DBManagementException, MissingAttributeException {
         boolean confirmed = confirmAppointment();
         if (!confirmed) {
             return false;
@@ -239,7 +247,7 @@ public class Controller {
         }
     }
 
-    private LoginUser getSelectedAgent(AttributeCollection selectedTimeSlot) throws SQLException {
+    private LoginUser getSelectedAgent(AttributeCollection selectedTimeSlot) throws SQLException, MissingAttributeException {
         String agentID = selectedTimeSlot.getValue(new Attribute(Name.AGENT_ID, Table.APPOINTMENT_SLOTS));
         return LoginUser.retrieve(agentID);
     }
@@ -413,8 +421,10 @@ public class Controller {
     /**
      * Opens a new window displaying a list of all available stores for
      * browsing.
+     *
+     * @return The table viewer displaying the properties
      */
-    public void browseProperties() {
+    public TableViewer browseProperties() {
         try {
             AttributeCollection toShow = Store.getVisibleAttributes();
             Filters filters = new Filters();
@@ -430,11 +440,12 @@ public class Controller {
                 }
 
             });
+            return viewer;
 
         } catch (SQLException ex) {
             displaySQLError(ex);
         }
-
+        return null;
     }
 
     /**

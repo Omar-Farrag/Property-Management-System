@@ -12,6 +12,8 @@ import DatabaseManagement.Exceptions.ConstraintNotFoundException;
 import DatabaseManagement.Exceptions.DBManagementException;
 import DatabaseManagement.Exceptions.MissingValidatorException;
 import DatabaseManagement.ConstraintsHandling.ReferentialResolver.DetailedKey;
+import DatabaseManagement.Exceptions.MissingAttributeException;
+import General.Controller;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -78,12 +80,14 @@ public class Validator {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (MissingAttributeException ex) {
+            new Controller().displayErrors(ex.getMessage());
         }
 
         return "";
     }
 
-    private boolean validPKInsert(ValidationParameters parameters) throws SQLException {
+    private boolean validPKInsert(ValidationParameters parameters) throws SQLException, MissingAttributeException {
         Attribute toValidate = parameters.getToValidate();
         AttributeCollection allAttributes = parameters.getAllAttributes();
 
@@ -193,12 +197,14 @@ public class Validator {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        } catch (MissingAttributeException ex) {
+            new Controller().displayErrors(ex.getMessage());
         }
 
         return "";
     }
 
-    private boolean validUKInsert(ValidationParameters parameters) throws SQLException {
+    private boolean validUKInsert(ValidationParameters parameters) throws SQLException, MissingAttributeException {
         Attribute toValidate = parameters.getToValidate();
         AttributeCollection allAttributes = parameters.getAllAttributes();
 

@@ -77,6 +77,9 @@ public class Graph {
     public void unVisitNodes() {
         for (Node node : graph.keySet()) {
             node.unVisit();
+            for (Link link : graph.get(node)) {
+                link.tail.unVisit();
+            }
         }
     }
 

@@ -8,6 +8,7 @@ import DatabaseManagement.Attribute;
 import DatabaseManagement.Attribute.Name;
 import DatabaseManagement.AttributeCollection;
 import DatabaseManagement.DatabaseManager;
+import DatabaseManagement.Exceptions.MissingAttributeException;
 import DatabaseManagement.Filters;
 import DatabaseManagement.QueryResult;
 import DatabaseManagement.Table;
@@ -175,38 +176,42 @@ public class AppointmentSlotForm extends TableForm {
 
     @Override
     public void populateFields(AttributeCollection toPopulateWith) {
-        slotNumber = toPopulateWith.getValue(new Attribute(Name.SLOT_NUM, Table.APPOINTMENT_SLOTS));
-        currentWeekDay = toPopulateWith.getValue(new Attribute(Name.DAY, Table.APPOINTMENT_SLOTS));
-        weekDayCMB.setSelectedItem(currentWeekDay);
+        try {
+            slotNumber = toPopulateWith.getValue(new Attribute(Name.SLOT_NUM, Table.APPOINTMENT_SLOTS));
+            currentWeekDay = toPopulateWith.getValue(new Attribute(Name.DAY, Table.APPOINTMENT_SLOTS));
+            weekDayCMB.setSelectedItem(currentWeekDay);
 
-        String start = toPopulateWith.getValue(new Attribute(Name.START_DATE, Table.APPOINTMENT_SLOTS));
-        String end = toPopulateWith.getValue(new Attribute(Name.END_DATE, Table.APPOINTMENT_SLOTS));
+            String start = toPopulateWith.getValue(new Attribute(Name.START_DATE, Table.APPOINTMENT_SLOTS));
+            String end = toPopulateWith.getValue(new Attribute(Name.END_DATE, Table.APPOINTMENT_SLOTS));
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy hh:mm:ss a");
-        LocalDateTime startDate = LocalDateTime.parse(start, formatter);
-        LocalDateTime endDate = LocalDateTime.parse(end, formatter);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy hh:mm:ss a");
+            LocalDateTime startDate = LocalDateTime.parse(start, formatter);
+            LocalDateTime endDate = LocalDateTime.parse(end, formatter);
 
-        currentDay = handlePadding(startDate.getDayOfMonth());
-        currentMonth = handlePadding(startDate.getMonthValue());
-        currentYear = handlePadding(startDate.getYear());
+            currentDay = handlePadding(startDate.getDayOfMonth());
+            currentMonth = handlePadding(startDate.getMonthValue());
+            currentYear = handlePadding(startDate.getYear());
 
-        dayCMB.setSelectedItem(currentDay);
-        monthCMB.setSelectedItem(currentMonth);
-        yearCMB.setSelectedItem(currentYear);
+            dayCMB.setSelectedItem(currentDay);
+            monthCMB.setSelectedItem(currentMonth);
+            yearCMB.setSelectedItem(currentYear);
 
-        currentStartHour = handlePadding(handleHour(startDate.getHour()));
-        currentStartMinute = handlePadding(startDate.getMinute());
-        currentStartPeriod = startDate.getHour() >= 12 ? "PM" : "AM";
-        currentEndHour = handlePadding(handleHour(endDate.getHour()));
-        currentEndMinute = handlePadding(endDate.getMinute());
-        currentEndPeriod = endDate.getHour() >= 12 ? "PM" : "AM";
+            currentStartHour = handlePadding(handleHour(startDate.getHour()));
+            currentStartMinute = handlePadding(startDate.getMinute());
+            currentStartPeriod = startDate.getHour() >= 12 ? "PM" : "AM";
+            currentEndHour = handlePadding(handleHour(endDate.getHour()));
+            currentEndMinute = handlePadding(endDate.getMinute());
+            currentEndPeriod = endDate.getHour() >= 12 ? "PM" : "AM";
 
-        startHourCMB.setSelectedItem(currentStartHour);
-        startMinuteCMB.setSelectedItem(currentStartMinute);
-        startPeriodCMB.setSelectedItem(currentStartPeriod);
-        endHourCMB.setSelectedItem(currentEndHour);
-        endMinuteCMB.setSelectedItem(currentEndMinute);
-        endPeriodCMB.setSelectedItem(currentEndPeriod);
+            startHourCMB.setSelectedItem(currentStartHour);
+            startMinuteCMB.setSelectedItem(currentStartMinute);
+            startPeriodCMB.setSelectedItem(currentStartPeriod);
+            endHourCMB.setSelectedItem(currentEndHour);
+            endMinuteCMB.setSelectedItem(currentEndMinute);
+            endPeriodCMB.setSelectedItem(currentEndPeriod);
+        } catch (MissingAttributeException ex) {
+            controller.displayErrors(ex.getMessage());
+        }
 
     }
 

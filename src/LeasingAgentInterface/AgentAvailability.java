@@ -8,12 +8,15 @@ import DatabaseManagement.Attribute;
 import DatabaseManagement.Attribute.Name;
 import DatabaseManagement.AttributeCollection;
 import DatabaseManagement.DBParameters;
+import DatabaseManagement.DatabaseManager;
 import DatabaseManagement.Exceptions.DBManagementException;
 import DatabaseManagement.Filters;
 import DatabaseManagement.Table;
 import LeasingAgentInterface.AppointmentSlotForm;
 import GUI.TableViewer;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -38,5 +41,16 @@ public class AgentAvailability {
         filters.addEqual(new Attribute(Name.BOOKED, "0", Table.APPOINTMENT_SLOTS));
 
         return new DBParameters(toShow, filters);
+    }
+
+    public static void main(String[] args) {
+        try {
+            DBParameters params = new AgentAvailability().getAgentAvailability();
+            DatabaseManager.getInstance().retrieve(params.getCollection(), params.getFilters());
+        } catch (SQLException ex) {
+            Logger.getLogger(AgentAvailability.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (DBManagementException ex) {
+            Logger.getLogger(AgentAvailability.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
