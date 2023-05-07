@@ -66,26 +66,31 @@ public class Controller {
      * @param username Input username
      * @param password Input password
      */
-    public void login(JFrame loginForm, String username, String password) {
+    public QueryResult login(JFrame loginForm, String username, String password) throws IllegalArgumentException {
         try {
+            if (loginForm == null || username == null || password == null) {
+                throw new IllegalArgumentException("None of form,username, nor password are allowed to be null");
+            }
             password = PasswordManager.encrypt(password);
             Filters filters = new Filters();
             filters.addEqual(new Attribute(Name.USER_ID, username, Table.CREDENTIALS));
             filters.addEqual(new Attribute(Name.PASSWORD, password, Table.CREDENTIALS));
             QueryResult result = DB.retrieve(Table.CREDENTIALS, filters);
 
-            if (result.getResult().next()) {
+            if (result.getRowsAffected() > 0) {
                 loggedInUser = LoginUser.retrieve(username);
                 displayWindow();
                 loginForm.dispose();
             } else {
                 displayErrors("Invalid login information");
             }
+            return result;
         } catch (DBManagementException ex) {
             displayErrors("Something went wrong while logging in");
         } catch (SQLException ex) {
             displaySQLError(ex);
         }
+        return null;
     }
 
     /**
@@ -871,7 +876,11 @@ public class Controller {
         }
 
         String role = loggedInUser.getRoleID();
-        role_to_interface.get(role).setVisible(true);
+        if (!role_to_interface.containsKey(role)) {
+            displayErrors("Sorry bro..No view for your role type yet");
+        } else {
+            role_to_interface.get(role).setVisible(true);
+        }
     }
 
     AttributeCollection getAttributes(Table table) {

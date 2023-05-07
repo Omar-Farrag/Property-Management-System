@@ -4,39 +4,22 @@
  */
 package General;
 
-import DataEntryInterface.InsertForm;
-import DataEntryInterface.Mall;
-import DataEntryInterface.ModificationForm;
-import DataEntryInterface.Store;
 import DatabaseManagement.Attribute;
 import DatabaseManagement.Attribute.Name;
-import DatabaseManagement.AttributeCollection;
-import DatabaseManagement.Exceptions.DBManagementException;
-import DatabaseManagement.Exceptions.MissingAttributeException;
 import DatabaseManagement.Filters;
 import DatabaseManagement.QueryResult;
 import DatabaseManagement.Table;
+import GUI.LogInScreen;
 import GUI.TableViewer;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JTable;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -66,14 +49,105 @@ public class ControllerTest {
      */
     @org.junit.Test
     public void testLogin() {
-//        System.out.println("login");
-//        JFrame loginForm = null;
-//        String username = "";
-//        String password = "";
-//        Controller instance = new Controller();
-//        instance.login(loginForm, username, password);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
+        Controller controller = new Controller();
+
+        // CASE 1A
+        {
+            JFrame frame = null;
+            String userID = "A1";
+            String password = "A1";
+
+            assertThrows(IllegalArgumentException.class, () -> {
+                controller.login(frame, userID, password);
+            });
+        }
+        // CASE 1B
+        {
+            JFrame frame = new LogInScreen();
+            frame.setVisible(false);
+            String userID = null;
+            String password = "A1";
+
+            assertThrows(IllegalArgumentException.class, () -> {
+                controller.login(frame, userID, password);
+            });
+        }
+        // CASE 1C
+        {
+            JFrame frame = new LogInScreen();
+            frame.setVisible(false);
+            String userID = "A1";
+            String password = null;
+
+            assertThrows(IllegalArgumentException.class, () -> {
+                controller.login(frame, userID, password);
+            });
+        }
+        // CASE 2A
+        {
+            JFrame frame = new LogInScreen();
+            frame.setVisible(false);
+            String userID = "A1AKJSDGFKASJGDSAGDFGSADKFJGSAKJFGSAKJSDGAGGSDFKJSDSAHDKSGADKJASKJDGAKSJFD";
+            String password = "A1";
+
+            assertTrue(controller.login(frame, userID, password).getRowsAffected() == 0);
+
+        }
+
+        // CASE 2B
+        {
+            JFrame frame = new LogInScreen();
+            frame.setVisible(false);
+            String userID = "A1";
+            String password = "ASFSDFASDFSDFASDFASDFSAFASDFHJSDFLKAHSLDKJFHALSKDHFAKSLJDFHLAKJSFLKASDHFKALJSDHFLKJASHDKJFAHSKDJFHAKLSJDFL";
+
+            assertTrue(controller.login(frame, userID, password).getRowsAffected() == 0);
+        }
+        // CASE 3A
+        {
+            JFrame frame = new LogInScreen();
+            frame.setVisible(false);
+            String userID = "ASDF";
+            String password = "A1";
+
+            assertTrue(controller.login(frame, userID, password).getRowsAffected() == 0);
+        }
+        // CASE 3B
+        {
+            JFrame frame = new LogInScreen();
+            frame.setVisible(false);
+            String userID = "A1";
+            String password = "AASDFS1";
+
+            assertTrue(controller.login(frame, userID, password).getRowsAffected() == 0);
+        }
+        // CASE 3C
+        {
+            JFrame frame = new LogInScreen();
+            frame.setVisible(false);
+            String userID = "ASDF";
+            String password = "AASDF1";
+
+            assertTrue(controller.login(frame, userID, password).getRowsAffected() == 0);
+        }
+        // CASE 4A
+        {
+            JFrame frame = new LogInScreen();
+            frame.setVisible(false);
+            String userID = "A2";
+            String password = "A1";
+            assertTrue(controller.login(frame, userID, password).getRowsAffected() == 0);
+        }
+        // CASE 5A
+        {
+            JFrame frame = new LogInScreen();
+            frame.setVisible(false);
+            String userID = "A1";
+            String password = "A1";
+
+            assertTrue(controller.login(frame, userID, password).getRowsAffected() > 0);
+            frame.dispose();
+        }
     }
 
     /**
@@ -82,9 +156,11 @@ public class ControllerTest {
     @org.junit.Test
     public void testBookAppointment() throws Exception {
         Controller controller = new Controller();
-        assertThrows(IllegalArgumentException.class, () -> {
-            controller.bookAppointment(null);
-        });
+        assertThrows(IllegalArgumentException.class,
+                () -> {
+                    controller.bookAppointment(
+                            null);
+                });
 
         try {
             controller.setLoggedInUser(LoginUser.retrieve("A6"));
