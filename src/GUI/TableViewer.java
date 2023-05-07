@@ -131,6 +131,7 @@ public class TableViewer extends JFrame {
         Filters filters = form.getPKFilter();
         filters.append(originalFilters);
         AttributeCollection newValues = form.getAllAttributes();
+        newValues.dispose(form.getPKFilter().getAttributes());
         Table[] tables = form.getTables();
 //        ArrayList<QueryResult> results;
 

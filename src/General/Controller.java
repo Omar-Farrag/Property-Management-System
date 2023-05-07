@@ -698,6 +698,7 @@ public class Controller {
         } catch (SQLException ex) {
             displaySQLError(ex);
         } catch (DBManagementException ex) {
+            ex.printStackTrace();
             displayErrors("Something went wrong while inserting an entry into  " + t.getTableName().toUpperCase());
         }
         return null;
