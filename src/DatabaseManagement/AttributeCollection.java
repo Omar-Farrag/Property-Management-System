@@ -1,6 +1,9 @@
 package DatabaseManagement;
 
+import DatabaseManagement.Attribute;
 import DatabaseManagement.Attribute.Name;
+import DatabaseManagement.Filters;
+import DatabaseManagement.Table;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -60,27 +63,18 @@ public class AttributeCollection {
     }
 
     /**
-     * Adds an attribute to the attribute collection
-     *
-     * @param attribute Attribute to be added to the collection
-     * @return The current attribute collection with the new attribute added.
-     * Useful for cascading the adds;
-     */
-    public AttributeCollection add(Attribute attribute) throws IllegalArgumentException {
-        if (attribute == null) {
-            throw new IllegalArgumentException("Cannot add null to this collection");
-        }
-        attributes.add(attribute);
-        return this;
-    }
-
-    /**
      * Removes the given attribute from the attribute collection if present
      *
      * @param attribute Attribute to be removed
      */
     public void remove(Attribute attribute) {
         attributes.remove(attribute);
+    }
+
+    public void dispose(Set<Attribute> toDispose) {
+        for (Attribute attribute : toDispose) {
+            remove(attribute);
+        }
     }
 
     /**
@@ -111,6 +105,17 @@ public class AttributeCollection {
      */
     public void clear() {
         attributes.clear();
+    }
+
+    /**
+     *
+     */
+    public Set<Table> getPresentTables() {
+        Set<Table> tables = new HashSet<>();
+        for (Attribute attribute : attributes) {
+            tables.add(attribute.getT());
+        }
+        return tables;
     }
 
     /**
@@ -204,6 +209,21 @@ public class AttributeCollection {
             }
         }
         return "";
+    }
+
+    /**
+     * Adds an attribute to the attribute collection
+     *
+     * @param attribute Attribute to be added to the collection
+     * @return The current attribute collection with the new attribute added.
+     * Useful for cascading the adds;
+     */
+    public AttributeCollection add(Attribute attribute) throws IllegalArgumentException {
+        if (attribute == null) {
+            throw new IllegalArgumentException("Cannot add null to this collection");
+        }
+        attributes.add(attribute);
+        return this;
     }
 
     @Override

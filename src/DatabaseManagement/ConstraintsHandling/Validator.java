@@ -68,11 +68,11 @@ public class Validator {
         try {
             if (operationType.equals(OperationType.UPDATE)) {
                 if (!validPKUpdate(parameters)) {
-                    return parameters.getToValidate().getStringName() + ": value entered is unavailable";
+                    return parameters.getToValidate().getStringName() + ": value entered is either unavailable or referenced by child record";
                 }
             } else if (operationType.equals(OperationType.INSERT)) {
                 if (!validPKInsert(parameters)) {
-                    return parameters.getToValidate().getStringName() + ": value entered is unavailable";
+                    return parameters.getToValidate().getStringName() + ": value entered is either unavailable or referenced by child record";
                 }
             }
 
@@ -111,9 +111,14 @@ public class Validator {
 
     private boolean validPKUpdate(ValidationParameters parameters) throws SQLException {
         Attribute toValidate = parameters.getToValidate();
+        Table table = toValidate.getT();
         Filters filters = parameters.getFilters();
         Key primaryKeys = MetaDataExtractor.getInstance().getPrimaryKeys(toValidate.getT());
 
+        HashMap<Table, Filters> referencerMap = ReferentialResolver.getInstance().getLenientReferencingAttributes(table, toValidate);
+        if (!referencerMap.isEmpty()) {
+            return false;
+        }
         HashSet<Key> keys = new HashSet<>();
         if (!validateType(toValidate).isEmpty()) {
             return false;

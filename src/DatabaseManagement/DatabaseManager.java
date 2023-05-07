@@ -11,6 +11,7 @@ import DatabaseManagement.QueryGeneration.*;
 import DatabaseManagement.QueryGeneration.Graph.Node;
 import General.Controller;
 import General.LoginUser;
+import java.util.HashSet;
 import java.util.Set;
 
 public class DatabaseManager {
@@ -294,6 +295,16 @@ public class DatabaseManager {
         return MetaDataExtractor.getInstance().getAttributeCollection(t);
     }
 
+    public Set<Table> getNeighbors(Table t) {
+        Node table = new Node(t);
+        Set<Node> neighboringNodes = Graph.getInstance().getNeighbors(table);
+        Set<Table> tables = new HashSet<>();
+        for (Node node : neighboringNodes) {
+            tables.add(node.getTable());
+        }
+        return tables;
+    }
+
     /**
      * Executes the given SQL statement. Only Select SQL statements allowed
      *
@@ -302,7 +313,7 @@ public class DatabaseManager {
      * @throws SQLException If an error occurs while executing the SQL statement
      * in the DBMS
      */
-    public ResultSet executeStatement(String sqlStatement) throws SQLException {
+    public ResultSet executeStatement(String sqlStatement) throws SQLException, NullPointerException {
 
         System.out.println(sqlStatement);
         if (conn == null) {
@@ -321,8 +332,11 @@ public class DatabaseManager {
      * @throws SQLException If an error occurs while executing SQL Prepared
      * Statement in the DBMS.
      */
-    private int executePreparedStatement(String sqlPreparedStatement) throws SQLException {
+    private int executePreparedStatement(String sqlPreparedStatement) throws SQLException, NullPointerException {
         System.out.println(sqlPreparedStatement);
+        if (conn == null) {
+            throw new NullPointerException("Cant perform any database operations database because the connection was not established");
+        }
         PreparedStatement prep = conn.prepareStatement(sqlPreparedStatement);
         return prep.executeUpdate();
     }

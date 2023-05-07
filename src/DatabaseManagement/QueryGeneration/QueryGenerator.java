@@ -20,7 +20,7 @@ public class QueryGenerator {
     public QueryGenerator(AttributeCollection toGet, Filters toFilter) {
         this.toGet = toGet;
         this.toFilter = toFilter;
-        graph = new Graph();
+        graph = Graph.getInstance();
         tables_to_join = new HashSet<>();
         links = new HashSet<>();
     }
@@ -28,7 +28,7 @@ public class QueryGenerator {
     public QueryGenerator(Filters toFilter) {
         this.toGet = new AttributeCollection();
         this.toFilter = toFilter;
-        graph = new Graph();
+        graph = Graph.getInstance();
         tables_to_join = new HashSet<>();
         links = new HashSet<>();
     }
@@ -36,7 +36,7 @@ public class QueryGenerator {
     public QueryGenerator(AttributeCollection toGet) {
         this.toGet = toGet;
         this.toFilter = new Filters();
-        graph = new Graph();
+        graph = Graph.getInstance();
         tables_to_join = new HashSet<>();
         links = new HashSet<>();
     }

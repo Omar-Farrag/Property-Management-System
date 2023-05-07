@@ -19,7 +19,13 @@ public class Graph {
     private HashMap<Node, ArrayList<Link>> graph;
     private ReferentialResolver resolver;
 
-    public Graph() {
+    private static Graph instance;
+
+    public static Graph getInstance() {
+        return instance == null ? instance = new Graph() : instance;
+    }
+
+    private Graph() {
         graph = new HashMap<>();
         resolver = ReferentialResolver.getInstance();
         initGraph();
