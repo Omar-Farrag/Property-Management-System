@@ -123,11 +123,16 @@ public class Store {
      * @throws SQLException
      * @throws DBManagementException
      */
-    public static Store retrieve(String locationNum) throws SQLException, DBManagementException {
+    public static Store retrieve(String locationNum) throws SQLException, DBManagementException, IllegalArgumentException {
         Filters filters = new Filters();
         filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.PROPERTIES));
         QueryResult store = controller.retrieve(Table.PROPERTIES, filters);
 
+        if (!store.getAllErrors().isEmpty()) {
+            String reasons = String.join(",", store.getAllErrors());
+            throw new IllegalArgumentException(reasons);
+
+        }
         if (store.getRowsAffected() < 1) {
             return null;
         }

@@ -48,20 +48,23 @@ public class LoginUser {
     }
 
     public static LoginUser retrieve(String userID) throws SQLException {
+        if (userID == null) {
+            return null;
+        }
         LoginUser user = new LoginUser();
+
         user.userID = userID;
 
         Filters filters = new Filters();
         filters.addEqual(new Attribute(Name.USER_ID, user.userID, Table.USERS));
 
         QueryResult userInfo = controller.retrieve(Table.USERS, filters);
+        if (!userInfo.noErrors() || userInfo.getRowsAffected() == 0) {
+            return null;
+        }
+
         ResultSet result = userInfo.getResult();
         result.next();
-
-        ResultSetMetaData meta = result.getMetaData();
-        for (int i = 1; i <= meta.getColumnCount(); i++) {
-            System.out.println(meta.getColumnName(i));
-        }
 
         user.firstName = result.getString(Name.FNAME.getName());
         user.lastName = result.getString(Name.LNAME.getName());

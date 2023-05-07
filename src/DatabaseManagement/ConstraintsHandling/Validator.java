@@ -829,6 +829,9 @@ public class Validator {
                     for (String value : values) {
                         try {
                             BigDecimal number = new BigDecimal(value);
+                            if (number.precision() > 38) {
+                                messages.add(attribute.getStringName() + ": Number too big bro");
+                            }
                         } catch (NumberFormatException ex) {
                             messages.add(attribute.getStringName() + ": Value entered is not a number");
                         }
@@ -863,6 +866,9 @@ public class Validator {
                 case NUMBER -> {
                     try {
                         BigDecimal number = new BigDecimal(value);
+                        if (number.precision() > 38) {
+                            return attribute.getStringName() + ": Number too big bro";
+                        }
                     } catch (NumberFormatException ex) {
                         return attribute.getStringName() + ": Value entered is not a number";
                     }
