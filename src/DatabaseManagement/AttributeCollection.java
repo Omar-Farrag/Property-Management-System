@@ -2,6 +2,8 @@ package DatabaseManagement;
 
 import DatabaseManagement.Attribute;
 import DatabaseManagement.Attribute.Name;
+import DatabaseManagement.Exceptions.AttributeNotFoundException;
+import DatabaseManagement.Exceptions.MissingAttributeException;
 import DatabaseManagement.Filters;
 import DatabaseManagement.Table;
 import java.util.ArrayList;
@@ -193,13 +195,13 @@ public class AttributeCollection {
         return values;
     }
 
-    public String getValue(Attribute attribute) {
+    public String getValue(Attribute attribute) throws MissingAttributeException {
         for (Attribute att : attributes) {
             if (att.equals(attribute)) {
                 return att.getValue();
             }
         }
-        return "";
+        throw new MissingAttributeException("Could not find target attribute in collection");
     }
 
     public String getStringValue(Attribute attribute) {

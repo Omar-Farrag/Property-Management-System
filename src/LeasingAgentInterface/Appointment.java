@@ -14,6 +14,8 @@ import DatabaseManagement.Table;
 import General.Controller;
 import General.LoginUser;
 import DataEntryInterface.Store;
+import DatabaseManagement.Exceptions.AttributeNotFoundException;
+import DatabaseManagement.Exceptions.MissingAttributeException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -39,7 +41,11 @@ public class Appointment {
     private Appointment() {
     }
 
-    public static Appointment create(LoginUser tenant, Store store, LoginUser agent, AttributeCollection appointmentInfo) throws SQLException, DBManagementException {
+    public static Appointment create(LoginUser tenant, Store store, LoginUser agent, AttributeCollection appointmentInfo) throws SQLException, DBManagementException, MissingAttributeException {
+
+        if (tenant == null || store == null || agent == null || appointmentInfo == null) {
+            throw new IllegalArgumentException("None of tenant, store, agent, nor appointmentInfo collection is allowed to be null");
+        }
 
         Appointment appointment = new Appointment();
 
@@ -48,7 +54,6 @@ public class Appointment {
         appointment.store = store;
 
         appointment.slotNumber = appointmentInfo.getValue(new Attribute(Name.SLOT_NUM, Table.APPOINTMENT_SLOTS));
-
         appointment.startDate = appointmentInfo.getValue(new Attribute(Name.START_DATE, Table.APPOINTMENT_SLOTS));
         appointment.endDate = appointmentInfo.getValue(new Attribute(Name.END_DATE, Table.APPOINTMENT_SLOTS));
 
