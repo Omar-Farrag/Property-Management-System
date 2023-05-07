@@ -151,6 +151,22 @@ public class AppointmentTest {
                 Appointment.create(tenant, store, agent, appointmentInfo);
             });
         }
-    }
+        {
+            AttributeCollection appointmentInfo = new AttributeCollection();
+            appointmentInfo.add(new Attribute(Name.SLOT_NUM, "A323ASDFAS5", Table.APPOINTMENT_SLOTS));
+            appointmentInfo.add(new Attribute(Name.START_DATE, "02-MAY-2023", Table.APPOINTMENT_SLOTS));
+            appointmentInfo.add(new Attribute(Name.END_DATE, "02-MAY-2024", Table.APPOINTMENT_SLOTS));
 
+            assertNull(Appointment.create(tenant, store, agent, appointmentInfo));
+        }
+        {
+            AttributeCollection appointmentInfo = new AttributeCollection();
+            appointmentInfo.add(new Attribute(Name.SLOT_NUM, "5", Table.APPOINTMENT_SLOTS));
+            appointmentInfo.add(new Attribute(Name.START_DATE, "02-MAY-2023", Table.APPOINTMENT_SLOTS));
+            appointmentInfo.add(new Attribute(Name.END_DATE, "02-MAY-2024", Table.APPOINTMENT_SLOTS));
+
+            assertNotNull(Appointment.create(tenant, store, agent, appointmentInfo));
+        }
+
+    }
 }

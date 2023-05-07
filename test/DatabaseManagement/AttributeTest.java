@@ -63,7 +63,7 @@ public class AttributeTest {
             new Attribute(null, null, null);
         });
 
-        new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, Table.APPOINTMENTS);
+        new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A1", Table.APPOINTMENTS);
     }
 
 }

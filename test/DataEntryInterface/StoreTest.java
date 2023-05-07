@@ -79,6 +79,7 @@ public class StoreTest {
         if (retrievalResult.getRowsAffected() > 0) {
             throw new Exception("CASE 3A FAILED BECAUSE VALUE ALREADY EXISTS");
         }
+        assertNull(Store.retrieve("999"));
 
         // Case 4A
         AttributeCollection collection = new AttributeCollection();
