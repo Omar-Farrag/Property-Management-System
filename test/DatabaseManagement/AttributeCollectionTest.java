@@ -43,6 +43,24 @@ public class AttributeCollectionTest {
     public void tearDown() {
     }
 
+    /**
+     * Test of add method, of class AttributeCollection.
+     */
+    @Test
+    public void testAdd() {
+        //Case 1A
+        AttributeCollection instance = new AttributeCollection();
+        assertThrows(IllegalArgumentException.class, () -> {
+            instance.add(null);
+        });
+
+        //Case 2A
+        Attribute attribute = new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "", Table.APPOINTMENTS);
+        instance.add(attribute);
+        Set<Attribute> collectionAttributes = instance.attributes();
+        assertTrue(collectionAttributes.contains(attribute));
+    }
+
     @Test
     public void testAttributes() {
         // Case 1A
@@ -79,30 +97,65 @@ public class AttributeCollectionTest {
     }
 
     /**
-     * Test of add method, of class AttributeCollection.
-     */
-    @Test
-    public void testAdd() {
-        //Case 1A
-        AttributeCollection instance = new AttributeCollection();
-        assertThrows(IllegalArgumentException.class, () -> {
-            instance.add(null);
-        });
-
-        //Case 2A
-        Attribute attribute = new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "", Table.APPOINTMENTS);
-        instance.add(attribute);
-        Set<Attribute> collectionAttributes = instance.attributes();
-        assertTrue(collectionAttributes.contains(attribute));
-    }
-
-    /**
      * Test of equals method, of class AttributeCollection.
      */
     @Test
     public void testEquals() {
         Table t = Table.APPOINTMENTS;
         // Case 1A
+        {
+            AttributeCollection collection1 = new AttributeCollection();
+
+            AttributeCollection collection2 = new AttributeCollection();
+
+            assertTrue(collection1.equals(collection2));
+        }
+        // CASE 1B
+        {
+            AttributeCollection collection1 = new AttributeCollection();
+
+            AttributeCollection collection2 = new AttributeCollection();
+
+            Attribute att21 = new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A5", t);
+            Attribute att22 = new Attribute(Attribute.Name.LOCATION_NUM, "5", t);
+            Attribute att23 = new Attribute(Attribute.Name.APPOINTMENT_SLOT, "SDF", t);
+
+            collection2.add(att21);
+            collection2.add(att22);
+            collection2.add(att23);
+
+            assertTrue(!collection1.equals(collection2));
+        }
+        // CASE 1C
+        {
+            AttributeCollection collection1 = new AttributeCollection();
+            AttributeCollection collection2 = null;
+            assertTrue(!collection1.equals(collection2));
+        }
+
+        // Case 2A
+        {
+            AttributeCollection collection1 = new AttributeCollection();
+            Attribute att11 = new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A5", t);
+            Attribute att12 = new Attribute(Attribute.Name.LOCATION_NUM, "5", t);
+            Attribute att13 = new Attribute(Attribute.Name.APPOINTMENT_SLOT, "SDF", t);
+
+            collection1.add(att11);
+            collection1.add(att12);
+            collection1.add(att13);
+            AttributeCollection collection2 = new AttributeCollection();
+
+            Attribute att21 = new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A5", t);
+            Attribute att22 = new Attribute(Attribute.Name.LOCATION_NUM, "5", t);
+            Attribute att23 = new Attribute(Attribute.Name.APPOINTMENT_SLOT, "SDF", t);
+
+            collection2.add(att21);
+            collection2.add(att22);
+            collection2.add(att23);
+
+            assertTrue(collection1.equals(collection2));
+        }
+        // CASE 2B
         {
             AttributeCollection collection1 = new AttributeCollection();
 
@@ -116,22 +169,56 @@ public class AttributeCollectionTest {
 
             AttributeCollection collection2 = new AttributeCollection();
 
-            Attribute att21 = new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A5", t);
             Attribute att22 = new Attribute(Attribute.Name.LOCATION_NUM, "5", t);
             Attribute att23 = new Attribute(Attribute.Name.APPOINTMENT_SLOT, "SDF", t);
 
-            collection2.add(att21);
             collection2.add(att22);
             collection2.add(att23);
 
-            assertTrue(collection1.equals(collection2));
+            assertTrue(!collection1.equals(collection2));
         }
+        // CASE 2C
         {
-
             AttributeCollection collection1 = new AttributeCollection();
+            Attribute att11 = new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A5", t);
+            Attribute att12 = new Attribute(Attribute.Name.LOCATION_NUM, "5", t);
+            Attribute att13 = new Attribute(Attribute.Name.APPOINTMENT_SLOT, "SDF", t);
+
+            collection1.add(att11);
+            collection1.add(att12);
+            collection1.add(att13);
+
+            AttributeCollection collection2 = null;
+
+            assertTrue(!collection1.equals(collection2));
+        }
+        // CASE 2D
+        {
+            AttributeCollection collection1 = new AttributeCollection();
+            Attribute att11 = new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A5", t);
+            Attribute att12 = new Attribute(Attribute.Name.LOCATION_NUM, "5", t);
+            Attribute att13 = new Attribute(Attribute.Name.APPOINTMENT_SLOT, "SDF", t);
+
+            collection1.add(att11);
+            collection1.add(att12);
+            collection1.add(att13);
+
             AttributeCollection collection2 = new AttributeCollection();
 
-            assertTrue(collection1.equals(collection2));
+            assertTrue(!collection1.equals(collection2));
+        }
+        // CASE 3A
+        {
+            AttributeCollection collection1 = new AttributeCollection();
+            Attribute att11 = new Attribute(Attribute.Name.POTENTIAL_TENANT_ID, "A5", t);
+            Attribute att12 = new Attribute(Attribute.Name.LOCATION_NUM, "5", t);
+            Attribute att13 = new Attribute(Attribute.Name.APPOINTMENT_SLOT, "SDF", t);
+
+            collection1.add(att11);
+            collection1.add(att12);
+            collection1.add(att13);
+
+            assertTrue(!collection1.equals(5));
         }
 
     }
