@@ -67,7 +67,7 @@ public class Mall {
     public static QueryResult insert(AttributeCollection toInsert) throws SQLException, DBManagementException {
         toInsert = toInsert.filter(Table.MALLS);
         toInsert.add(new Attribute(Name.MALL_NUM, String.valueOf(generateMallNum()), Table.MALLS));
-        return controller.insert(Table.MALLS, toInsert, false);
+        return controller.insert(Table.MALLS, toInsert, true);
     }
 
     /**
@@ -81,7 +81,7 @@ public class Mall {
     public QueryResult modify(AttributeCollection newValues) throws SQLException, DBManagementException {
         Filters filters = new Filters();
         filters.addEqual(new Attribute(Name.MALL_NUM, String.valueOf(mallNum), Table.MALLS));
-        QueryResult result = controller.modify(Table.MALLS, newValues, filters, false);
+        QueryResult result = controller.modify(Table.MALLS, newValues, filters, true);
 
         if (!result.noErrors()) {
             return result;
@@ -108,7 +108,7 @@ public class Mall {
 
         Filters filters = new Filters();
         filters.addEqual(new Attribute(Name.MALL_NUM, String.valueOf(mallNum), Table.MALLS));
-        QueryResult result = controller.delete(Table.MALLS, filters, false);
+        QueryResult result = controller.delete(Table.MALLS, filters, true);
         if (result.noErrors()) {
             clear();
         }
@@ -132,7 +132,9 @@ public class Mall {
 
         while (locationNumbers.next()) {
             Store store = Store.retrieve(locationNumbers.getString(1));
-            stores.add(store);
+            if (store != null) {
+                stores.add(store);
+            }
         }
         return stores;
     }

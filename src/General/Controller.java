@@ -79,8 +79,9 @@ public class Controller {
 
             if (result.getRowsAffected() > 0) {
                 loggedInUser = LoginUser.retrieve(username);
-                displayWindow();
-                loginForm.dispose();
+                if (displayWindow()) {
+                    loginForm.dispose();
+                }
             } else {
                 displayErrors("Invalid login information");
             }
@@ -356,8 +357,6 @@ public class Controller {
             }
         } catch (SQLException ex) {
             displaySQLError(ex);
-        } catch (DBManagementException ex) {
-            ex.printStackTrace();
         }
 
     }
@@ -370,11 +369,12 @@ public class Controller {
      * @param form The form that called this function
      *
      */
-    public void modifyStore(Store store, ModificationForm form) {
+    public Store modifyStore(Store store, ModificationForm form) {
         try {
             QueryResult modificationResult = store.modify(form.getAttributes());
             if (modificationResult.noErrors()) {
                 displaySuccessMessage("Store modified successfully");
+                return Store.retrieve(String.valueOf(store.getLocationNum()));
             } else {
                 displayErrors(modificationResult);
             }
@@ -383,6 +383,7 @@ public class Controller {
         } catch (DBManagementException ex) {
             displayErrors("Could not modify the store");
         }
+        return null;
     }
 
     /**
@@ -866,7 +867,7 @@ public class Controller {
         return DB.executePreparedStatement(sqlPreparedStatement);
     }
 
-    private void displayWindow() {
+    private boolean displayWindow() {
         if (role_to_interface == null) {
             role_to_interface = new HashMap<>();
             role_to_interface.put("DE", new DataEntryUserInterface());
@@ -879,8 +880,10 @@ public class Controller {
         String role = loggedInUser.getRoleID();
         if (!role_to_interface.containsKey(role)) {
             displayErrors("Sorry bro..No view for your role type yet");
+            return false;
         } else {
             role_to_interface.get(role).setVisible(true);
+            return true;
         }
     }
 

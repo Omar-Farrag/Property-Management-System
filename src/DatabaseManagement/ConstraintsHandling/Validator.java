@@ -80,8 +80,10 @@ public class Validator {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (MissingAttributeException ex) {
-            new Controller().displayErrors(ex.getMessage());
+        } catch (MissingAttributeException e) {
+            new Controller().displayErrors(e.getMessage());
+        } catch (DBManagementException e) {
+            e.printStackTrace();
         }
 
         return "";
@@ -113,16 +115,19 @@ public class Validator {
 
     }
 
-    private boolean validPKUpdate(ValidationParameters parameters) throws SQLException {
+    private boolean validPKUpdate(ValidationParameters parameters) throws SQLException, DBManagementException {
         Attribute toValidate = parameters.getToValidate();
         Table table = toValidate.getT();
         Filters filters = parameters.getFilters();
         Key primaryKeys = MetaDataExtractor.getInstance().getPrimaryKeys(toValidate.getT());
 
         HashMap<Table, Filters> referencerMap = ReferentialResolver.getInstance().getLenientReferencingAttributes(table, toValidate);
-//        if (!referencerMap.isEmpty()) {
-//            return false;
-//        }
+        for (Entry<Table, Filters> entry : referencerMap.entrySet()) {
+            QueryResult result = DatabaseManager.getInstance().retrieve(entry.getKey(), entry.getValue());
+            if (result.getRowsAffected() > 0) {
+                return false;
+            }
+        }
         HashSet<Key> keys = new HashSet<>();
         if (!validateType(toValidate).isEmpty()) {
             return false;
@@ -866,7 +871,7 @@ public class Validator {
     }
 
     public String validateType(Attribute attribute) {
-        String value = attribute.getStringValue();
+        String value = attribute.getValue();
         if (null != attribute.getType()) {
             switch (attribute.getType()) {
                 case NUMBER -> {

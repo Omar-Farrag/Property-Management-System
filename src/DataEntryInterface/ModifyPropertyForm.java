@@ -58,11 +58,9 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
         jPanel7 = new javax.swing.JPanel();
         jLabel23 = new javax.swing.JLabel();
         jLabel26 = new javax.swing.JLabel();
-        jLabel28 = new javax.swing.JLabel();
         jLabel30 = new javax.swing.JLabel();
         DeleteBtn2 = new javax.swing.JButton();
         filterStoreCMB = new javax.swing.JComboBox<>();
-        filterFloorCMB = new javax.swing.JComboBox<>();
         filterMallCMB = new javax.swing.JComboBox<>();
         jLabel39 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -185,12 +183,6 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
         jLabel26.setText("Select Mall:");
         jLabel26.setOpaque(true);
 
-        jLabel28.setBackground(new java.awt.Color(204, 204, 204));
-        jLabel28.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
-        jLabel28.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel28.setText("Select Floor:");
-        jLabel28.setOpaque(true);
-
         jLabel30.setBackground(new java.awt.Color(204, 204, 204));
         jLabel30.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
         jLabel30.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -213,8 +205,6 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
                 filterStoreCMBActionPerformed(evt);
             }
         });
-
-        filterFloorCMB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         filterMallCMB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         filterMallCMB.addActionListener(new java.awt.event.ActionListener() {
@@ -491,13 +481,11 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addGap(40, 40, 40)
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(filterStoreCMB, 0, 505, Short.MAX_VALUE)
-                            .addComponent(filterFloorCMB, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(filterMallCMB, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addContainerGap()
@@ -588,11 +576,7 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel26)
                     .addComponent(filterMallCMB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel28)
-                    .addComponent(filterFloorCMB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel30)
                     .addComponent(filterStoreCMB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1068,7 +1052,8 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
         }
         currentTab = 0;
 
-        controller.modifyStore(currentStore, this);
+        currentStore = controller.modifyStore(currentStore, this);
+        populateFields();
     }//GEN-LAST:event_ModifyBtn1ActionPerformed
 
     private void DeleteBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteBtn1ActionPerformed
@@ -1214,7 +1199,6 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
     @Override
     public void resetFields() {
         filterMallCMB.removeAllItems();
-        filterFloorCMB.removeAllItems();
         filterStoreCMB.removeAllItems();
         clearEditFields();
 
@@ -1256,8 +1240,8 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
 
         populateCurrentFloorCMBs();
         populateNewFloorCMBs();
-        currentFloorCMB.setSelectedItem(currentStore.getFloor());
-        newFloorCMB.setSelectedItem(currentStore.getFloor());
+        currentFloorCMB.setSelectedItem(String.valueOf(currentStore.getFloor()));
+        newFloorCMB.setSelectedItem(String.valueOf(currentStore.getFloor()));
 
         populateGenericCMBs();
         currentPurposeCMB.setSelectedItem(currentStore.getPurpose());
@@ -1328,11 +1312,9 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
     private void populateCurrentFloorCMBs() {
         int floors = currentStoreTabMall.getNumFloors();
 
-        filterFloorCMB.removeAllItems();
         currentFloorCMB.removeAllItems();
 
         for (int i = 0; i < floors; i++) {
-            filterFloorCMB.addItem(String.valueOf(i));
             currentFloorCMB.addItem(String.valueOf(i));
         }
     }
@@ -1409,7 +1391,6 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
     private javax.swing.JTextField currentStoreNumber;
     private javax.swing.JButton deleteMallBtn1;
     private javax.swing.JButton deleteMallBtn2;
-    private javax.swing.JComboBox<String> filterFloorCMB;
     private javax.swing.JComboBox<String> filterMallCMB;
     private javax.swing.JComboBox<String> filterStoreCMB;
     private javax.swing.JLabel jLabel1;
@@ -1429,7 +1410,6 @@ public class ModifyPropertyForm extends javax.swing.JFrame implements Modificati
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel26;
-    private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;

@@ -311,6 +311,7 @@ public class MetaDataExtractor {
             String keyConstraintName = getKeyConstraintName((JSONArray) attributes.get(attributeName), "U_");
 
             if (!keyConstraintName.isEmpty()) {
+                keyConstraintName = keyConstraintName.substring(4);
                 Key existingKey = keys.get(keyConstraintName);
                 if (existingKey != null) {
                     existingKey.add(new Attribute(Name.valueOf(attributeName), t));

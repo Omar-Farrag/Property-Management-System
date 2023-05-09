@@ -62,7 +62,7 @@ public class Store {
      * @throws SQLException
      * @throws DBManagementException
      */
-    public static QueryResult insert(AttributeCollection toInsert) throws SQLException, DBManagementException {
+    public static QueryResult insert(AttributeCollection toInsert) throws SQLException {
         Filters filters = new Filters();
         AttributeCollection collection = new AttributeCollection();
 
@@ -92,7 +92,7 @@ public class Store {
             int generatedLocationNum = generateLocationNum();
             Attribute newLocationNum = new Attribute(Name.LOCATION_NUM, String.valueOf(generatedLocationNum), Table.LOCS);
             newLocationEntry.add(newLocationNum);
-            QueryResult locationInsertion = controller.insert(Table.LOCS, newLocationEntry, false);
+            QueryResult locationInsertion = controller.insert(Table.LOCS, newLocationEntry, true);
 
             if (!locationInsertion.noErrors()) {
                 return locationInsertion;
@@ -100,12 +100,13 @@ public class Store {
 
             newLocationNum = new Attribute(Name.LOCATION_NUM, String.valueOf(generatedLocationNum), Table.PROPERTIES);
             toInsert.add(newLocationNum);
+            toInsert.add(new Attribute(Name.STATUS, "Available", Table.PROPERTIES));
             toInsert = toInsert.filter(Table.PROPERTIES);
-            QueryResult storeInsertion = controller.insert(Table.PROPERTIES, toInsert, false);
+            QueryResult storeInsertion = controller.insert(Table.PROPERTIES, toInsert, true);
             if (!storeInsertion.noErrors()) {
                 Filters deletionFilter = new Filters();
                 deletionFilter.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(generatedLocationNum), Table.LOCS));
-                controller.delete(Table.LOCS, deletionFilter, false);
+                controller.delete(Table.LOCS, deletionFilter, true);
             }
             return storeInsertion;
         }
@@ -204,11 +205,11 @@ public class Store {
         Filters filters = new Filters();
         filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.PROPERTIES));
 
-        QueryResult result = controller.modify(Table.PROPERTIES, newValues.filter(Table.PROPERTIES), filters, false);
+        QueryResult result = controller.modify(Table.PROPERTIES, newValues.filter(Table.PROPERTIES), filters, true);
 
         filters.clear();
         filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.LOCS));
-        QueryResult result2 = controller.modify(Table.LOCS, newValues.filter(Table.LOCS), filters, false);
+        QueryResult result2 = controller.modify(Table.LOCS, newValues.filter(Table.LOCS), filters, true);
 
         if (!result.noErrors()) {
             return result;
@@ -239,11 +240,11 @@ public class Store {
 
         Filters filters = new Filters();
         filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.PROPERTIES));
-        QueryResult result = controller.delete(Table.PROPERTIES, filters, false);
+        QueryResult result = controller.delete(Table.PROPERTIES, filters, true);
 
         filters.clear();
         filters.addEqual(new Attribute(Name.LOCATION_NUM, String.valueOf(locationNum), Table.LOCS));
-        QueryResult result2 = controller.delete(Table.LOCS, filters, false);
+        QueryResult result2 = controller.delete(Table.LOCS, filters, true);
 
         if (!result.noErrors()) {
             return result;
