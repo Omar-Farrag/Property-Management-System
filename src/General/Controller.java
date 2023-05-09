@@ -183,7 +183,7 @@ public class Controller {
         javax.swing.JLabel label = new javax.swing.JLabel(message);
         label.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 18));
         JOptionPane pane = new JOptionPane(label, JOptionPane.INFORMATION_MESSAGE);
-        JDialog dialog = pane.createDialog("ERROR");
+        JDialog dialog = pane.createDialog("SUCCESS");
         dialog.setAlwaysOnTop(true); // make the dialog always on top
         dialog.setVisible(true);
     }

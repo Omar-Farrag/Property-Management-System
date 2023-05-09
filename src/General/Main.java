@@ -5,15 +5,8 @@
 package General;
 
 import GUI.LogInScreen;
-import DataEntryInterface.DataEntryUserInterface;
 import DatabaseManagement.ConstraintsHandling.ConstraintChecker;
-import DatabaseManagement.ConstraintsHandling.MetaDataExtractor;
 import DatabaseManagement.DatabaseManager;
-import LeasingAgentInterface.LeasingAgentUserInterface;
-import TenantInterface.TenantUserInterface;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -27,7 +20,6 @@ public class Main {
     public static void main(String[] args) {
         DatabaseManager.getInstance();
         ConstraintChecker.getInstance();
-        Controller controller = new Controller();
         (new LogInScreen()).setVisible(true);
 
     }
